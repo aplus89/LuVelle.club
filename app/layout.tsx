@@ -52,7 +52,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className={`${inter.className} ${dancingScript.variable} ${playfairDisplay.variable} bg-dark text-cream`}>
+      <body
+        className={`${inter.className} ${dancingScript.variable} ${playfairDisplay.variable} bg-dark text-gold-light`}
+      >
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

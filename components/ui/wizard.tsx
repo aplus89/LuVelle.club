@@ -34,18 +34,18 @@ export function Wizard({
       {/* Header */}
       <div className="text-center mb-8">
         {title && <h1 className="font-dancing text-4xl md:text-5xl text-gold mb-4">{title}</h1>}
-        {subtitle && <p className="text-cream/80 text-lg max-w-2xl mx-auto">{subtitle}</p>}
+        {subtitle && <p className="text-beige/80 text-lg max-w-2xl mx-auto">{subtitle}</p>}
       </div>
 
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-cream/60">
+          <span className="text-sm text-beige/60">
             Paso {currentStep + 1} de {totalSteps}
           </span>
-          <span className="text-sm text-cream/60">{Math.round(progress)}% completado</span>
+          <span className="text-sm text-beige/60">{Math.round(progress)}% completado</span>
         </div>
-        <div className="w-full bg-cream/10 rounded-full h-2">
+        <div className="w-full bg-beige/10 rounded-full h-2">
           <div
             className="gradient-gold h-2 rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
@@ -61,7 +61,7 @@ export function Wizard({
               key={i}
               onClick={() => onStepClick(i)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                i <= currentStep ? "bg-gold" : "bg-cream/20 hover:bg-cream/40"
+                i <= currentStep ? "bg-gold" : "bg-beige/20 hover:bg-beige/40"
               }`}
             />
           ))}
@@ -77,7 +77,7 @@ export function Wizard({
           variant="outline"
           onClick={onPrev}
           disabled={currentStep === 0}
-          className="border-cream/20 text-cream hover:border-gold hover:text-gold"
+          className="border-beige/20 text-beige hover:border-gold hover:text-gold"
         >
           <ChevronLeft className="h-4 w-4 mr-2" />
           Anterior

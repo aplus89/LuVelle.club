@@ -33,7 +33,7 @@ export function Navbar() {
                 key={item.name}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-gold ${
-                  pathname === item.href ? "text-gold" : "text-cream/80"
+                  pathname === item.href ? "text-gold" : "text-gold-light/80"
                 }`}
               >
                 {item.name}
@@ -43,7 +43,12 @@ export function Navbar() {
 
           {/* Mobile menu button */}
           <div className="md:hidden">
-            <Button variant="ghost" size="sm" onClick={() => setIsOpen(!isOpen)} className="text-cream hover:text-gold">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gold-light hover:text-gold"
+            >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
@@ -58,7 +63,7 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   className={`block px-3 py-2 text-base font-medium transition-colors hover:text-gold ${
-                    pathname === item.href ? "text-gold" : "text-cream/80"
+                    pathname === item.href ? "text-gold" : "text-gold-light/80"
                   }`}
                   onClick={() => setIsOpen(false)}
                 >

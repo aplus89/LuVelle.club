@@ -25,9 +25,10 @@ const config: Config = {
       colors: {
         dark: "#141322",
         gold: "#F6CE6F",
-        cream: "#EFEDEA",
-        beige: "#EAE0D5",
-        blue: "#1A5276",
+        "gold-light": "#f8d992",
+        "gold-dark": "#e6b85c",
+        "dark-light": "#1a1a2e",
+        "dark-lighter": "#252440",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

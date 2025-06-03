@@ -29,7 +29,7 @@ export default function PartnersPage() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="font-dancing text-4xl md:text-5xl text-gold mb-4">Partners LuVelle</h1>
-          <p className="text-lg text-cream/80 max-w-2xl mx-auto">
+          <p className="text-lg text-beige/80 max-w-2xl mx-auto">
             Únete a nuestra red exclusiva de marcas y servicios de belleza y bienestar
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function PartnersPage() {
         <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* Benefits */}
           <div>
-            <h2 className="font-playfair text-2xl text-cream mb-6">¿Por qué ser partner de LuVelle?</h2>
+            <h2 className="font-playfair text-2xl text-beige mb-6">¿Por qué ser partner de LuVelle?</h2>
 
             <div className="space-y-6">
               {[
@@ -61,22 +61,22 @@ export default function PartnersPage() {
                 <div key={index} className="flex items-start space-x-3">
                   <CheckCircle className="h-6 w-6 text-gold flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-cream">{benefit.title}</h3>
-                    <p className="text-cream/70">{benefit.description}</p>
+                    <h3 className="font-medium text-beige">{benefit.title}</h3>
+                    <p className="text-beige/70">{benefit.description}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="mt-12">
-              <h2 className="font-playfair text-2xl text-cream mb-6">Tipos de colaboración</h2>
+              <h2 className="font-playfair text-2xl text-beige mb-6">Tipos de colaboración</h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Card className="border-gold/10 bg-dark/60">
                   <CardHeader>
                     <CardTitle className="text-gold">Marcas</CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm text-cream/70">
+                  <CardContent className="text-sm text-beige/70">
                     <p>
                       Incluye tus productos en nuestras Beauty Boxes y llega directamente a las manos de nuestras
                       clientas.
@@ -88,7 +88,7 @@ export default function PartnersPage() {
                   <CardHeader>
                     <CardTitle className="text-gold">Servicios</CardTitle>
                   </CardHeader>
-                  <CardContent className="text-sm text-cream/70">
+                  <CardContent className="text-sm text-beige/70">
                     <p>
                       Ofrece tus servicios de belleza y bienestar a nuestra comunidad a través de experiencias
                       exclusivas.
@@ -113,8 +113,8 @@ export default function PartnersPage() {
                         <CheckCircle className="h-8 w-8 text-gold" />
                       </div>
                     </div>
-                    <h3 className="text-xl font-medium text-cream mb-2">¡Gracias por tu interés!</h3>
-                    <p className="text-cream/70">
+                    <h3 className="text-xl font-medium text-beige mb-2">¡Gracias por tu interés!</h3>
+                    <p className="text-beige/70">
                       Hemos recibido tu información. Nuestro equipo se pondrá en contacto contigo en las próximas 48
                       horas.
                     </p>
@@ -123,31 +123,31 @@ export default function PartnersPage() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="name" className="text-cream">
+                        <Label htmlFor="name" className="text-beige">
                           Nombre completo
                         </Label>
                         <Input
                           id="name"
                           placeholder="Tu nombre"
                           required
-                          className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="company" className="text-cream">
+                        <Label htmlFor="company" className="text-beige">
                           Empresa / Marca
                         </Label>
                         <Input
                           id="company"
                           placeholder="Nombre de tu empresa"
                           required
-                          className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
                         />
                       </div>
 
                       <div>
-                        <Label htmlFor="email" className="text-cream">
+                        <Label htmlFor="email" className="text-beige">
                           Email
                         </Label>
                         <Input
@@ -155,12 +155,12 @@ export default function PartnersPage() {
                           type="email"
                           placeholder="tu@email.com"
                           required
-                          className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
                         />
                       </div>
 
                       <div>
-                        <Label className="text-cream mb-2 block">Tipo de colaboración</Label>
+                        <Label className="text-beige mb-2 block">Tipo de colaboración</Label>
                         <RadioGroup
                           value={partnerType}
                           onValueChange={setPartnerType}
@@ -169,13 +169,13 @@ export default function PartnersPage() {
                         >
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="brand" id="brand" />
-                            <Label htmlFor="brand" className="text-cream">
+                            <Label htmlFor="brand" className="text-beige">
                               Marca / Productos
                             </Label>
                           </div>
                           <div className="flex items-center space-x-2">
                             <RadioGroupItem value="service" id="service" />
-                            <Label htmlFor="service" className="text-cream">
+                            <Label htmlFor="service" className="text-beige">
                               Servicios
                             </Label>
                           </div>
@@ -183,14 +183,14 @@ export default function PartnersPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor="message" className="text-cream">
+                        <Label htmlFor="message" className="text-beige">
                           Mensaje
                         </Label>
                         <Textarea
                           id="message"
                           placeholder="Cuéntanos sobre tu marca o servicio..."
                           rows={4}
-                          className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
                         />
                       </div>
                     </div>

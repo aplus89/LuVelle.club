@@ -21,7 +21,7 @@ export function PlanCard({ plan, isSelected, onSelect, isPopular }: PlanCardProp
   return (
     <Card
       className={`relative cursor-pointer transition-all duration-300 hover-lift ${
-        isSelected ? "ring-2 ring-gold bg-gold/5 border-gold" : "border-cream/20 hover:border-gold/50"
+        isSelected ? "ring-2 ring-gold bg-gold/5 border-gold" : "border-beige/20 hover:border-gold/50"
       }`}
       onClick={onSelect}
     >
@@ -34,10 +34,10 @@ export function PlanCard({ plan, isSelected, onSelect, isPopular }: PlanCardProp
       <CardHeader className="text-center pb-4">
         <CardTitle className="font-dancing text-2xl text-gold mb-2">{plan.name}</CardTitle>
         <div className="mb-2">
-          <span className="text-3xl font-bold text-cream">${plan.price}</span>
-          <span className="text-cream/60 text-sm">/mes</span>
+          <span className="text-3xl font-bold text-beige">${plan.price}</span>
+          <span className="text-beige/60 text-sm">/mes</span>
         </div>
-        <p className="text-cream/80 text-sm">{plan.description}</p>
+        <p className="text-beige/80 text-sm">{plan.description}</p>
       </CardHeader>
 
       <CardContent className="pt-0">
@@ -45,7 +45,7 @@ export function PlanCard({ plan, isSelected, onSelect, isPopular }: PlanCardProp
           {plan.features.map((feature, index) => (
             <li key={index} className="flex items-start space-x-2">
               <Check className="h-4 w-4 text-gold mt-0.5 flex-shrink-0" />
-              <span className="text-cream/80 text-sm">{feature}</span>
+              <span className="text-beige/80 text-sm">{feature}</span>
             </li>
           ))}
         </ul>

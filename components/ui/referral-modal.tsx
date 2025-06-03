@@ -32,7 +32,7 @@ export function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="absolute right-2 top-2 text-cream/60 hover:text-cream"
+            className="absolute right-2 top-2 text-beige/60 hover:text-beige"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -41,35 +41,35 @@ export function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
 
         <CardContent className="space-y-6">
           <div className="text-center">
-            <p className="text-cream/80 text-sm mb-4">
+            <p className="text-beige/80 text-sm mb-4">
               Comparte LuVelle con tus amigas y gana cashback en cada referido
             </p>
           </div>
 
           {/* Cashback Rates */}
           <div className="space-y-3">
-            <div className="flex justify-between items-center p-3 bg-cream/5 rounded-lg">
+            <div className="flex justify-between items-center p-3 bg-beige/5 rounded-lg">
               <div>
                 <span className="font-semibold text-gold">Premium</span>
-                <p className="text-xs text-cream/60">Cashback 3%</p>
+                <p className="text-xs text-beige/60">Cashback 3%</p>
               </div>
-              <span className="text-cream text-sm">Cualquier compra</span>
+              <span className="text-beige text-sm">Cualquier compra</span>
             </div>
 
             <div className="flex justify-between items-center p-3 bg-gold/10 rounded-lg border border-gold/20">
               <div>
                 <span className="font-semibold text-gold">Deluxe</span>
-                <p className="text-xs text-cream/60">Cashback 8%</p>
+                <p className="text-xs text-beige/60">Cashback 8%</p>
               </div>
-              <span className="text-cream text-sm">Caja Deluxe +$120</span>
+              <span className="text-beige text-sm">Caja Deluxe +$120</span>
             </div>
           </div>
 
           {/* Referral Code */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-cream">Tu código de referido:</label>
+            <label className="text-sm font-medium text-beige">Tu código de referido:</label>
             <div className="flex space-x-2">
-              <div className="flex-1 p-3 bg-cream/5 rounded-lg border border-cream/20">
+              <div className="flex-1 p-3 bg-beige/5 rounded-lg border border-beige/20">
                 <span className="font-mono text-gold">{referralCode}</span>
               </div>
               <Button onClick={copyToClipboard} size="sm" className="gradient-gold text-dark">
@@ -79,7 +79,7 @@ export function ReferralModal({ isOpen, onClose }: ReferralModalProps) {
           </div>
 
           <div className="text-center">
-            <p className="text-xs text-cream/60">
+            <p className="text-xs text-beige/60">
               Personalizá tu experiencia. Recompensamos a quienes comparten LuVelle 💛
             </p>
           </div>

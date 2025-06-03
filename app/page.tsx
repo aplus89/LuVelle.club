@@ -57,16 +57,16 @@ export default function HomePage() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-dark via-dark/95 to-blue/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-dark via-dark/95 to-dark-light" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <h1 className="font-dancing text-5xl md:text-6xl lg:text-7xl text-gold mb-6 animate-float">LuVelle</h1>
-              <h2 className="font-playfair text-2xl md:text-3xl lg:text-4xl text-cream mb-6 leading-tight">
+              <h2 className="font-playfair text-2xl md:text-3xl lg:text-4xl text-gold-light mb-6 leading-tight">
                 Tu club de belleza y bienestar personalizado
               </h2>
-              <p className="text-lg text-cream/80 mb-8 max-w-xl">
+              <p className="text-lg text-gold-light/80 mb-8 max-w-xl">
                 Descubre <strong className="text-gold">The Beauty Box by LuVelle</strong>, una experiencia mensual única
                 diseñada especialmente para mujeres en LATAM. Productos premium, servicios exclusivos y beneficios
                 únicos.
@@ -83,17 +83,9 @@ export default function HomePage() {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="lg"
-                  className="border-cream/30 text-cream hover:border-cream hover:bg-cream/5 text-lg px-8 py-4"
-                >
-                  <Link href="/partners">Ofrecer mis servicios</Link>
-                </Button>
               </div>
 
-              <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-cream/60">
+              <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-gold-light/60">
                 <div className="flex items-center space-x-1">
                   <CheckCircle className="h-4 w-4 text-gold" />
                   <span>Envío gratis</span>
@@ -112,23 +104,23 @@ export default function HomePage() {
             <div className="relative">
               <div className="relative z-10">
                 <img
-                  src="/placeholder.svg?height=600&width=500"
-                  alt="Beauty Box by LuVelle"
+                  src="/images/luvelle-hero.png"
+                  alt="LuVelle - Para cada mujer"
                   className="w-full max-w-md mx-auto rounded-2xl shadow-2xl hover-lift"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-blue/20 rounded-2xl blur-3xl animate-pulse-slow" />
+              <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-dark-light/50 rounded-2xl blur-3xl animate-pulse-slow" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-b from-dark to-blue/10">
+      <section className="py-20 bg-gradient-to-b from-dark to-dark-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-4">¿Por qué elegir LuVelle?</h2>
-            <p className="text-lg text-cream/80 max-w-3xl mx-auto">
+            <p className="text-lg text-gold-light/80 max-w-3xl mx-auto">
               Más que una suscripción, es una experiencia completa de belleza y bienestar diseñada para empoderar a la
               mujer latina moderna.
             </p>
@@ -136,11 +128,11 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-cream/10 bg-dark/60 hover-lift">
+              <Card key={index} className="border-gold/10 bg-dark-lighter hover-lift">
                 <CardContent className="p-6 text-center">
                   <div className="mb-4 flex justify-center">{feature.icon}</div>
-                  <h3 className="font-semibold text-cream text-lg mb-2">{feature.title}</h3>
-                  <p className="text-cream/70 text-sm">{feature.description}</p>
+                  <h3 className="font-semibold text-gold-light text-lg mb-2">{feature.title}</h3>
+                  <p className="text-gold-light/70 text-sm">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -153,7 +145,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-4">¿Cómo funciona?</h2>
-            <p className="text-lg text-cream/80 max-w-2xl mx-auto">
+            <p className="text-lg text-gold-light/80 max-w-2xl mx-auto">
               En solo unos pasos, tendrás tu Beauty Box personalizada lista para disfrutar.
             </p>
           </div>
@@ -179,15 +171,15 @@ export default function HomePage() {
             ].map((item, index) => (
               <div key={index} className="text-center">
                 <div className="relative mb-6">
-                  <div className="w-20 h-20 mx-auto bg-dark border border-gold rounded-full flex items-center justify-center">
+                  <div className="w-20 h-20 mx-auto bg-dark-lighter border border-gold rounded-full flex items-center justify-center">
                     <span className="text-2xl font-bold text-gold">{item.step}</span>
                   </div>
                   {index < 2 && (
                     <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-gold to-transparent" />
                   )}
                 </div>
-                <h3 className="font-semibold text-cream text-xl mb-3">{item.title}</h3>
-                <p className="text-cream/70">{item.description}</p>
+                <h3 className="font-semibold text-gold-light text-xl mb-3">{item.title}</h3>
+                <p className="text-gold-light/70">{item.description}</p>
               </div>
             ))}
           </div>
@@ -195,29 +187,29 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gradient-to-b from-blue/10 to-dark">
+      <section className="py-20 bg-gradient-to-b from-dark-light to-dark">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-4">Lo que dicen nuestras LuVellers</h2>
-            <p className="text-lg text-cream/80 max-w-2xl mx-auto">
+            <p className="text-lg text-gold-light/80 max-w-2xl mx-auto">
               Miles de mujeres ya transformaron su rutina de belleza con LuVelle.
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <Card className="border-gold/10 bg-dark/60">
+            <Card className="border-gold/10 bg-dark-lighter">
               <CardContent className="p-8 text-center">
                 <div className="flex justify-center mb-4">
                   {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-gold fill-current" />
                   ))}
                 </div>
-                <blockquote className="text-lg text-cream/90 mb-6 italic">
+                <blockquote className="text-lg text-gold-light/90 mb-6 italic">
                   "{testimonials[currentTestimonial].text}"
                 </blockquote>
                 <div>
                   <p className="font-semibold text-gold">{testimonials[currentTestimonial].name}</p>
-                  <p className="text-cream/60 text-sm">{testimonials[currentTestimonial].location}</p>
+                  <p className="text-gold-light/60 text-sm">{testimonials[currentTestimonial].location}</p>
                 </div>
               </CardContent>
             </Card>
@@ -228,7 +220,7 @@ export default function HomePage() {
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentTestimonial ? "bg-gold" : "bg-cream/30"
+                    index === currentTestimonial ? "bg-gold" : "bg-gold-light/30"
                   }`}
                 />
               ))}
@@ -241,7 +233,7 @@ export default function HomePage() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-6">¿Lista para transformar tu rutina?</h2>
-          <p className="text-lg text-cream/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-gold-light/80 mb-8 max-w-2xl mx-auto">
             Únete a miles de mujeres que ya descubrieron el poder de una experiencia de belleza completamente
             personalizada.
           </p>
@@ -259,27 +251,27 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <p className="text-sm text-cream/60 mt-6">
+          <p className="text-sm text-gold-light/60 mt-6">
             Sin compromisos • Cancela cuando quieras • Envío gratis a toda LATAM
           </p>
         </div>
       </section>
 
       {/* Partners Section */}
-      <section className="py-20 bg-gradient-to-b from-dark to-blue/5">
+      <section className="py-20 bg-gradient-to-b from-dark to-dark-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-4">Partners</h2>
-            <p className="text-lg text-cream/80 max-w-3xl mx-auto">
+            <p className="text-lg text-gold-light/80 max-w-3xl mx-auto">
               ¿Tienes una marca o servicio de belleza y bienestar? Únete a nuestra red de partners y llega a miles de
               mujeres en LATAM.
             </p>
           </div>
 
           <div className="max-w-2xl mx-auto">
-            <Card className="border-gold/10 bg-dark/60">
+            <Card className="border-gold/10 bg-dark-lighter">
               <CardContent className="p-8 text-center">
-                <p className="text-cream/90 mb-6">
+                <p className="text-gold-light/90 mb-6">
                   En LuVelle valoramos la calidad y exclusividad. Si tu marca o servicio comparte nuestros valores,
                   queremos conocerte.
                 </p>

@@ -24,7 +24,7 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
 
   if (!product.available) {
     return (
-      <Card className="border-cream/10 bg-cream/5 opacity-60">
+      <Card className="border-beige/10 bg-beige/5 opacity-60">
         <CardContent className="p-4">
           <div className="relative mb-3">
             <img
@@ -41,9 +41,9 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
             </div>
           </div>
           <div className="space-y-1">
-            <h3 className="font-medium text-cream/60 text-sm">{product.name}</h3>
+            <h3 className="font-medium text-beige/60 text-sm">{product.name}</h3>
             <p className="text-xs text-gold/60">{product.brand}</p>
-            <p className="text-xs text-cream/50 line-clamp-2">{product.description}</p>
+            <p className="text-xs text-beige/50 line-clamp-2">{product.description}</p>
           </div>
         </CardContent>
       </Card>
@@ -56,8 +56,8 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
         isSelected
           ? "ring-2 ring-gold bg-gold/10 border-gold"
           : disabled
-            ? "border-cream/10 opacity-50 cursor-not-allowed"
-            : "border-cream/20 hover:border-gold/50"
+            ? "border-beige/10 opacity-50 cursor-not-allowed"
+            : "border-beige/20 hover:border-gold/50"
       }`}
       onClick={disabled ? undefined : onSelect}
     >
@@ -71,13 +71,13 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
             }`}
             onLoad={() => setImageLoaded(true)}
           />
-          {!imageLoaded && <div className="absolute inset-0 bg-cream/10 rounded-lg animate-pulse" />}
+          {!imageLoaded && <div className="absolute inset-0 bg-beige/10 rounded-lg animate-pulse" />}
 
           {/* Selection indicator */}
           <div className="absolute top-2 right-2">
             <div
               className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                isSelected ? "bg-gold border-gold" : "bg-white/80 border-cream/40"
+                isSelected ? "bg-gold border-gold" : "bg-white/80 border-beige/40"
               }`}
             >
               {isSelected && <Check className="h-3 w-3 text-dark" />}
@@ -86,11 +86,11 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
         </div>
 
         <div className="space-y-1">
-          <h3 className={`font-medium text-sm transition-colors ${isSelected ? "text-gold" : "text-cream"}`}>
+          <h3 className={`font-medium text-sm transition-colors ${isSelected ? "text-gold" : "text-beige"}`}>
             {product.name}
           </h3>
           <p className="text-xs text-gold/80">{product.brand}</p>
-          <p className="text-xs text-cream/70 line-clamp-2">{product.description}</p>
+          <p className="text-xs text-beige/70 line-clamp-2">{product.description}</p>
         </div>
 
         {/* Hidden checkbox for accessibility */}

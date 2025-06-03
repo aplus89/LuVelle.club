@@ -202,11 +202,11 @@ export default function TheBeautyBoxPage() {
           <div className="text-center space-y-6">
             <div className="mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">¡Hola! Diseñemos juntas tu Beauty Box ideal 🌸</h2>
-              <p className="text-cream/80">Comenzemos conociendo tu nombre para personalizar tu experiencia</p>
+              <p className="text-beige/80">Comenzemos conociendo tu nombre para personalizar tu experiencia</p>
             </div>
 
             <div className="max-w-md mx-auto">
-              <Label htmlFor="name" className="text-cream mb-2 block">
+              <Label htmlFor="name" className="text-beige mb-2 block">
                 ¿Cómo te llamas?
               </Label>
               <Input
@@ -215,7 +215,7 @@ export default function TheBeautyBoxPage() {
                 placeholder="Tu nombre"
                 value={config.name}
                 onChange={(e) => setConfig((prev) => ({ ...prev, name: e.target.value }))}
-                className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
               />
             </div>
           </div>
@@ -226,7 +226,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tu plan, {config.name}</h2>
-              <p className="text-cream/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
+              <p className="text-beige/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -242,7 +242,7 @@ export default function TheBeautyBoxPage() {
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-cream/60 flex items-center justify-center gap-2">
+              <p className="text-sm text-beige/60 flex items-center justify-center gap-2">
                 <Info className="h-4 w-4" />
                 ¿Solo querés una vez? Lo decidís más adelante
               </p>
@@ -255,7 +255,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">¿Qué te interesa más?</h2>
-              <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
+              <p className="text-beige/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 max-w-2xl mx-auto">
@@ -265,13 +265,13 @@ export default function TheBeautyBoxPage() {
                   className={`cursor-pointer transition-all duration-300 hover-lift ${
                     config.interest === interest.id
                       ? "ring-2 ring-gold bg-gold/10 border-gold"
-                      : "border-cream/20 hover:border-gold/50"
+                      : "border-beige/20 hover:border-gold/50"
                   }`}
                   onClick={() => setConfig((prev) => ({ ...prev, interest: interest.id }))}
                 >
                   <CardContent className="p-6 text-center">
                     <div className="text-4xl mb-3">{interest.icon}</div>
-                    <h3 className="font-semibold text-cream">{interest.name}</h3>
+                    <h3 className="font-semibold text-beige">{interest.name}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -288,7 +288,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tus categorías</h2>
-              <p className="text-cream/80 mb-4">Selecciona las categorías que más te interesan</p>
+              <p className="text-beige/80 mb-4">Selecciona las categorías que más te interesan</p>
               <div className="flex justify-center">
                 <span className="text-sm bg-gold/20 text-gold px-3 py-1 rounded-full">
                   {config.categories.length} de {maxCategories} seleccionadas
@@ -312,7 +312,7 @@ export default function TheBeautyBoxPage() {
 
             {config.categories.length === maxCategories && (
               <div className="text-center">
-                <p className="text-sm text-cream/60">Has alcanzado el límite de categorías para tu plan</p>
+                <p className="text-sm text-beige/60">Has alcanzado el límite de categorías para tu plan</p>
               </div>
             )}
           </div>
@@ -334,7 +334,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Seleccioná tus productos</h2>
-              <p className="text-cream/80 mb-4">
+              <p className="text-beige/80 mb-4">
                 Elegí los productos que más te gusten de las categorías seleccionadas
               </p>
               <div className="flex justify-center">
@@ -348,18 +348,18 @@ export default function TheBeautyBoxPage() {
               <div className="max-w-2xl mx-auto mb-6">
                 <div className="bg-blue/10 border border-blue/20 rounded-lg p-4 flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-blue mt-0.5 flex-shrink-0" />
-                  <p className="text-cream/90 text-sm">Para incluir otro producto, primero eliminá uno de tu Box.</p>
+                  <p className="text-beige/90 text-sm">Para incluir otro producto, primero eliminá uno de tu Box.</p>
                 </div>
               </div>
             )}
 
             {config.categories.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-cream/60">Primero selecciona algunas categorías en el paso anterior</p>
+                <p className="text-beige/60">Primero selecciona algunas categorías en el paso anterior</p>
               </div>
             ) : availableProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-cream/60">No hay productos disponibles para las categorías seleccionadas</p>
+                <p className="text-beige/60">No hay productos disponibles para las categorías seleccionadas</p>
               </div>
             ) : (
               <div className="space-y-8">
@@ -371,7 +371,7 @@ export default function TheBeautyBoxPage() {
 
                   return (
                     <div key={categoryId}>
-                      <h3 className="font-semibold text-cream text-lg mb-4 flex items-center gap-2">
+                      <h3 className="font-semibold text-beige text-lg mb-4 flex items-center gap-2">
                         <span className="text-2xl">{category?.icon}</span>
                         {category?.name}
                       </h3>
@@ -407,7 +407,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Tu Beauty Box</h2>
-              <p className="text-cream/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
+              <p className="text-beige/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
             </div>
 
             <div className="max-w-2xl mx-auto space-y-6">
@@ -418,14 +418,14 @@ export default function TheBeautyBoxPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-cream">Precio base</span>
-                    <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
+                    <span className="text-beige">Precio base</span>
+                    <span className="text-beige font-semibold">${finalPlan?.price}/mes</span>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm text-cream/80">Categorías seleccionadas:</p>
+                    <p className="text-sm text-beige/80">Categorías seleccionadas:</p>
                     <div className="flex flex-wrap gap-2">
                       {selectedCategories.map((category) => (
-                        <span key={category.id} className="text-xs bg-cream/10 text-cream px-2 py-1 rounded-full">
+                        <span key={category.id} className="text-xs bg-beige/10 text-beige px-2 py-1 rounded-full">
                           {category.icon} {category.name}
                         </span>
                       ))}
@@ -436,21 +436,21 @@ export default function TheBeautyBoxPage() {
 
               {/* Selected Products */}
               {selectedProducts.length > 0 && (
-                <Card className="border-cream/20">
+                <Card className="border-beige/20">
                   <CardHeader>
-                    <CardTitle className="text-cream">Productos seleccionados</CardTitle>
+                    <CardTitle className="text-beige">Productos seleccionados</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {selectedProducts.map((product) => (
-                        <div key={product.id} className="flex items-center space-x-3 p-2 bg-cream/5 rounded-lg">
+                        <div key={product.id} className="flex items-center space-x-3 p-2 bg-beige/5 rounded-lg">
                           <img
                             src={product.image || "/placeholder.svg"}
                             alt={product.name}
                             className="w-12 h-12 object-cover rounded"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-cream truncate">{product.name}</p>
+                            <p className="text-sm font-medium text-beige truncate">{product.name}</p>
                             <p className="text-xs text-gold/80">{product.brand}</p>
                           </div>
                         </div>
@@ -462,9 +462,9 @@ export default function TheBeautyBoxPage() {
 
               {/* Extras */}
               {(finalPlan?.id === "premium" || finalPlan?.id === "deluxe") && (
-                <Card className="border-cream/20">
+                <Card className="border-beige/20">
                   <CardHeader>
-                    <CardTitle className="text-cream flex items-center gap-2">
+                    <CardTitle className="text-beige flex items-center gap-2">
                       <Plus className="h-5 w-5" />
                       Extras
                     </CardTitle>
@@ -472,8 +472,8 @@ export default function TheBeautyBoxPage() {
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-cream">Productos extra</span>
-                        <p className="text-xs text-cream/60">$5 cada uno</p>
+                        <span className="text-beige">Productos extra</span>
+                        <p className="text-xs text-beige/60">$5 cada uno</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
@@ -485,11 +485,11 @@ export default function TheBeautyBoxPage() {
                               extraProducts: Math.max(0, prev.extraProducts - 1),
                             }))
                           }
-                          className="border-cream/20 text-cream"
+                          className="border-beige/20 text-beige"
                         >
                           -
                         </Button>
-                        <span className="text-cream w-8 text-center">{config.extraProducts}</span>
+                        <span className="text-beige w-8 text-center">{config.extraProducts}</span>
                         <Button
                           size="sm"
                           variant="outline"
@@ -499,7 +499,7 @@ export default function TheBeautyBoxPage() {
                               extraProducts: prev.extraProducts + 1,
                             }))
                           }
-                          className="border-cream/20 text-cream"
+                          className="border-beige/20 text-beige"
                         >
                           +
                         </Button>
@@ -509,8 +509,8 @@ export default function TheBeautyBoxPage() {
                     {finalPlan?.id === "deluxe" && (
                       <div className="flex justify-between items-center">
                         <div>
-                          <span className="text-cream">Servicios extra</span>
-                          <p className="text-xs text-cream/60">$10 cada uno</p>
+                          <span className="text-beige">Servicios extra</span>
+                          <p className="text-xs text-beige/60">$10 cada uno</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
@@ -522,11 +522,11 @@ export default function TheBeautyBoxPage() {
                                 extraServices: Math.max(0, prev.extraServices - 1),
                               }))
                             }
-                            className="border-cream/20 text-cream"
+                            className="border-beige/20 text-beige"
                           >
                             -
                           </Button>
-                          <span className="text-cream w-8 text-center">{config.extraServices}</span>
+                          <span className="text-beige w-8 text-center">{config.extraServices}</span>
                           <Button
                             size="sm"
                             variant="outline"
@@ -536,7 +536,7 @@ export default function TheBeautyBoxPage() {
                                 extraServices: prev.extraServices + 1,
                               }))
                             }
-                            className="border-cream/20 text-cream"
+                            className="border-beige/20 text-beige"
                           >
                             +
                           </Button>
@@ -549,13 +549,13 @@ export default function TheBeautyBoxPage() {
 
               {/* Referral Code */}
               {finalPlan?.id === "deluxe" && (
-                <Card className="border-cream/20">
+                <Card className="border-beige/20">
                   <CardHeader>
-                    <CardTitle className="text-cream">Código de referido</CardTitle>
+                    <CardTitle className="text-beige">Código de referido</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      <Label htmlFor="referralCode" className="text-cream/80">
+                      <Label htmlFor="referralCode" className="text-beige/80">
                         ¿Tienes un código de referido?
                       </Label>
                       <Input
@@ -564,9 +564,9 @@ export default function TheBeautyBoxPage() {
                         placeholder="Ingresa tu código"
                         value={config.referralCode}
                         onChange={(e) => setConfig((prev) => ({ ...prev, referralCode: e.target.value }))}
-                        className="bg-cream/5 border-cream/20 text-cream placeholder:text-cream/50"
+                        className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
                       />
-                      <p className="text-xs text-cream/60">
+                      <p className="text-xs text-beige/60">
                         Personalizá tu experiencia. Recompensamos a quienes comparten LuVelle 💛
                       </p>
                     </div>
@@ -578,11 +578,11 @@ export default function TheBeautyBoxPage() {
               <Card className="border-gold/20 bg-gold/10">
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center text-lg">
-                    <span className="text-cream font-semibold">Total mensual:</span>
+                    <span className="text-beige font-semibold">Total mensual:</span>
                     <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
                   </div>
                   {(extraProductsPrice > 0 || extraServicesPrice > 0) && (
-                    <div className="mt-2 text-sm text-cream/70">
+                    <div className="mt-2 text-sm text-beige/70">
                       <div className="flex justify-between">
                         <span>Plan base:</span>
                         <span>${basePrice}</span>
@@ -618,7 +618,7 @@ export default function TheBeautyBoxPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="font-dancing text-4xl md:text-5xl text-gold mb-4">The Beauty Box by LuVelle</h1>
-          <p className="text-cream/80 text-lg max-w-2xl mx-auto">
+          <p className="text-beige/80 text-lg max-w-2xl mx-auto">
             Diseña tu experiencia personalizada de belleza y bienestar
           </p>
         </div>
@@ -626,12 +626,12 @@ export default function TheBeautyBoxPage() {
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-cream/60">
+            <span className="text-sm text-beige/60">
               Paso {currentStep + 1} de {totalSteps}
             </span>
-            <span className="text-sm text-cream/60">{Math.round(progress)}% completado</span>
+            <span className="text-sm text-beige/60">{Math.round(progress)}% completado</span>
           </div>
-          <div className="w-full bg-cream/10 rounded-full h-2">
+          <div className="w-full bg-beige/10 rounded-full h-2">
             <div
               className="gradient-gold h-2 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
@@ -647,7 +647,7 @@ export default function TheBeautyBoxPage() {
                 key={i}
                 onClick={() => handleStepClick(i)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  i <= currentStep ? "bg-gold" : "bg-cream/20 hover:bg-cream/40"
+                  i <= currentStep ? "bg-gold" : "bg-beige/20 hover:bg-beige/40"
                 }`}
               />
             ))}
@@ -663,7 +663,7 @@ export default function TheBeautyBoxPage() {
             variant="outline"
             onClick={handlePrev}
             disabled={currentStep === 0}
-            className="border-cream/20 text-cream hover:border-gold hover:text-gold"
+            className="border-beige/20 text-beige hover:border-gold hover:text-gold"
           >
             <ChevronLeft className="h-4 w-4 mr-2" />
             Anterior

@@ -76,7 +76,7 @@
 
 .glass-effect {
   backdrop-filter: blur(10px);
-  background: rgba(239, 237, 234, 0.1);
+  background: rgba(20, 19, 34, 0.8);
   border: 1px solid rgba(246, 206, 111, 0.2);
 }
 
@@ -86,7 +86,7 @@
 
 .hover-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .animate-float {
