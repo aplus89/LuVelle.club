@@ -62,7 +62,13 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
-              <h1 className="font-dancing text-5xl md:text-6xl lg:text-7xl text-gold mb-6 animate-float">LuVelle</h1>
+              <div className="mb-6 animate-float">
+                <img
+                  src="/images/luvelle-logo.png"
+                  alt="LuVelle"
+                  className="h-16 md:h-20 lg:h-24 w-auto mx-auto lg:mx-0"
+                />
+              </div>
               <h2 className="font-playfair text-2xl md:text-3xl lg:text-4xl text-gold-light mb-6 leading-tight">
                 Tu club de belleza y bienestar personalizado
               </h2>

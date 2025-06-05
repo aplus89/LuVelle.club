@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, Sparkles } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Navbar() {
@@ -22,8 +22,7 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <Sparkles className="h-8 w-8 text-gold" />
-            <span className="font-dancing text-2xl font-bold text-gold">LuVelle</span>
+            <img src="/images/luvelle-logo.png" alt="LuVelle" className="h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

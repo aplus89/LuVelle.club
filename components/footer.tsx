@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <span className="font-dancing text-3xl font-bold text-gold">LuVelle</span>
+              <img src="/images/luvelle-logo.png" alt="LuVelle" className="h-8 w-auto" />
             </div>
             <p className="text-gold-light/80 text-sm mb-6 max-w-md">
               Tu club de belleza y bienestar personalizado. Descubre productos premium y servicios exclusivos diseñados
