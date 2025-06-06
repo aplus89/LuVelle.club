@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PLANS, CATEGORIES, INTERESTS, PRODUCTS } from "@/lib/constants"
-import { Plus, Info, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react"
+import { Plus, Info, ChevronRight, AlertCircle, ArrowLeft } from "lucide-react"
 
 interface BoxConfiguration {
   plan: string
@@ -47,13 +47,18 @@ export default function TheBeautyBoxPage() {
       case 1:
         return config.plan !== ""
       case 2:
+        // Skip interest step for Esencial plan
+        if (config.plan === "esencial") return true
         return config.interest !== ""
       case 3:
+        // Skip categories step for Esencial plan
+        if (config.plan === "esencial") return true
         return config.categories.length > 0
       case 4: {
         // Product selection step - only for Premium/Deluxe
+        if (config.plan === "esencial") return true // Skip for Esencial
         const plan = getSelectedPlan()
-        if (plan?.id === "esencial") return true // Skip for Esencial
+        if (!plan || plan.id === "esencial") return true
         return config.selectedProducts.length > 0
       }
       case 5:
@@ -65,8 +70,15 @@ export default function TheBeautyBoxPage() {
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
-      // Skip product selection for Esencial plan
-      if (currentStep === 3 && config.plan === "esencial") {
+      // Skip steps for Esencial plan
+      if (config.plan === "esencial") {
+        if (currentStep === 1) {
+          // Skip interest, categories, and product selection for Esencial
+          setCurrentStep(5) // Go directly to summary
+        } else {
+          setCurrentStep(currentStep + 1)
+        }
+      } else if (currentStep === 3 && config.plan === "esencial") {
         setCurrentStep(currentStep + 2) // Skip step 4 (product selection)
       } else {
         setCurrentStep(currentStep + 1)
@@ -88,8 +100,14 @@ export default function TheBeautyBoxPage() {
 
   const handlePrev = () => {
     if (currentStep > 0) {
-      // Skip product selection for Esencial plan when going back
-      if (currentStep === 5 && config.plan === "esencial") {
+      // Handle back navigation for Esencial plan
+      if (config.plan === "esencial") {
+        if (currentStep === 5) {
+          setCurrentStep(1) // Go back to plan selection
+        } else {
+          setCurrentStep(currentStep - 1)
+        }
+      } else if (currentStep === 5 && config.plan === "esencial") {
         setCurrentStep(currentStep - 2) // Skip step 4 (product selection)
       } else {
         setCurrentStep(currentStep - 1)
@@ -98,9 +116,29 @@ export default function TheBeautyBoxPage() {
   }
 
   const handleStepClick = (step: number) => {
+    // Don't allow skipping to steps that should be skipped for Esencial
+    if (config.plan === "esencial" && (step === 2 || step === 3 || step === 4)) {
+      return
+    }
+
     if (step <= currentStep || canProceed()) {
       setCurrentStep(step)
     }
+  }
+
+  // Modified plan selection to auto-advance
+  const handlePlanSelect = (planId: string) => {
+    setConfig((prev) => ({ ...prev, plan: planId }))
+
+    // Auto-advance to next step after a short delay for visual feedback
+    setTimeout(() => {
+      if (planId === "esencial") {
+        // Skip interest, categories, and product selection for Esencial
+        setCurrentStep(5) // Go directly to summary
+      } else {
+        setCurrentStep(2) // Go to interest selection
+      }
+    }, 300)
   }
 
   const handleCategorySelect = (categoryId: string) => {
@@ -201,12 +239,14 @@ export default function TheBeautyBoxPage() {
         return (
           <div className="text-center space-y-6">
             <div className="mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">¡Hola! Diseñemos juntas tu Beauty Box ideal 🌸</h2>
-              <p className="text-beige/80">Comenzemos conociendo tu nombre para personalizar tu experiencia</p>
+              <h2 className="font-dancing text-3xl text-gold mb-4">
+                ¡Hola! Diseñemos juntas tu experiencia LuVelle 🌸
+              </h2>
+              <p className="text-cream/80">Comenzemos conociendo tu nombre para personalizar tu experiencia</p>
             </div>
 
             <div className="max-w-md mx-auto">
-              <Label htmlFor="name" className="text-beige mb-2 block">
+              <Label htmlFor="name" className="text-cream mb-2 block">
                 ¿Cómo te llamas?
               </Label>
               <Input
@@ -215,7 +255,7 @@ export default function TheBeautyBoxPage() {
                 placeholder="Tu nombre"
                 value={config.name}
                 onChange={(e) => setConfig((prev) => ({ ...prev, name: e.target.value }))}
-                className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
+                className="bg-dark border-gold/20 text-cream placeholder:text-cream/50"
               />
             </div>
           </div>
@@ -226,7 +266,8 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tu plan, {config.name}</h2>
-              <p className="text-beige/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
+              <p className="text-cream/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
+              <p className="text-sm text-cream/60 mt-2">Hacé clic en el plan que prefieras</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -235,14 +276,15 @@ export default function TheBeautyBoxPage() {
                   key={plan.id}
                   plan={plan}
                   isSelected={config.plan === plan.id}
-                  onSelect={() => setConfig((prev) => ({ ...prev, plan: plan.id }))}
+                  onSelect={() => handlePlanSelect(plan.id)}
                   isPopular={index === 1}
+                  hideButton={true}
                 />
               ))}
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-beige/60 flex items-center justify-center gap-2">
+              <p className="text-sm text-cream/60 flex items-center justify-center gap-2">
                 <Info className="h-4 w-4" />
                 ¿Solo querés una vez? Lo decidís más adelante
               </p>
@@ -251,11 +293,16 @@ export default function TheBeautyBoxPage() {
         )
 
       case 2:
+        // Skip this step for Esencial plan
+        if (config.plan === "esencial") {
+          return null
+        }
+
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">¿Qué te interesa más?</h2>
-              <p className="text-beige/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
+              <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 max-w-2xl mx-auto">
@@ -265,13 +312,13 @@ export default function TheBeautyBoxPage() {
                   className={`cursor-pointer transition-all duration-300 hover-lift ${
                     config.interest === interest.id
                       ? "ring-2 ring-gold bg-gold/10 border-gold"
-                      : "border-beige/20 hover:border-gold/50"
+                      : "border-gold/20 hover:border-gold/50"
                   }`}
                   onClick={() => setConfig((prev) => ({ ...prev, interest: interest.id }))}
                 >
                   <CardContent className="p-6 text-center">
                     <div className="text-4xl mb-3">{interest.icon}</div>
-                    <h3 className="font-semibold text-beige">{interest.name}</h3>
+                    <h3 className="font-semibold text-cream">{interest.name}</h3>
                   </CardContent>
                 </Card>
               ))}
@@ -280,6 +327,11 @@ export default function TheBeautyBoxPage() {
         )
 
       case 3:
+        // Skip this step for Esencial plan
+        if (config.plan === "esencial") {
+          return null
+        }
+
         const selectedPlan = getSelectedPlan()
         const maxCategories =
           selectedPlan?.maxCategories === "all" ? CATEGORIES.length : selectedPlan?.maxCategories || 0
@@ -288,7 +340,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tus categorías</h2>
-              <p className="text-beige/80 mb-4">Selecciona las categorías que más te interesan</p>
+              <p className="text-cream/80 mb-4">Selecciona las categorías que más te interesan</p>
               <div className="flex justify-center">
                 <span className="text-sm bg-gold/20 text-gold px-3 py-1 rounded-full">
                   {config.categories.length} de {maxCategories} seleccionadas
@@ -312,7 +364,7 @@ export default function TheBeautyBoxPage() {
 
             {config.categories.length === maxCategories && (
               <div className="text-center">
-                <p className="text-sm text-beige/60">Has alcanzado el límite de categorías para tu plan</p>
+                <p className="text-sm text-cream/60">Has alcanzado el límite de categorías para tu plan</p>
               </div>
             )}
           </div>
@@ -320,9 +372,13 @@ export default function TheBeautyBoxPage() {
 
       case 4:
         // Product selection step - only for Premium/Deluxe
+        if (config.plan === "esencial") {
+          // This step should be skipped for Esencial
+          return null
+        }
+
         const plan = getSelectedPlan()
-        if (plan?.id === "esencial") {
-          // This step should be skipped for Esencial, but just in case
+        if (!plan || plan.id === "esencial") {
           return null
         }
 
@@ -334,7 +390,7 @@ export default function TheBeautyBoxPage() {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-4">Seleccioná tus productos</h2>
-              <p className="text-beige/80 mb-4">
+              <p className="text-cream/80 mb-4">
                 Elegí los productos que más te gusten de las categorías seleccionadas
               </p>
               <div className="flex justify-center">
@@ -346,20 +402,20 @@ export default function TheBeautyBoxPage() {
 
             {selectedCount >= maxProducts && (
               <div className="max-w-2xl mx-auto mb-6">
-                <div className="bg-blue/10 border border-blue/20 rounded-lg p-4 flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-blue mt-0.5 flex-shrink-0" />
-                  <p className="text-beige/90 text-sm">Para incluir otro producto, primero eliminá uno de tu Box.</p>
+                <div className="bg-dark border border-gold/20 rounded-lg p-4 flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
+                  <p className="text-cream/90 text-sm">Para incluir otro producto, primero eliminá uno de tu Box.</p>
                 </div>
               </div>
             )}
 
             {config.categories.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-beige/60">Primero selecciona algunas categorías en el paso anterior</p>
+                <p className="text-cream/60">Primero selecciona algunas categorías en el paso anterior</p>
               </div>
             ) : availableProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-beige/60">No hay productos disponibles para las categorías seleccionadas</p>
+                <p className="text-cream/60">No hay productos disponibles para las categorías seleccionadas</p>
               </div>
             ) : (
               <div className="space-y-8">
@@ -371,7 +427,7 @@ export default function TheBeautyBoxPage() {
 
                   return (
                     <div key={categoryId}>
-                      <h3 className="font-semibold text-beige text-lg mb-4 flex items-center gap-2">
+                      <h3 className="font-semibold text-cream text-lg mb-4 flex items-center gap-2">
                         <span className="text-2xl">{category?.icon}</span>
                         {category?.name}
                       </h3>
@@ -406,51 +462,63 @@ export default function TheBeautyBoxPage() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">Tu Beauty Box</h2>
-              <p className="text-beige/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
+              <h2 className="font-dancing text-3xl text-gold mb-4">Tu Plan LuVelle</h2>
+              <p className="text-cream/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
             </div>
 
             <div className="max-w-2xl mx-auto space-y-6">
               {/* Plan Summary */}
-              <Card className="border-gold/20 bg-gold/5">
+              <Card className="border-gold/20 bg-dark">
                 <CardHeader>
                   <CardTitle className="text-gold">Plan {finalPlan?.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-beige">Precio base</span>
-                    <span className="text-beige font-semibold">${finalPlan?.price}/mes</span>
+                    <span className="text-cream">Precio base</span>
+                    <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-sm text-beige/80">Categorías seleccionadas:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCategories.map((category) => (
-                        <span key={category.id} className="text-xs bg-beige/10 text-beige px-2 py-1 rounded-full">
-                          {category.icon} {category.name}
-                        </span>
-                      ))}
+
+                  {config.plan !== "esencial" && (
+                    <div className="space-y-2">
+                      <p className="text-sm text-cream/80">Categorías seleccionadas:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedCategories.map((category) => (
+                          <span key={category.id} className="text-xs bg-gold/10 text-cream px-2 py-1 rounded-full">
+                            {category.icon} {category.name}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {config.plan === "esencial" && (
+                    <div className="mt-4 p-3 bg-gold/5 rounded-lg border border-gold/10">
+                      <p className="text-sm text-cream/90">
+                        Has seleccionado el plan Esencial que incluye acceso a contenidos digitales, comunidad y eventos
+                        online. Este plan no incluye la creación de una Beauty Box física.
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Selected Products */}
-              {selectedProducts.length > 0 && (
-                <Card className="border-beige/20">
+              {config.plan !== "esencial" && selectedProducts.length > 0 && (
+                <Card className="border-gold/20 bg-dark">
                   <CardHeader>
-                    <CardTitle className="text-beige">Productos seleccionados</CardTitle>
+                    <CardTitle className="text-cream">Productos seleccionados</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {selectedProducts.map((product) => (
-                        <div key={product.id} className="flex items-center space-x-3 p-2 bg-beige/5 rounded-lg">
+                        <div key={product.id} className="flex items-center space-x-3 p-2 bg-dark/60 rounded-lg">
                           <img
                             src={product.image || "/placeholder.svg"}
                             alt={product.name}
                             className="w-12 h-12 object-cover rounded"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-beige truncate">{product.name}</p>
+                            <p className="text-sm font-medium text-cream truncate">{product.name}</p>
                             <p className="text-xs text-gold/80">{product.brand}</p>
                           </div>
                         </div>
@@ -461,19 +529,19 @@ export default function TheBeautyBoxPage() {
               )}
 
               {/* Extras */}
-              {(finalPlan?.id === "premium" || finalPlan?.id === "deluxe") && (
-                <Card className="border-beige/20">
+              {(config.plan === "premium" || config.plan === "deluxe") && (
+                <Card className="border-gold/20 bg-dark">
                   <CardHeader>
-                    <CardTitle className="text-beige flex items-center gap-2">
-                      <Plus className="h-5 w-5" />
+                    <CardTitle className="text-cream flex items-center gap-2">
+                      <Plus className="h-5 w-5 text-gold" />
                       Extras
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-beige">Productos extra</span>
-                        <p className="text-xs text-beige/60">$5 cada uno</p>
+                        <span className="text-cream">Productos extra</span>
+                        <p className="text-xs text-cream/60">$5 cada uno</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
@@ -485,11 +553,11 @@ export default function TheBeautyBoxPage() {
                               extraProducts: Math.max(0, prev.extraProducts - 1),
                             }))
                           }
-                          className="border-beige/20 text-beige"
+                          className="border-gold/20 text-cream"
                         >
                           -
                         </Button>
-                        <span className="text-beige w-8 text-center">{config.extraProducts}</span>
+                        <span className="text-cream w-8 text-center">{config.extraProducts}</span>
                         <Button
                           size="sm"
                           variant="outline"
@@ -499,18 +567,18 @@ export default function TheBeautyBoxPage() {
                               extraProducts: prev.extraProducts + 1,
                             }))
                           }
-                          className="border-beige/20 text-beige"
+                          className="border-gold/20 text-cream"
                         >
                           +
                         </Button>
                       </div>
                     </div>
 
-                    {finalPlan?.id === "deluxe" && (
+                    {config.plan === "deluxe" && (
                       <div className="flex justify-between items-center">
                         <div>
-                          <span className="text-beige">Servicios extra</span>
-                          <p className="text-xs text-beige/60">$10 cada uno</p>
+                          <span className="text-cream">Servicios extra</span>
+                          <p className="text-xs text-cream/60">$10 cada uno</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
@@ -522,11 +590,11 @@ export default function TheBeautyBoxPage() {
                                 extraServices: Math.max(0, prev.extraServices - 1),
                               }))
                             }
-                            className="border-beige/20 text-beige"
+                            className="border-gold/20 text-cream"
                           >
                             -
                           </Button>
-                          <span className="text-beige w-8 text-center">{config.extraServices}</span>
+                          <span className="text-cream w-8 text-center">{config.extraServices}</span>
                           <Button
                             size="sm"
                             variant="outline"
@@ -536,7 +604,7 @@ export default function TheBeautyBoxPage() {
                                 extraServices: prev.extraServices + 1,
                               }))
                             }
-                            className="border-beige/20 text-beige"
+                            className="border-gold/20 text-cream"
                           >
                             +
                           </Button>
@@ -548,14 +616,14 @@ export default function TheBeautyBoxPage() {
               )}
 
               {/* Referral Code */}
-              {finalPlan?.id === "deluxe" && (
-                <Card className="border-beige/20">
+              {(config.plan === "premium" || config.plan === "deluxe") && (
+                <Card className="border-gold/20 bg-dark">
                   <CardHeader>
-                    <CardTitle className="text-beige">Código de referido</CardTitle>
+                    <CardTitle className="text-cream">Código de referido</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      <Label htmlFor="referralCode" className="text-beige/80">
+                      <Label htmlFor="referralCode" className="text-cream/80">
                         ¿Tienes un código de referido?
                       </Label>
                       <Input
@@ -564,10 +632,12 @@ export default function TheBeautyBoxPage() {
                         placeholder="Ingresa tu código"
                         value={config.referralCode}
                         onChange={(e) => setConfig((prev) => ({ ...prev, referralCode: e.target.value }))}
-                        className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
+                        className="bg-dark/60 border-gold/20 text-cream placeholder:text-cream/50"
                       />
-                      <p className="text-xs text-beige/60">
-                        Personalizá tu experiencia. Recompensamos a quienes comparten LuVelle 💛
+                      <p className="text-xs text-cream/60">
+                        {config.plan === "premium"
+                          ? "Obtén 3% de cashback por cada referido"
+                          : "Obtén 8% de cashback por referidos que compren caja Deluxe de +$120"}
                       </p>
                     </div>
                   </CardContent>
@@ -578,11 +648,11 @@ export default function TheBeautyBoxPage() {
               <Card className="border-gold/20 bg-gold/10">
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center text-lg">
-                    <span className="text-beige font-semibold">Total mensual:</span>
+                    <span className="text-cream font-semibold">Total mensual:</span>
                     <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
                   </div>
                   {(extraProductsPrice > 0 || extraServicesPrice > 0) && (
-                    <div className="mt-2 text-sm text-beige/70">
+                    <div className="mt-2 text-sm text-cream/70">
                       <div className="flex justify-between">
                         <span>Plan base:</span>
                         <span>${basePrice}</span>
@@ -612,29 +682,45 @@ export default function TheBeautyBoxPage() {
     }
   }
 
+  // Determine which steps to show in the progress bar
+  const getVisibleSteps = () => {
+    if (config.plan === "esencial") {
+      // For Esencial, only show steps 1 (name), 2 (plan), and 6 (summary)
+      return [0, 1, 5]
+    }
+    return Array.from({ length: totalSteps }, (_, i) => i)
+  }
+
+  const visibleSteps = getVisibleSteps()
+  const visibleStepCount = visibleSteps.length
+  const currentVisibleStepIndex = visibleSteps.indexOf(currentStep)
+  const visibleProgress = ((currentVisibleStepIndex + 1) / visibleStepCount) * 100
+
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-dancing text-4xl md:text-5xl text-gold mb-4">The Beauty Box by LuVelle</h1>
-          <p className="text-beige/80 text-lg max-w-2xl mx-auto">
-            Diseña tu experiencia personalizada de belleza y bienestar
+          <h1 className="font-dancing text-4xl text-gold mb-4">Tu experiencia personalizada</h1>
+          <p className="text-cream/80 text-lg max-w-2xl mx-auto">
+            {config.plan === "esencial"
+              ? "Diseña tu experiencia digital de bienestar"
+              : "Diseña tu Beauty Box personalizada de belleza y bienestar"}
           </p>
         </div>
 
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-beige/60">
-              Paso {currentStep + 1} de {totalSteps}
+            <span className="text-sm text-cream/60">
+              Paso {currentVisibleStepIndex + 1} de {visibleStepCount}
             </span>
-            <span className="text-sm text-beige/60">{Math.round(progress)}% completado</span>
+            <span className="text-sm text-cream/60">{Math.round(visibleProgress)}% completado</span>
           </div>
-          <div className="w-full bg-beige/10 rounded-full h-2">
+          <div className="w-full bg-dark-lighter rounded-full h-2">
             <div
               className="gradient-gold h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${visibleProgress}%` }}
             />
           </div>
         </div>
@@ -642,12 +728,12 @@ export default function TheBeautyBoxPage() {
         {/* Step Indicators */}
         <div className="flex justify-center mb-8">
           <div className="flex space-x-2">
-            {Array.from({ length: totalSteps }, (_, i) => (
+            {visibleSteps.map((stepIndex, i) => (
               <button
-                key={i}
-                onClick={() => handleStepClick(i)}
+                key={stepIndex}
+                onClick={() => handleStepClick(stepIndex)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  i <= currentStep ? "bg-gold" : "bg-beige/20 hover:bg-beige/40"
+                  i <= currentVisibleStepIndex ? "bg-gold" : "bg-cream/30"
                 }`}
               />
             ))}
@@ -660,23 +746,26 @@ export default function TheBeautyBoxPage() {
         {/* Navigation */}
         <div className="flex justify-between items-center">
           <Button
-            variant="outline"
+            variant="ghost"
+            size="sm"
             onClick={handlePrev}
             disabled={currentStep === 0}
-            className="border-beige/20 text-beige hover:border-gold hover:text-gold"
+            className="text-cream hover:text-gold hover:bg-gold/10 p-2"
           >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            Anterior
+            <ArrowLeft className="h-5 w-5" />
           </Button>
 
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className="gradient-gold text-dark font-semibold hover:opacity-90 transition-opacity"
-          >
-            {currentStep === totalSteps - 1 ? "Ir al checkout" : "Continuar"}
-            <ChevronRight className="h-4 w-4 ml-2" />
-          </Button>
+          {/* Only show Continue button for steps that need it (not plan selection) */}
+          {currentStep !== 1 && (
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="gradient-gold text-dark font-semibold hover:opacity-90 transition-opacity"
+            >
+              {currentStep === totalSteps - 1 ? "Ir al checkout" : "Continuar"}
+              <ChevronRight className="h-4 w-4 ml-2" />
+            </Button>
+          )}
         </div>
       </div>
     </div>

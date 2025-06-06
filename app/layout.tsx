@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "LuVelle",
     images: [
       {
-        url: "/placeholder.svg?height=630&width=1200",
+        url: "/images/luvelle-hero-new.png",
         width: 1200,
         height: 630,
         alt: "LuVelle Beauty Box",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LuVelle - Club de Belleza y Bienestar",
     description: "Tu experiencia mensual personalizada de belleza y bienestar",
-    images: ["/placeholder.svg?height=630&width=1200"],
+    images: ["/images/luvelle-hero-new.png"],
   },
     generator: 'v0.dev'
 }
@@ -52,9 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body
-        className={`${inter.className} ${dancingScript.variable} ${playfairDisplay.variable} bg-dark text-gold-light`}
-      >
+      <body className={`${inter.className} ${dancingScript.variable} ${playfairDisplay.variable} bg-dark text-cream`}>
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />
