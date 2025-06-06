@@ -11,21 +11,27 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      name: "María González",
-      location: "México",
-      text: "LuVelle cambió completamente mi rutina de belleza. Cada mes recibo productos increíbles que nunca habría descubierto por mi cuenta.",
+      name: "Paola Cambronero",
+      location: "Costa Rica, Heredia",
+      text: "Mi experiencia con Luvelle ha sido satisfactoria, encontré lo que necesitaba desde la comodidad de mi casa.",
       rating: 5,
     },
     {
-      name: "Ana Rodríguez",
-      location: "Colombia",
-      text: "Los servicios incluidos son fantásticos. He probado tratamientos que siempre quise pero nunca me animé a reservar.",
+      name: "Alison Duarte",
+      location: "Costa Rica, Limón",
+      text: "Contraté algunos servicios y la experiencia y trato personalizado fue excelente.",
       rating: 5,
     },
     {
-      name: "Sofia Martínez",
-      location: "Argentina",
-      text: "La personalización es perfecta. Cada caja se siente como un regalo especial diseñado solo para mí.",
+      name: "Dania Berrios",
+      location: "Costa Rica, San José",
+      text: "Me encantó poder elegir y personalizar mi caja con las marcas de mi preferencia.",
+      rating: 5,
+    },
+    {
+      name: "Helen Rivera",
+      location: "Costa Rica, Alajuela",
+      text: "Hace un tiempo tuve una crisis en mi rostro porque elegía productos que creía ideales para mi piel, con Luvelle pude encontrar fácilmente asesoría personalizada con profesionales en la materia y en conjunto me brindaron una asesoría guiada con productos aptos para mi tipo de piel, por lo que la recomiendo 100%.",
       rating: 5,
     },
   ]
