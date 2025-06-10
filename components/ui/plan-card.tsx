@@ -12,14 +12,16 @@ interface PlanCardProps {
     description: string
     features: string[]
     restrictions?: string[]
+    priceLabel?: string
   }
   isSelected: boolean
   onSelect: () => void
   isPopular?: boolean
   hideButton?: boolean
+  showAnnual?: boolean
 }
 
-export function PlanCard({ plan, isSelected, onSelect, isPopular, hideButton = false }: PlanCardProps) {
+export function PlanCard({ plan, isSelected, onSelect, isPopular, hideButton = false, showAnnual }: PlanCardProps) {
   return (
     <Card
       className={`relative cursor-pointer transition-all duration-300 hover-lift ${
@@ -37,8 +39,13 @@ export function PlanCard({ plan, isSelected, onSelect, isPopular, hideButton = f
         <CardTitle className="font-dancing text-2xl text-gold mb-2">{plan.name}</CardTitle>
         <div className="mb-2">
           <span className="text-3xl font-bold text-cream">${plan.price}</span>
-          <span className="text-cream/60 text-sm">/mes</span>
+          <span className="text-cream/60 text-sm">{plan.priceLabel || "/mes"}</span>
         </div>
+        {showAnnual && (
+          <div className="text-xs text-gold/80 mt-1">
+            {plan.id === "esencial" ? "$101.90" : plan.id === "premium" ? "$254.90" : "$407.90"}
+          </div>
+        )}
         <p className="text-cream/80 text-sm">{plan.description}</p>
       </CardHeader>
 

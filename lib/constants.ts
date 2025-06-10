@@ -24,7 +24,7 @@ export const PLANS = {
     maxCategories: 4,
     maxProducts: 3,
     features: [
-      "Acceso a crear tu propia Beauty Box con hasta 4 categorías",
+      "Caja mixta (2-3 productos + 1 servicio o sesión mensual)",
       "Productos personalizados según preferencias",
       "Selección de productos recomendados por IA",
       "Acceso al programa de puntos de fidelidad",
@@ -42,8 +42,8 @@ export const PLANS = {
     maxCategories: "all",
     maxProducts: 6,
     features: [
-      "Acceso completo y libre a todas las categorías",
-      "Productos y servicios personalizados",
+      "Caja personalizada completa (3+ productos + 2 servicios)",
+      "Beneficios financieros y eventos exclusivos",
       "Beauty Box 100% a tu gusto, sin límite de categorías",
       "Acceso al programa de puntos y upgrades",
       "Acceso exclusivo a servicios (spa, facial, masajes, etc.)",
@@ -92,6 +92,12 @@ export const CATEGORIES = [
     name: "Higiene femenina",
     icon: "🌸",
     available: true,
+  },
+  {
+    id: "medicamentos",
+    name: "Medicamentos menstruales",
+    icon: "💊",
+    available: false,
   },
   {
     id: "maternidad",

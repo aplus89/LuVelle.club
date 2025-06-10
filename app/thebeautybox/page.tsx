@@ -1,16 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { PlanCard } from "@/components/ui/plan-card"
 import { CategoryCard } from "@/components/ui/category-card"
 import { ProductCard } from "@/components/ui/product-card"
+import { NotificationModal } from "@/components/ui/notification-modal"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
 import { PLANS, CATEGORIES, INTERESTS, PRODUCTS } from "@/lib/constants"
-import { Plus, Info, ChevronRight, AlertCircle, ArrowLeft } from "lucide-react"
+import { Plus, Info, ChevronRight, AlertCircle, ArrowLeft, Sparkles, Check } from "lucide-react"
 
 interface BoxConfiguration {
   plan: string
@@ -21,10 +26,13 @@ interface BoxConfiguration {
   extraServices: number
   referralCode: string
   name: string
+  unlimitedSelection: boolean
 }
 
 export default function TheBeautyBoxPage() {
   const router = useRouter()
+  const { toast } = useToast()
+  const continueButtonRef = useRef<HTMLButtonElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [config, setConfig] = useState<BoxConfiguration>({
     plan: "",
@@ -35,6 +43,17 @@ export default function TheBeautyBoxPage() {
     extraServices: 0,
     referralCode: "",
     name: "",
+    unlimitedSelection: false,
+  })
+  const [showAnnualPrices, setShowAnnualPrices] = useState(false)
+  const [notificationModal, setNotificationModal] = useState<{
+    isOpen: boolean
+    categoryName: string
+    categoryIcon: string
+  }>({
+    isOpen: false,
+    categoryName: "",
+    categoryIcon: "",
   })
 
   const totalSteps = 6 // Updated to 6 steps
@@ -126,9 +145,25 @@ export default function TheBeautyBoxPage() {
     }
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && config.name.trim() !== "") {
+      handleNext()
+    }
+  }
+
+  const handleNotifyClick = (categoryName: string, categoryIcon: string) => {
+    setNotificationModal({
+      isOpen: true,
+      categoryName,
+      categoryIcon,
+    })
+  }
+
   // Modified plan selection to auto-advance
   const handlePlanSelect = (planId: string) => {
-    setConfig((prev) => ({ ...prev, plan: planId }))
+    // Capitalizar la primera letra del nombre
+    const capitalizedName = config.name.charAt(0).toUpperCase() + config.name.slice(1)
+    setConfig((prev) => ({ ...prev, plan: planId, name: capitalizedName }))
 
     // Auto-advance to next step after a short delay for visual feedback
     setTimeout(() => {
@@ -145,17 +180,11 @@ export default function TheBeautyBoxPage() {
     const category = CATEGORIES.find((c) => c.id === categoryId)
     if (!category?.available) return
 
-    const plan = PLANS[config.plan as keyof typeof PLANS]
-    if (!plan) return
-
-    const maxCategories = plan.maxCategories === "all" ? CATEGORIES.length : plan.maxCategories
-
+    // No hay límites en la selección de categorías para Premium y Deluxe
     setConfig((prev) => {
       const newCategories = prev.categories.includes(categoryId)
         ? prev.categories.filter((id) => id !== categoryId)
-        : prev.categories.length < maxCategories
-          ? [...prev.categories, categoryId]
-          : prev.categories
+        : [...prev.categories, categoryId]
 
       // Reset selected products when categories change
       const validProducts = prev.selectedProducts.filter((productId) => {
@@ -179,22 +208,89 @@ export default function TheBeautyBoxPage() {
 
     setConfig((prev) => {
       const isSelected = prev.selectedProducts.includes(productId)
+      const maxProducts = plan?.maxProducts || 0
 
       if (isSelected) {
         // Remove product
+        const newSelectedProducts = prev.selectedProducts.filter((id) => id !== productId)
+
+        // Show toast when removing a product
+        if (newSelectedProducts.length < maxProducts && prev.selectedProducts.length >= maxProducts) {
+          toast({
+            title: "Producto eliminado",
+            description: `Ahora puedes seleccionar ${maxProducts - newSelectedProducts.length} producto(s) más dentro de tu plan.`,
+            duration: 4000,
+          })
+        }
+
         return {
           ...prev,
-          selectedProducts: prev.selectedProducts.filter((id) => id !== productId),
+          selectedProducts: newSelectedProducts,
         }
       } else {
-        // Add product if under limit
-        if (prev.selectedProducts.length < plan.maxProducts) {
-          return {
-            ...prev,
-            selectedProducts: [...prev.selectedProducts, productId],
-          }
+        // Add product
+        const newSelectedProducts = [...prev.selectedProducts, productId]
+
+        // If we're at the limit and not in unlimited mode, show toast with option to add more
+        if (newSelectedProducts.length === maxProducts && !prev.unlimitedSelection) {
+          setTimeout(() => {
+            toast({
+              title: "¡Selección completa!",
+              description:
+                "Has alcanzado el límite de productos incluidos en tu plan. ¿Deseas agregar más productos con cargo adicional?",
+              variant: "gold",
+              duration: 8000,
+              action: (
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    onClick={() => {
+                      setConfig((c) => ({ ...c, unlimitedSelection: true }))
+                      toast({
+                        title: "¡Genial!",
+                        description:
+                          "Ahora puedes seleccionar productos adicionales. Cada producto extra tendrá un costo adicional de $5.",
+                        variant: "success",
+                        duration: 4000,
+                      })
+                    }}
+                    className="bg-gold text-dark hover:bg-gold/80"
+                    size="sm"
+                  >
+                    <Check className="mr-1 h-4 w-4" /> Sí, agregar más
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      // Scroll to continue button
+                      if (continueButtonRef.current) {
+                        continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
+                      }
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="border-gold/30 text-gold hover:bg-gold/10"
+                  >
+                    No, continuar
+                  </Button>
+                </div>
+              ),
+            })
+          }, 500)
         }
-        return prev // Don't add if at limit
+
+        // If we're adding beyond the limit, show toast about additional cost
+        if (newSelectedProducts.length > maxProducts && prev.unlimitedSelection) {
+          toast({
+            title: "Producto adicional",
+            description: `Has agregado un producto adicional. Se cobrará $5 extra por este producto.`,
+            variant: "gold",
+            duration: 4000,
+          })
+        }
+
+        return {
+          ...prev,
+          selectedProducts: newSelectedProducts,
+        }
       }
     })
   }
@@ -231,6 +327,22 @@ export default function TheBeautyBoxPage() {
     return allProducts.filter((product) => config.selectedProducts.includes(product.id))
   }
 
+  // Auto-scroll to continue button when selection is complete
+  useEffect(() => {
+    const plan = getSelectedPlan()
+    if (!plan) return
+
+    const maxProducts = plan?.maxProducts || 0
+
+    if (config.selectedProducts.length === maxProducts && !config.unlimitedSelection) {
+      setTimeout(() => {
+        if (continueButtonRef.current) {
+          continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
+      }, 500)
+    }
+  }, [config.selectedProducts, config.unlimitedSelection])
+
   const progress = ((currentStep + 1) / totalSteps) * 100
 
   const renderStep = () => {
@@ -255,6 +367,7 @@ export default function TheBeautyBoxPage() {
                 placeholder="Tu nombre"
                 value={config.name}
                 onChange={(e) => setConfig((prev) => ({ ...prev, name: e.target.value }))}
+                onKeyDown={handleKeyDown}
                 className="bg-dark border-gold/20 text-cream placeholder:text-cream/50"
               />
             </div>
@@ -265,22 +378,58 @@ export default function TheBeautyBoxPage() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tu plan, {config.name}</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Elegí tu plan</h2>
+              <div className="font-playfair text-4xl text-cream mb-6">{config.name}</div>
               <p className="text-cream/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
-              <p className="text-sm text-cream/60 mt-2">Hacé clic en el plan que prefieras</p>
+
+              <div className="flex items-center justify-center mt-4 mb-6">
+                <span
+                  className={`text-sm px-3 py-1 rounded-l-full ${!showAnnualPrices ? "bg-gold text-dark" : "bg-dark border border-gold/30 text-cream/70"}`}
+                >
+                  <button onClick={() => setShowAnnualPrices(false)} className="w-full h-full">
+                    Mensual
+                  </button>
+                </span>
+                <span
+                  className={`text-sm px-3 py-1 rounded-r-full ${showAnnualPrices ? "bg-gold text-dark" : "bg-dark border border-gold/30 text-cream/70"}`}
+                >
+                  <button onClick={() => setShowAnnualPrices(true)} className="w-full h-full">
+                    Anual (15% desc.)
+                  </button>
+                </span>
+              </div>
+
+              {showAnnualPrices && (
+                <div className="text-sm text-gold/80 mb-4">
+                  Referí 3 amigas Deluxe y tu siguiente compra podría salirte gratis 💛
+                </div>
+              )}
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {Object.values(PLANS).map((plan, index) => (
-                <PlanCard
-                  key={plan.id}
-                  plan={plan}
-                  isSelected={config.plan === plan.id}
-                  onSelect={() => handlePlanSelect(plan.id)}
-                  isPopular={index === 1}
-                  hideButton={true}
-                />
-              ))}
+              {Object.values(PLANS).map((plan, index) => {
+                // Calcular precio anual con 15% de descuento
+                const annualPrice = showAnnualPrices ? (plan.price * 12 * 0.85).toFixed(2) : plan.price
+
+                // Crear una copia del plan con el precio modificado para mostrar
+                const displayPlan = {
+                  ...plan,
+                  price: showAnnualPrices ? Number(annualPrice) : plan.price,
+                  priceLabel: showAnnualPrices ? "/año" : "/mes",
+                }
+
+                return (
+                  <PlanCard
+                    key={plan.id}
+                    plan={displayPlan}
+                    isSelected={config.plan === plan.id}
+                    onSelect={() => handlePlanSelect(plan.id)}
+                    isPopular={index === 1}
+                    hideButton={true}
+                    showAnnual={showAnnualPrices}
+                  />
+                )
+              })}
             </div>
 
             <div className="text-center">
@@ -301,7 +450,8 @@ export default function TheBeautyBoxPage() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">¿Qué te interesa más?</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">¿Qué te interesa más?</h2>
+              <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
             </div>
 
@@ -332,41 +482,30 @@ export default function TheBeautyBoxPage() {
           return null
         }
 
-        const selectedPlan = getSelectedPlan()
-        const maxCategories =
-          selectedPlan?.maxCategories === "all" ? CATEGORIES.length : selectedPlan?.maxCategories || 0
-
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">Elegí tus categorías</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Elegí tus categorías</h2>
+              <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80 mb-4">Selecciona las categorías que más te interesan</p>
               <div className="flex justify-center">
-                <span className="text-sm bg-gold/20 text-gold px-3 py-1 rounded-full">
-                  {config.categories.length} de {maxCategories} seleccionadas
-                </span>
+                <div className="bg-gradient-to-r from-gold/20 to-beige/20 text-gold px-4 py-2 rounded-full border border-gold/30">
+                  <span className="font-medium">{config.categories.length} categorías seleccionadas</span>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {CATEGORIES.map((category) => (
                 <CategoryCard
                   key={category.id}
                   category={category}
                   isSelected={config.categories.includes(category.id)}
                   onSelect={() => handleCategorySelect(category.id)}
-                  onNotify={() => {
-                    alert(`Te notificaremos cuando ${category.name} esté disponible!`)
-                  }}
+                  onNotify={() => handleNotifyClick(category.name, category.icon)}
                 />
               ))}
             </div>
-
-            {config.categories.length === maxCategories && (
-              <div className="text-center">
-                <p className="text-sm text-cream/60">Has alcanzado el límite de categorías para tu plan</p>
-              </div>
-            )}
           </div>
         )
 
@@ -389,22 +528,49 @@ export default function TheBeautyBoxPage() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">Seleccioná tus productos</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Seleccioná tus productos</h2>
+              <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80 mb-4">
                 Elegí los productos que más te gusten de las categorías seleccionadas
               </p>
               <div className="flex justify-center">
-                <span className="text-sm bg-gold/20 text-gold px-3 py-1 rounded-full">
-                  Has seleccionado {selectedCount} de {maxProducts}
-                </span>
+                <div className="bg-gradient-to-r from-gold/20 to-beige/20 text-gold px-4 py-2 rounded-full border border-gold/30">
+                  <span className="font-medium">
+                    {selectedCount} de {config.unlimitedSelection ? `${maxProducts}+` : maxProducts} productos
+                    seleccionados
+                  </span>
+                  {config.unlimitedSelection && selectedCount > maxProducts && (
+                    <span className="ml-2 text-xs bg-gold/30 px-2 py-0.5 rounded-full">
+                      {selectedCount - maxProducts} adicionales
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            {selectedCount >= maxProducts && (
+            {selectedCount >= maxProducts && !config.unlimitedSelection && (
               <div className="max-w-2xl mx-auto mb-6">
-                <div className="bg-dark border border-gold/20 rounded-lg p-4 flex items-start gap-3">
+                <div className="bg-gradient-to-r from-gold/10 to-beige/10 border border-gold/20 rounded-xl p-4 flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
-                  <p className="text-cream/90 text-sm">Para incluir otro producto, primero eliminá uno de tu Box.</p>
+                  <p className="text-cream/90 text-sm">
+                    Has alcanzado el límite de productos incluidos en tu plan. Para incluir otro producto, primero
+                    eliminá uno de tu Box o habilita la selección de productos adicionales.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {config.unlimitedSelection && selectedCount > maxProducts && (
+              <div className="max-w-2xl mx-auto mb-6">
+                <div className="bg-gradient-to-r from-gold/20 to-beige/10 border border-gold/30 rounded-xl p-4 flex items-start gap-3">
+                  <Sparkles className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-gold font-medium">Productos adicionales seleccionados</p>
+                    <p className="text-cream/90 text-sm">
+                      Has seleccionado {selectedCount - maxProducts} producto(s) adicional(es). Cada producto adicional
+                      tendrá un costo extra de $5.
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
@@ -426,9 +592,14 @@ export default function TheBeautyBoxPage() {
                   if (categoryProducts.length === 0) return null
 
                   return (
-                    <div key={categoryId}>
-                      <h3 className="font-semibold text-cream text-lg mb-4 flex items-center gap-2">
-                        <span className="text-2xl">{category?.icon}</span>
+                    <div
+                      key={categoryId}
+                      className="bg-gradient-to-br from-dark/40 to-blue/10 rounded-2xl p-6 border border-beige/20"
+                    >
+                      <h3 className="font-playfair text-xl font-medium text-cream mb-6 flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full flex items-center justify-center border border-gold/30">
+                          <span className="text-xl">{category?.icon}</span>
+                        </div>
                         {category?.name}
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -438,7 +609,11 @@ export default function TheBeautyBoxPage() {
                             product={product}
                             isSelected={config.selectedProducts.includes(product.id)}
                             onSelect={() => handleProductSelect(product.id)}
-                            disabled={!config.selectedProducts.includes(product.id) && selectedCount >= maxProducts}
+                            disabled={
+                              !config.selectedProducts.includes(product.id) &&
+                              selectedCount >= maxProducts &&
+                              !config.unlimitedSelection
+                            }
                           />
                         ))}
                       </div>
@@ -455,14 +630,24 @@ export default function TheBeautyBoxPage() {
         const selectedCategories = getSelectedCategories()
         const selectedProducts = getSelectedProducts()
         const basePrice = finalPlan?.price || 0
-        const extraProductsPrice = config.extraProducts * 5
+        const maxIncludedProducts = finalPlan?.maxProducts || 0
+        const additionalProducts = Math.max(0, config.selectedProducts.length - maxIncludedProducts)
+        const extraProductsPrice = (config.extraProducts + additionalProducts) * 5
         const extraServicesPrice = config.extraServices * 10
         const totalPrice = basePrice + extraProductsPrice + extraServicesPrice
+
+        const planDescription =
+          config.plan === "premium"
+            ? "Caja mixta (2-3 productos + 1 servicio o sesión mensual)"
+            : config.plan === "deluxe"
+              ? "Caja personalizada completa (3+ productos + 2 servicios) + beneficios financieros + eventos exclusivos"
+              : "Acceso a contenidos digitales y comunidad"
 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-4">Tu Plan LuVelle</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Tu Plan LuVelle</h2>
+              <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
             </div>
 
@@ -477,9 +662,10 @@ export default function TheBeautyBoxPage() {
                     <span className="text-cream">Precio base</span>
                     <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
                   </div>
+                  <div className="text-sm text-cream/80 mt-2">{planDescription}</div>
 
                   {config.plan !== "esencial" && (
-                    <div className="space-y-2">
+                    <div className="space-y-2 mt-4">
                       <p className="text-sm text-cream/80">Categorías seleccionadas:</p>
                       <div className="flex flex-wrap gap-2">
                         {selectedCategories.map((category) => (
@@ -506,12 +692,24 @@ export default function TheBeautyBoxPage() {
               {config.plan !== "esencial" && selectedProducts.length > 0 && (
                 <Card className="border-gold/20 bg-dark">
                   <CardHeader>
-                    <CardTitle className="text-cream">Productos seleccionados</CardTitle>
+                    <CardTitle className="text-cream flex items-center justify-between">
+                      <span>Productos seleccionados</span>
+                      {additionalProducts > 0 && (
+                        <span className="text-sm bg-gold/20 text-gold px-2 py-1 rounded-full">
+                          {additionalProducts} adicionales
+                        </span>
+                      )}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {selectedProducts.map((product) => (
-                        <div key={product.id} className="flex items-center space-x-3 p-2 bg-dark/60 rounded-lg">
+                      {selectedProducts.map((product, index) => (
+                        <div
+                          key={product.id}
+                          className={`flex items-center space-x-3 p-2 rounded-lg ${
+                            index >= maxIncludedProducts ? "bg-gold/10 border border-gold/30" : "bg-dark/60"
+                          }`}
+                        >
                           <img
                             src={product.image || "/placeholder.svg"}
                             alt={product.name}
@@ -520,6 +718,7 @@ export default function TheBeautyBoxPage() {
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-cream truncate">{product.name}</p>
                             <p className="text-xs text-gold/80">{product.brand}</p>
+                            {index >= maxIncludedProducts && <p className="text-xs text-gold mt-1">+$5.00</p>}
                           </div>
                         </div>
                       ))}
@@ -651,26 +850,30 @@ export default function TheBeautyBoxPage() {
                     <span className="text-cream font-semibold">Total mensual:</span>
                     <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
                   </div>
-                  {(extraProductsPrice > 0 || extraServicesPrice > 0) && (
-                    <div className="mt-2 text-sm text-cream/70">
-                      <div className="flex justify-between">
-                        <span>Plan base:</span>
-                        <span>${basePrice}</span>
-                      </div>
-                      {extraProductsPrice > 0 && (
-                        <div className="flex justify-between">
-                          <span>Productos extra:</span>
-                          <span>${extraProductsPrice}</span>
-                        </div>
-                      )}
-                      {extraServicesPrice > 0 && (
-                        <div className="flex justify-between">
-                          <span>Servicios extra:</span>
-                          <span>${extraServicesPrice}</span>
-                        </div>
-                      )}
+                  <div className="mt-2 text-sm text-cream/70">
+                    <div className="flex justify-between">
+                      <span>Plan base:</span>
+                      <span>${basePrice}</span>
                     </div>
-                  )}
+                    {additionalProducts > 0 && (
+                      <div className="flex justify-between">
+                        <span>Productos adicionales ({additionalProducts}):</span>
+                        <span>${additionalProducts * 5}</span>
+                      </div>
+                    )}
+                    {config.extraProducts > 0 && (
+                      <div className="flex justify-between">
+                        <span>Productos extra ({config.extraProducts}):</span>
+                        <span>${config.extraProducts * 5}</span>
+                      </div>
+                    )}
+                    {config.extraServices > 0 && (
+                      <div className="flex justify-between">
+                        <span>Servicios extra ({config.extraServices}):</span>
+                        <span>${config.extraServices * 10}</span>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -698,7 +901,7 @@ export default function TheBeautyBoxPage() {
 
   return (
     <div className="min-h-screen py-8">
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="font-dancing text-4xl text-gold mb-4">Tu experiencia personalizada</h1>
@@ -758,6 +961,7 @@ export default function TheBeautyBoxPage() {
           {/* Only show Continue button for steps that need it (not plan selection) */}
           {currentStep !== 1 && (
             <Button
+              ref={continueButtonRef}
               onClick={handleNext}
               disabled={!canProceed()}
               className="gradient-gold text-dark font-semibold hover:opacity-90 transition-opacity"
@@ -768,6 +972,17 @@ export default function TheBeautyBoxPage() {
           )}
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={notificationModal.isOpen}
+        onClose={() => setNotificationModal({ isOpen: false, categoryName: "", categoryIcon: "" })}
+        categoryName={notificationModal.categoryName}
+        categoryIcon={notificationModal.categoryIcon}
+      />
+
+      {/* Toast notifications */}
+      <Toaster />
     </div>
   )
 }
