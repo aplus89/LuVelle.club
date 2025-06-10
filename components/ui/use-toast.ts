@@ -5,7 +5,7 @@ import * as React from "react"
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 5
+const TOAST_LIMIT = 3
 const TOAST_REMOVE_DELAY = 1000000
 
 type ToasterToast = ToastProps & {
@@ -119,23 +119,44 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
+type Toast = Omit<ToasterToast, "id"> & {
+  id?: string
+}
 
-function toast({ ...props }: Toast) {
-  const id = genId()
+function toast({ id, ...props }: Toast) {
+  const toastId = id || genId()
+
+  // If there's an existing toast with the same ID, update it instead of creating a new one
+  const existingToast = memoryState.toasts.find((t) => t.id === toastId)
+
+  if (existingToast) {
+    const update = (props: ToasterToast) =>
+      dispatch({
+        type: actionTypes.UPDATE_TOAST,
+        toast: { ...props, id: toastId },
+      })
+
+    update({ ...props, id: toastId, open: true })
+
+    return {
+      id: toastId,
+      dismiss: () => dispatch({ type: actionTypes.DISMISS_TOAST, toastId }),
+      update,
+    }
+  }
 
   const update = (props: ToasterToast) =>
     dispatch({
       type: actionTypes.UPDATE_TOAST,
-      toast: { ...props, id },
+      toast: { ...props, id: toastId },
     })
-  const dismiss = () => dispatch({ type: actionTypes.DISMISS_TOAST, toastId: id })
+  const dismiss = () => dispatch({ type: actionTypes.DISMISS_TOAST, toastId })
 
   dispatch({
     type: actionTypes.ADD_TOAST,
     toast: {
       ...props,
-      id,
+      id: toastId,
       open: true,
       onOpenChange: (open) => {
         if (!open) dismiss()
@@ -144,7 +165,7 @@ function toast({ ...props }: Toast) {
   })
 
   return {
-    id: id,
+    id: toastId,
     dismiss,
     update,
   }
