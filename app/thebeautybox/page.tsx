@@ -15,7 +15,19 @@ import { Label } from "@/components/ui/label"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
 import { PLANS, CATEGORIES, INTERESTS, PRODUCTS } from "@/lib/constants"
-import { Plus, Info, ChevronRight, AlertCircle, ArrowLeft, Sparkles, Check, Heart, Star } from "lucide-react"
+import {
+  Plus,
+  Info,
+  ChevronRight,
+  AlertCircle,
+  ArrowLeft,
+  Sparkles,
+  Check,
+  Heart,
+  Star,
+  ArrowUp,
+  Gift,
+} from "lucide-react"
 
 interface BoxConfiguration {
   plan: string
@@ -452,7 +464,7 @@ export default function TheBeautyBoxPage() {
               <h2 className="font-dancing text-3xl text-gold mb-4">
                 ¡Hola! Diseñemos juntas tu experiencia LuVelle 🌸
               </h2>
-              <p className="text-cream/80">Comenzemos conociendo tu nombre para personalizar tu experiencia</p>
+              <p className="text-cream/80">Comencemos conociendo tu nombre para personalizar tu experiencia</p>
             </div>
 
             <div className="max-w-md mx-auto">
@@ -741,6 +753,120 @@ export default function TheBeautyBoxPage() {
               ? "Caja personalizada completa (3+ productos + 2 servicios) + beneficios financieros + eventos exclusivos"
               : "Acceso a contenidos digitales y comunidad"
 
+        // Special layout for Esencial plan
+        if (config.plan === "esencial") {
+          const premiumPlan = PLANS.premium
+          const upgradePrice = +(premiumPlan.price - basePrice).toFixed(1) // Formato con un decimal
+
+          return (
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 items-center min-h-[600px]">
+              {/* Right side - Content - Primero en móvil */}
+              <div className="space-y-6 order-1 lg:order-2">
+                <div className="text-center lg:text-left">
+                  <h2 className="font-dancing text-3xl text-gold mb-2">¡Perfecto, {config.name}!</h2>
+                  <p className="text-cream/80 mb-6">
+                    Has elegido el plan Esencial. Tendrás acceso a contenidos digitales exclusivos y nuestra comunidad.
+                  </p>
+                </div>
+
+                {/* Plan Summary */}
+                <Card className="border-gold/20 bg-dark/80 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="text-gold">Plan Esencial</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-cream">Precio mensual</span>
+                      <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
+                    </div>
+                    <div className="text-sm text-cream/80 mt-2">{planDescription}</div>
+
+                    <div className="mt-4 p-3 bg-gold/5 rounded-lg border border-gold/10">
+                      <p className="text-sm text-cream/90">
+                        Incluye acceso a contenidos digitales, comunidad LuVelle, eventos online y descuentos
+                        exclusivos.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Upgrade Suggestion */}
+                <Card className="border-blue/30 bg-gradient-to-br from-dark/90 to-blue/20 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue/30 to-blue/20 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Gift className="h-6 w-6 text-cream" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-cream mb-2 flex items-center gap-2">
+                          ¿Querés crear tu propia Beauty Box?
+                          <ArrowUp className="h-4 w-4 text-gold" />
+                        </h3>
+                        <p className="text-cream/90 text-sm mb-4">
+                          Por solo <span className="font-bold text-gold">${upgradePrice} más al mes</span>, podés
+                          actualizar al plan Premium y empezar a recibir productos personalizados mensualmente para
+                          concentrarte en esos días especiales de autocuidado.
+                        </p>
+                        <div className="space-y-2 text-xs text-cream/80">
+                          <div className="flex items-center gap-2">
+                            <Check className="h-3 w-3 text-gold" />
+                            <span>2-3 productos personalizados + 1 servicio mensual</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Check className="h-3 w-3 text-gold" />
+                            <span>Selección de productos según tus preferencias</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Check className="h-3 w-3 text-gold" />
+                            <span>3% de cashback por cada referida</span>
+                          </div>
+                        </div>
+                        <Button
+                          onClick={() => {
+                            setConfig((prev) => ({ ...prev, plan: "premium" }))
+                            setCurrentStep(2) // Go to interest selection for Premium
+                          }}
+                          className="mt-4 bg-gradient-to-r from-gold to-gold/80 text-dark hover:from-gold/90 hover:to-gold/70 font-semibold"
+                          size="sm"
+                        >
+                          <ArrowUp className="mr-2 h-4 w-4" />
+                          Actualizar a Premium
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Total */}
+                <Card className="border-gold/20 bg-gold/10 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-center text-lg">
+                      <span className="text-cream font-semibold">Total mensual:</span>
+                      <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
+                    </div>
+                    <p className="text-xs text-cream/70 mt-2">
+                      Sin compromisos • Cancela cuando quieras • Actualiza tu plan en cualquier momento
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Left side - Image - Segundo en móvil */}
+              <div className="relative order-2 lg:order-1 mt-6 lg:mt-0">
+                <div className="relative z-10">
+                  <img
+                    src="/images/beauty-box-woman.png"
+                    alt="Mujer profesional con Beauty Box LuVelle"
+                    className="w-full max-w-md mx-auto rounded-2xl shadow-2xl hover-lift"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-blue/20 rounded-2xl blur-3xl animate-pulse-slow" />
+              </div>
+            </div>
+          )
+        }
+
+        // Regular layout for Premium/Deluxe plans
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
@@ -772,15 +898,6 @@ export default function TheBeautyBoxPage() {
                           </span>
                         ))}
                       </div>
-                    </div>
-                  )}
-
-                  {config.plan === "esencial" && (
-                    <div className="mt-4 p-3 bg-gold/5 rounded-lg border border-gold/10">
-                      <p className="text-sm text-cream/90">
-                        Has seleccionado el plan Esencial que incluye acceso a contenidos digitales, comunidad y eventos
-                        online. Este plan no incluye la creación de una Beauty Box física.
-                      </p>
                     </div>
                   )}
                 </CardContent>
@@ -1116,16 +1233,6 @@ export default function TheBeautyBoxPage() {
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="font-dancing text-4xl text-gold mb-4">Tu experiencia personalizada</h1>
-          <p className="text-cream/80 text-lg max-w-2xl mx-auto">
-            {config.plan === "esencial"
-              ? "Diseña tu experiencia digital de bienestar"
-              : "Diseña tu Beauty Box personalizada de belleza y bienestar"}
-          </p>
-        </div>
-
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
