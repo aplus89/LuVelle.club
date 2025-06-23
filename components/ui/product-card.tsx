@@ -24,11 +24,11 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
 
   if (!product.available) {
     return (
-      <Card className="relative overflow-hidden border-beige/20 bg-gradient-to-br from-dark/60 to-blue/20 backdrop-blur-sm opacity-70">
-        <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent" />
+      <Card className="relative overflow-hidden border-beige bg-cream backdrop-blur-sm opacity-80">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue/5 to-transparent" />
         <CardContent className="relative p-4">
           <div className="relative mb-3">
-            <div className="w-full h-32 bg-gradient-to-br from-beige/10 to-gold/5 rounded-xl flex items-center justify-center border border-beige/20">
+            <div className="w-full h-32 bg-gradient-to-br from-beige/20 to-blue/10 rounded-xl flex items-center justify-center border border-beige">
               <img
                 src={product.image || "/placeholder.svg"}
                 alt={product.name}
@@ -36,8 +36,8 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
                 onLoad={() => setImageLoaded(true)}
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-dark/60 via-transparent to-transparent rounded-xl flex items-center justify-center">
-              <div className="bg-gradient-to-r from-cream/90 to-beige/90 text-dark text-xs px-3 py-1.5 rounded-full flex items-center gap-2 border border-gold/20">
+            <div className="absolute inset-0 bg-gradient-to-t from-cream/60 via-transparent to-transparent rounded-xl flex items-center justify-center">
+              <div className="bg-gradient-to-r from-blue/90 to-beige/90 text-cream text-xs px-3 py-1.5 rounded-full flex items-center gap-2 border border-blue/20">
                 <Clock className="h-3 w-3" />
                 <span className="font-medium">Próximamente</span>
               </div>
@@ -45,9 +45,9 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
           </div>
 
           <div className="space-y-1">
-            <h3 className="font-playfair text-sm font-medium text-beige/60">{product.name}</h3>
-            <p className="text-xs text-gold/60 font-medium">{product.brand}</p>
-            <p className="text-xs text-beige/50 line-clamp-2">{product.description}</p>
+            <h3 className="font-playfair text-sm font-medium text-blue">{product.name}</h3>
+            <p className="text-xs text-blue font-medium">{product.brand}</p>
+            <p className="text-xs text-blue line-clamp-2">{product.description}</p>
           </div>
         </CardContent>
       </Card>
@@ -58,10 +58,10 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
     <Card
       className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover-lift group ${
         isSelected
-          ? "ring-2 ring-gold bg-gradient-to-br from-gold/10 to-gold/5 border-gold shadow-lg shadow-gold/20"
+          ? "ring-2 ring-gold bg-beige border-gold shadow-lg shadow-gold/25"
           : disabled
-            ? "border-beige/10 opacity-50 cursor-not-allowed bg-gradient-to-br from-dark/40 to-blue/10"
-            : "border-beige/20 bg-gradient-to-br from-dark/60 to-blue/10 hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10"
+            ? "border-beige/20 opacity-50 cursor-not-allowed bg-gradient-to-br from-dark/60 to-blue/20"
+            : "border-gold bg-dark hover:border-gold/80 hover:shadow-lg hover:shadow-gold/10"
       }`}
       onClick={disabled ? undefined : onSelect}
     >
@@ -88,7 +88,7 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${
                 isSelected
-                  ? "bg-gradient-to-br from-gold to-gold/80 border-2 border-cream scale-110"
+                  ? "bg-gradient-to-br from-gold to-gold/80 border-2 border-dark scale-110"
                   : "bg-gradient-to-br from-cream/90 to-beige/90 border border-beige/40 group-hover:scale-105"
               }`}
             >
@@ -104,17 +104,19 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
         <div className="space-y-1">
           <h3
             className={`font-playfair text-sm font-medium transition-colors duration-300 ${
-              isSelected ? "text-gold" : "text-beige group-hover:text-gold/80"
+              isSelected ? "text-dark" : "text-beige group-hover:text-gold/80"
             }`}
           >
             {product.name}
           </h3>
-          <p className="text-xs text-gold/80 font-medium">{product.brand}</p>
-          <p className="text-xs text-beige/70 line-clamp-2">{product.description}</p>
+          <p className={`text-xs font-medium ${isSelected ? "text-dark/70" : "text-gold/80"}`}>{product.brand}</p>
+          <p className={`text-xs line-clamp-2 ${isSelected ? "text-dark/60" : "text-beige/70"}`}>
+            {product.description}
+          </p>
         </div>
 
         {isSelected && (
-          <div className="mt-3 flex items-center justify-center gap-1 text-gold/80">
+          <div className="mt-3 flex items-center justify-center gap-1 text-dark/80">
             <Sparkles className="h-3 w-3 animate-pulse" />
             <span className="text-xs font-medium">En tu Box</span>
             <Sparkles className="h-3 w-3 animate-pulse" />

@@ -27,6 +27,8 @@ import {
   Star,
   ArrowUp,
   Gift,
+  Package,
+  Crown,
 } from "lucide-react"
 
 interface BoxConfiguration {
@@ -236,23 +238,27 @@ export default function TheBeautyBoxPage() {
             id: "product-action", // Fixed ID to replace previous notifications
             title: "Producto eliminado",
             description: (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-400/30 to-red-300/20 rounded-lg flex items-center justify-center">
-                    <span className="text-xs">❌</span>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-red-400/30 to-red-300/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-lg">❌</span>
                   </div>
-                  <div>
-                    <p className="font-medium text-sm">{selectedProduct.name}</p>
-                    <p className="text-xs opacity-80">{selectedProduct.brand}</p>
+                  <div className="flex-1">
+                    <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
+                    <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
                   </div>
                 </div>
-                <p className="text-xs">
-                  Ahora puedes seleccionar {maxProducts - newSelectedProducts.length} producto(s) más dentro de tu plan.
-                </p>
+                <div className="pt-2 border-t border-current/20">
+                  <p className="text-sm leading-relaxed">
+                    Ahora puedes seleccionar{" "}
+                    <span className="font-semibold">{maxProducts - newSelectedProducts.length} producto(s) más</span>{" "}
+                    dentro de tu plan.
+                  </p>
+                </div>
               </div>
             ),
             variant: "elegant",
-            duration: 3000,
+            duration: 4000,
           })
         }
 
@@ -273,31 +279,37 @@ export default function TheBeautyBoxPage() {
               id: "product-action", // Fixed ID to replace previous notifications
               title: "¡Producto agregado!",
               description: (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-gold/30 to-gold/20 rounded-lg flex items-center justify-center">
-                      <Heart className="h-4 w-4 text-gold" />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-gold/30 to-gold/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Heart className="h-6 w-6 text-gold" />
                     </div>
-                    <div>
-                      <p className="font-medium text-sm">{selectedProduct.name}</p>
-                      <p className="text-xs opacity-80">{selectedProduct.brand}</p>
+                    <div className="flex-1">
+                      <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
+                      <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
                     </div>
                   </div>
-                  {remaining > 0 ? (
-                    <p className="text-xs flex items-center gap-1">
-                      <Star className="h-3 w-3 text-gold" />
-                      Te faltan {remaining} producto{remaining !== 1 ? "s" : ""} para completar tu plan {plan.name}
-                    </p>
-                  ) : (
-                    <p className="text-xs flex items-center gap-1">
-                      <Sparkles className="h-3 w-3 text-gold" />
-                      ¡Has completado tu plan {plan.name}!
-                    </p>
-                  )}
+                  <div className="pt-2 border-t border-current/20">
+                    {remaining > 0 ? (
+                      <p className="text-sm leading-relaxed flex items-center gap-2">
+                        <Star className="h-4 w-4 text-gold flex-shrink-0" />
+                        Te faltan{" "}
+                        <span className="font-semibold">
+                          {remaining} producto{remaining !== 1 ? "s" : ""}
+                        </span>{" "}
+                        para completar tu plan {plan.name}
+                      </p>
+                    ) : (
+                      <p className="text-sm leading-relaxed flex items-center gap-2">
+                        <Sparkles className="h-4 w-4 text-gold flex-shrink-0" />
+                        <span className="font-semibold">¡Has completado tu plan {plan.name}!</span>
+                      </p>
+                    )}
+                  </div>
                 </div>
               ),
               variant: "elegant",
-              duration: 3000,
+              duration: 4000,
             })
           } else if (prev.unlimitedSelection) {
             // Product added as extra - using fixed ID to replace previous
@@ -305,21 +317,25 @@ export default function TheBeautyBoxPage() {
               id: "product-action", // Fixed ID to replace previous notifications
               title: "Producto adicional agregado",
               description: (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-gold/40 to-gold/30 rounded-lg flex items-center justify-center">
-                      <Plus className="h-4 w-4 text-gold" />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-gold/40 to-gold/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Plus className="h-6 w-6 text-gold" />
                     </div>
-                    <div>
-                      <p className="font-medium text-sm">{selectedProduct.name}</p>
-                      <p className="text-xs opacity-80">{selectedProduct.brand}</p>
+                    <div className="flex-1">
+                      <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
+                      <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
                     </div>
                   </div>
-                  <p className="text-xs bg-gold/20 text-gold px-2 py-1 rounded-lg">+$5.00 - Solo para este mes</p>
+                  <div className="pt-2">
+                    <div className="bg-gold/20 text-gold px-3 py-2 rounded-lg">
+                      <p className="text-sm font-medium">+$5.00 - Solo para este mes</p>
+                    </div>
+                  </div>
                 </div>
               ),
               variant: "gold",
-              duration: 3000,
+              duration: 4000,
             })
           }
         }
@@ -334,65 +350,81 @@ export default function TheBeautyBoxPage() {
               id: "plan-limit", // Different ID for the special limit notification
               title: "¡Selección completa!",
               description: (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-gold/30 to-gold/20 rounded-lg flex items-center justify-center">
-                      <Check className="h-4 w-4 text-gold" />
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-gold/30 to-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
+                      <Check className="h-6 w-6 text-gold" />
                     </div>
-                    <p className="text-sm">
-                      Has completado tu plan {plan.name} con {maxProducts} productos.
-                    </p>
+                    <div className="flex-1">
+                      <p className="text-base font-semibold leading-relaxed mb-2">
+                        Has completado tu plan {plan.name} con {maxProducts} productos.
+                      </p>
+                      <p className="text-sm leading-relaxed text-current/80">
+                        ¿Deseas agregar más productos con cargo adicional de{" "}
+                        <span className="font-semibold">$5 cada uno</span>?
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs">¿Deseas agregar más productos con cargo adicional de $5 cada uno?</p>
+
+                  <div className="pt-3 border-t border-current/20">
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        onClick={() => {
+                          setConfig((c) => ({ ...c, unlimitedSelection: true }))
+                          dismiss("plan-limit") // Dismiss this notification
+                          toast({
+                            id: "unlimited-enabled",
+                            title: "¡Perfecto!",
+                            description: (
+                              <div className="space-y-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-12 h-12 bg-gradient-to-br from-green-400/30 to-green-300/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <Sparkles className="h-6 w-6 text-green-600" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="font-semibold text-base leading-relaxed">
+                                      Selección ilimitada activada
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="pt-2 border-t border-current/20">
+                                  <p className="text-sm leading-relaxed">
+                                    Ahora puedes agregar productos adicionales. Cada uno costará{" "}
+                                    <span className="font-semibold">$5 extra</span>.
+                                  </p>
+                                </div>
+                              </div>
+                            ),
+                            variant: "success",
+                            duration: 5000,
+                          })
+                        }}
+                        className="bg-gold text-dark hover:bg-gold/80 rounded-xl font-semibold py-3"
+                        size="default"
+                      >
+                        <Check className="mr-2 h-5 w-5" />
+                        Sí, agregar más productos
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          dismiss("plan-limit") // Dismiss this notification
+                          // Scroll to continue button
+                          if (continueButtonRef.current) {
+                            continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
+                          }
+                        }}
+                        variant="outline"
+                        size="default"
+                        className="border-gold/30 text-gold hover:bg-gold/10 rounded-xl font-semibold py-3"
+                      >
+                        No, continuar con mi selección
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ),
               variant: "elegant",
-              duration: 10000, // Longer duration for this special notification
-              action: (
-                <div className="flex gap-2 mt-3">
-                  <Button
-                    onClick={() => {
-                      setConfig((c) => ({ ...c, unlimitedSelection: true }))
-                      dismiss("plan-limit") // Dismiss this notification
-                      toast({
-                        id: "unlimited-enabled",
-                        title: "¡Perfecto!",
-                        description: (
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Sparkles className="h-4 w-4 text-gold" />
-                              <span className="text-sm font-medium">Selección ilimitada activada</span>
-                            </div>
-                            <p className="text-xs">
-                              Ahora puedes agregar productos adicionales. Cada uno costará $5 extra.
-                            </p>
-                          </div>
-                        ),
-                        variant: "success",
-                        duration: 4000,
-                      })
-                    }}
-                    className="bg-gold text-dark hover:bg-gold/80 rounded-xl"
-                    size="sm"
-                  >
-                    <Check className="mr-1 h-4 w-4" /> Sí, agregar más
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      dismiss("plan-limit") // Dismiss this notification
-                      // Scroll to continue button
-                      if (continueButtonRef.current) {
-                        continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
-                      }
-                    }}
-                    variant="outline"
-                    size="sm"
-                    className="border-gold/30 text-gold hover:bg-gold/10 rounded-xl"
-                  >
-                    No, continuar
-                  </Button>
-                </div>
-              ),
+              duration: Number.POSITIVE_INFINITY, // Permanent until user clicks
             })
           }, 100)
         }
@@ -454,6 +486,20 @@ export default function TheBeautyBoxPage() {
   }, [config.selectedProducts, config.unlimitedSelection])
 
   const progress = ((currentStep + 1) / totalSteps) * 100
+
+  // Helper function to get the icon component
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case "Package":
+        return Package
+      case "Sparkles":
+        return Sparkles
+      case "Crown":
+        return Crown
+      default:
+        return Package
+    }
+  }
 
   const renderStep = () => {
     switch (currentStep) {
@@ -565,23 +611,56 @@ export default function TheBeautyBoxPage() {
               <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-              {INTERESTS.map((interest) => (
-                <Card
-                  key={interest.id}
-                  className={`cursor-pointer transition-all duration-300 hover-lift ${
-                    config.interest === interest.id
-                      ? "ring-2 ring-gold bg-gold/10 border-gold"
-                      : "border-gold/20 hover:border-gold/50"
-                  }`}
-                  onClick={() => setConfig((prev) => ({ ...prev, interest: interest.id }))}
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className="text-4xl mb-3">{interest.icon}</div>
-                    <h3 className="font-semibold text-cream">{interest.name}</h3>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              {INTERESTS.map((interest) => {
+                const IconComponent = getIconComponent(interest.icon)
+                return (
+                  <Card
+                    key={interest.id}
+                    className={`cursor-pointer transition-all duration-300 hover-lift group ${
+                      config.interest === interest.id
+                        ? "ring-2 ring-gold bg-beige border-gold shadow-lg shadow-gold/25"
+                        : "border-gold bg-dark hover:border-gold/80 hover:shadow-lg hover:shadow-gold/10"
+                    }`}
+                    onClick={() => setConfig((prev) => ({ ...prev, interest: interest.id }))}
+                  >
+                    <CardContent className="p-8 text-center">
+                      <div className="mb-6">
+                        <div
+                          className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 transition-all duration-300 ${
+                            config.interest === interest.id
+                              ? "bg-gradient-to-br from-dark/15 to-dark/10 border-2 border-dark/30 shadow-lg"
+                              : "bg-gradient-to-br from-beige/10 to-gold/5 border border-beige/20 group-hover:border-gold/30"
+                          }`}
+                        >
+                          <IconComponent
+                            className={`h-8 w-8 transition-all duration-300 ${
+                              config.interest === interest.id
+                                ? "text-dark scale-110"
+                                : "text-beige group-hover:text-gold/80 group-hover:scale-105"
+                            }`}
+                          />
+                        </div>
+                        <h3
+                          className={`font-playfair text-xl font-medium transition-colors duration-300 ${
+                            config.interest === interest.id ? "text-dark" : "text-beige group-hover:text-gold/80"
+                          }`}
+                        >
+                          {interest.name}
+                        </h3>
+                      </div>
+
+                      {config.interest === interest.id && (
+                        <div className="flex items-center justify-center gap-2 text-dark/80 animate-pulse">
+                          <Sparkles className="h-4 w-4" />
+                          <span className="text-sm font-medium">Seleccionado</span>
+                          <Sparkles className="h-4 w-4" />
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )
+              })}
             </div>
           </div>
         )
@@ -704,7 +783,7 @@ export default function TheBeautyBoxPage() {
                   return (
                     <div
                       key={categoryId}
-                      className="bg-gradient-to-br from-dark/40 to-blue/10 rounded-2xl p-6 border border-beige/20"
+                      className="bg-gradient-to-br from-dark via-dark/95 to-blue/20 rounded-2xl p-6 border border-gold/20"
                     >
                       <h3 className="font-playfair text-xl font-medium text-cream mb-6 flex items-center gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full flex items-center justify-center border border-gold/30">

@@ -279,9 +279,9 @@ export const PRODUCTS = {
 } as const
 
 export const INTERESTS = [
-  { id: "productos", name: "Productos", icon: "🧴" },
-  { id: "servicios", name: "Servicios", icon: "✂️" },
-  { id: "ambos", name: "Ambos", icon: "🌟" },
+  { id: "productos", name: "Productos", icon: "Package" },
+  { id: "servicios", name: "Servicios", icon: "Sparkles" },
+  { id: "ambos", name: "Ambos", icon: "Crown" },
 ] as const
 
 export const SOCIAL_LINKS = {
