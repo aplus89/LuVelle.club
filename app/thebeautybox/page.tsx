@@ -485,6 +485,11 @@ export default function TheBeautyBoxPage() {
     }
   }, [config.selectedProducts, config.unlimitedSelection])
 
+  // Auto-scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [currentStep])
+
   const progress = ((currentStep + 1) / totalSteps) * 100
 
   // Helper function to get the icon component
@@ -562,7 +567,7 @@ export default function TheBeautyBoxPage() {
               )}
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {Object.values(PLANS).map((plan, index) => {
                 // Calcular precio anual con 15% de descuento
                 const annualPrice = showAnnualPrices ? (plan.price * 12 * 0.85).toFixed(2) : plan.price
@@ -611,7 +616,7 @@ export default function TheBeautyBoxPage() {
               <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               {INTERESTS.map((interest) => {
                 const IconComponent = getIconComponent(interest.icon)
                 return (
@@ -684,7 +689,7 @@ export default function TheBeautyBoxPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
               {CATEGORIES.map((category) => (
                 <CategoryCard
                   key={category.id}
@@ -791,7 +796,7 @@ export default function TheBeautyBoxPage() {
                         </div>
                         {category?.name}
                       </h3>
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {categoryProducts.map((product) => (
                           <ProductCard
                             key={product.id}
