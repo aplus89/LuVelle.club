@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { PlanCard } from "@/components/ui/plan-card"
 import { CategoryCard } from "@/components/ui/category-card"
 import { ProductCard } from "@/components/ui/product-card"
@@ -14,52 +14,32 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
-import { PLANS, CATEGORIES, INTERESTS, PRODUCTS } from "@/lib/constants"
-import {
-  Plus,
-  Info,
-  ChevronRight,
-  AlertCircle,
-  ArrowLeft,
-  Sparkles,
-  Check,
-  Heart,
-  Star,
-  ArrowUp,
-  Gift,
-  Package,
-  Crown,
-} from "lucide-react"
+import { PLANS, CATEGORIES, PRODUCTS, SERVICES, calcularPrecioFinal } from "@/lib/constants"
+import { Plus, Info, ChevronRight, ArrowLeft, Sparkles, Package, Crown, Lightbulb } from "lucide-react"
 
 interface BoxConfiguration {
-  plan: string
-  interest: string
-  categories: string[]
-  selectedProducts: string[]
-  extraProducts: number
-  extraServices: number
-  referralCode: string
   name: string
-  unlimitedSelection: boolean
+  selectedPlan: string
+  categories: string[]
+  selectedProducts: { [key: string]: number } // productId: quantity
+  selectedServices: { [key: string]: number } // serviceId: quantity
+  referralCode: string
 }
 
 export default function TheBeautyBoxPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast, dismiss } = useToast()
   const continueButtonRef = useRef<HTMLButtonElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [config, setConfig] = useState<BoxConfiguration>({
-    plan: "",
-    interest: "",
-    categories: [],
-    selectedProducts: [],
-    extraProducts: 0,
-    extraServices: 0,
-    referralCode: "",
     name: "",
-    unlimitedSelection: false,
+    selectedPlan: searchParams.get("plan") || "", // Pre-select plan from URL
+    categories: [],
+    selectedProducts: {},
+    selectedServices: {},
+    referralCode: "",
   })
-  const [showAnnualPrices, setShowAnnualPrices] = useState(false)
   const [notificationModal, setNotificationModal] = useState<{
     isOpen: boolean
     categoryName: string
@@ -70,7 +50,26 @@ export default function TheBeautyBoxPage() {
     categoryIcon: "",
   })
 
-  const totalSteps = 6 // Updated to 6 steps
+  const totalSteps = 5 // 5 pasos: nombre, plan, categorías, productos/servicios, resumen
+
+  // Calcular precios en tiempo real
+  const calculateCurrentPricing = () => {
+    const productsCost = Object.entries(config.selectedProducts).reduce((total, [productId, quantity]) => {
+      const allProducts = getAllProducts()
+      const product = allProducts.find((p) => p.id === productId)
+      return total + (product?.price || 0) * quantity
+    }, 0)
+
+    const servicesCost = Object.entries(config.selectedServices).reduce((total, [serviceId, quantity]) => {
+      const service = SERVICES.find((s) => s.id === serviceId)
+      return total + (service?.price || 0) * quantity
+    }, 0)
+
+    const totalProductsCost = productsCost + servicesCost
+    return calcularPrecioFinal(totalProductsCost)
+  }
+
+  const pricing = calculateCurrentPricing()
 
   // Check if current step can proceed
   const canProceed = () => {
@@ -78,23 +77,12 @@ export default function TheBeautyBoxPage() {
       case 0:
         return config.name.trim() !== ""
       case 1:
-        return config.plan !== ""
+        return config.selectedPlan !== ""
       case 2:
-        // Skip interest step for Esencial plan
-        if (config.plan === "esencial") return true
-        return config.interest !== ""
-      case 3:
-        // Skip categories step for Esencial plan
-        if (config.plan === "esencial") return true
         return config.categories.length > 0
-      case 4: {
-        // Product selection step - only for Premium/Deluxe
-        if (config.plan === "esencial") return true // Skip for Esencial
-        const plan = getSelectedPlan()
-        if (!plan || plan.id === "esencial") return true
-        return config.selectedProducts.length > 0
-      }
-      case 5:
+      case 3:
+        return Object.keys(config.selectedProducts).length > 0 || Object.keys(config.selectedServices).length > 0
+      case 4:
         return true
       default:
         return false
@@ -103,29 +91,18 @@ export default function TheBeautyBoxPage() {
 
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
-      // Skip steps for Esencial plan
-      if (config.plan === "esencial") {
-        if (currentStep === 1) {
-          // Skip interest, categories, and product selection for Esencial
-          setCurrentStep(5) // Go directly to summary
-        } else {
-          setCurrentStep(currentStep + 1)
-        }
-      } else if (currentStep === 3 && config.plan === "esencial") {
-        setCurrentStep(currentStep + 2) // Skip step 4 (product selection)
-      } else {
-        setCurrentStep(currentStep + 1)
-      }
+      setCurrentStep(currentStep + 1)
     } else {
       // Navigate to checkout
       const searchParams = new URLSearchParams({
-        plan: config.plan,
-        categories: config.categories.join(","),
-        selectedProducts: config.selectedProducts.join(","),
-        extraProducts: config.extraProducts.toString(),
-        extraServices: config.extraServices.toString(),
-        referralCode: config.referralCode,
         name: config.name,
+        selectedPlan: config.selectedPlan,
+        categories: config.categories.join(","),
+        selectedProducts: JSON.stringify(config.selectedProducts),
+        selectedServices: JSON.stringify(config.selectedServices),
+        referralCode: config.referralCode,
+        finalPrice: pricing.precioFinal.toString(),
+        planAchieved: pricing.planAlcanzado,
       })
       router.push(`/checkout?${searchParams.toString()}`)
     }
@@ -133,27 +110,11 @@ export default function TheBeautyBoxPage() {
 
   const handlePrev = () => {
     if (currentStep > 0) {
-      // Handle back navigation for Esencial plan
-      if (config.plan === "esencial") {
-        if (currentStep === 5) {
-          setCurrentStep(1) // Go back to plan selection
-        } else {
-          setCurrentStep(currentStep - 1)
-        }
-      } else if (currentStep === 5 && config.plan === "esencial") {
-        setCurrentStep(currentStep - 2) // Skip step 4 (product selection)
-      } else {
-        setCurrentStep(currentStep - 1)
-      }
+      setCurrentStep(currentStep - 1)
     }
   }
 
   const handleStepClick = (step: number) => {
-    // Don't allow skipping to steps that should be skipped for Esencial
-    if (config.plan === "esencial" && (step === 2 || step === 3 || step === 4)) {
-      return
-    }
-
     if (step <= currentStep || canProceed()) {
       setCurrentStep(step)
     }
@@ -173,20 +134,11 @@ export default function TheBeautyBoxPage() {
     })
   }
 
-  // Modified plan selection to auto-advance
   const handlePlanSelect = (planId: string) => {
-    // Capitalizar la primera letra del nombre
-    const capitalizedName = config.name.charAt(0).toUpperCase() + config.name.slice(1)
-    setConfig((prev) => ({ ...prev, plan: planId, name: capitalizedName }))
-
+    setConfig((prev) => ({ ...prev, selectedPlan: planId }))
     // Auto-advance to next step after a short delay for visual feedback
     setTimeout(() => {
-      if (planId === "esencial") {
-        // Skip interest, categories, and product selection for Esencial
-        setCurrentStep(5) // Go directly to summary
-      } else {
-        setCurrentStep(2) // Go to interest selection
-      }
+      setCurrentStep(2) // Go to categories
     }, 300)
   }
 
@@ -194,18 +146,25 @@ export default function TheBeautyBoxPage() {
     const category = CATEGORIES.find((c) => c.id === categoryId)
     if (!category?.available) return
 
-    // No hay límites en la selección de categorías para Premium y Deluxe
     setConfig((prev) => {
       const newCategories = prev.categories.includes(categoryId)
         ? prev.categories.filter((id) => id !== categoryId)
         : [...prev.categories, categoryId]
 
       // Reset selected products when categories change
-      const validProducts = prev.selectedProducts.filter((productId) => {
-        return newCategories.some((catId) => {
-          const categoryProducts = PRODUCTS[catId as keyof typeof PRODUCTS] || []
-          return categoryProducts.some((p) => p.id === productId)
-        })
+      const validProducts: { [key: string]: number } = {}
+      Object.entries(prev.selectedProducts).forEach(([productId, quantity]) => {
+        const allProducts = getAllProducts()
+        const product = allProducts.find((p) => p.id === productId)
+        if (
+          product &&
+          newCategories.some((catId) => {
+            const categoryProducts = PRODUCTS[catId as keyof typeof PRODUCTS] || []
+            return categoryProducts.some((p) => p.id === productId)
+          })
+        ) {
+          validProducts[productId] = quantity
+        }
       })
 
       return {
@@ -217,236 +176,83 @@ export default function TheBeautyBoxPage() {
   }
 
   const handleProductSelect = (productId: string) => {
-    const plan = getSelectedPlan()
-    if (!plan) return
-
-    // Get product details
-    const allProducts = getAvailableProducts()
-    const selectedProduct = allProducts.find((p) => p.id === productId)
-
     setConfig((prev) => {
-      const isSelected = prev.selectedProducts.includes(productId)
-      const maxProducts = plan?.maxProducts || 0
+      const currentQuantity = prev.selectedProducts[productId] || 0
+      const newProducts = { ...prev.selectedProducts }
 
-      if (isSelected) {
-        // Remove product
-        const newSelectedProducts = prev.selectedProducts.filter((id) => id !== productId)
-
-        // Show toast when removing a product - using fixed ID to replace previous
-        if (selectedProduct) {
-          toast({
-            id: "product-action", // Fixed ID to replace previous notifications
-            title: "Producto eliminado",
-            description: (
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-400/30 to-red-300/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-lg">❌</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
-                    <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
-                  </div>
-                </div>
-                <div className="pt-2 border-t border-current/20">
-                  <p className="text-sm leading-relaxed">
-                    Ahora puedes seleccionar{" "}
-                    <span className="font-semibold">{maxProducts - newSelectedProducts.length} producto(s) más</span>{" "}
-                    dentro de tu plan.
-                  </p>
-                </div>
-              </div>
-            ),
-            variant: "elegant",
-            duration: 4000,
-          })
-        }
-
-        return {
-          ...prev,
-          selectedProducts: newSelectedProducts,
-        }
+      if (currentQuantity > 0) {
+        delete newProducts[productId]
       } else {
-        // Add product
-        const newSelectedProducts = [...prev.selectedProducts, productId]
-        const remaining = Math.max(0, maxProducts - newSelectedProducts.length)
+        newProducts[productId] = 1
+      }
 
-        // Show toast when adding a product - using fixed ID to replace previous
-        if (selectedProduct) {
-          if (newSelectedProducts.length <= maxProducts) {
-            // Product added within plan limits
-            toast({
-              id: "product-action", // Fixed ID to replace previous notifications
-              title: "¡Producto agregado!",
-              description: (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold/30 to-gold/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Heart className="h-6 w-6 text-gold" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
-                      <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t border-current/20">
-                    {remaining > 0 ? (
-                      <p className="text-sm leading-relaxed flex items-center gap-2">
-                        <Star className="h-4 w-4 text-gold flex-shrink-0" />
-                        Te faltan{" "}
-                        <span className="font-semibold">
-                          {remaining} producto{remaining !== 1 ? "s" : ""}
-                        </span>{" "}
-                        para completar tu plan {plan.name}
-                      </p>
-                    ) : (
-                      <p className="text-sm leading-relaxed flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-gold flex-shrink-0" />
-                        <span className="font-semibold">¡Has completado tu plan {plan.name}!</span>
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ),
-              variant: "elegant",
-              duration: 4000,
-            })
-          } else if (prev.unlimitedSelection) {
-            // Product added as extra - using fixed ID to replace previous
-            toast({
-              id: "product-action", // Fixed ID to replace previous notifications
-              title: "Producto adicional agregado",
-              description: (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold/40 to-gold/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <Plus className="h-6 w-6 text-gold" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-base leading-relaxed">{selectedProduct.name}</p>
-                      <p className="text-sm opacity-80 mt-1">{selectedProduct.brand}</p>
-                    </div>
-                  </div>
-                  <div className="pt-2">
-                    <div className="bg-gold/20 text-gold px-3 py-2 rounded-lg">
-                      <p className="text-sm font-medium">+$5.00 - Solo para este mes</p>
-                    </div>
-                  </div>
-                </div>
-              ),
-              variant: "gold",
-              duration: 4000,
-            })
-          }
-        }
-
-        // If we're at the limit and not in unlimited mode, show special toast with actions
-        if (newSelectedProducts.length === maxProducts && !prev.unlimitedSelection) {
-          // Dismiss the regular product notification first
-          dismiss("product-action")
-
-          setTimeout(() => {
-            toast({
-              id: "plan-limit", // Different ID for the special limit notification
-              title: "¡Selección completa!",
-              description: (
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold/30 to-gold/20 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
-                      <Check className="h-6 w-6 text-gold" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-base font-semibold leading-relaxed mb-2">
-                        Has completado tu plan {plan.name} con {maxProducts} productos.
-                      </p>
-                      <p className="text-sm leading-relaxed text-current/80">
-                        ¿Deseas agregar más productos con cargo adicional de{" "}
-                        <span className="font-semibold">$5 cada uno</span>?
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 border-t border-current/20">
-                    <div className="flex flex-col gap-3">
-                      <Button
-                        onClick={() => {
-                          setConfig((c) => ({ ...c, unlimitedSelection: true }))
-                          dismiss("plan-limit") // Dismiss this notification
-                          toast({
-                            id: "unlimited-enabled",
-                            title: "¡Perfecto!",
-                            description: (
-                              <div className="space-y-3">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-12 h-12 bg-gradient-to-br from-green-400/30 to-green-300/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <Sparkles className="h-6 w-6 text-green-600" />
-                                  </div>
-                                  <div className="flex-1">
-                                    <p className="font-semibold text-base leading-relaxed">
-                                      Selección ilimitada activada
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="pt-2 border-t border-current/20">
-                                  <p className="text-sm leading-relaxed">
-                                    Ahora puedes agregar productos adicionales. Cada uno costará{" "}
-                                    <span className="font-semibold">$5 extra</span>.
-                                  </p>
-                                </div>
-                              </div>
-                            ),
-                            variant: "success",
-                            duration: 5000,
-                          })
-                        }}
-                        className="bg-gold text-dark hover:bg-gold/80 rounded-xl font-semibold py-3"
-                        size="default"
-                      >
-                        <Check className="mr-2 h-5 w-5" />
-                        Sí, agregar más productos
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          dismiss("plan-limit") // Dismiss this notification
-                          // Scroll to continue button
-                          if (continueButtonRef.current) {
-                            continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
-                          }
-                        }}
-                        variant="outline"
-                        size="default"
-                        className="border-gold/30 text-gold hover:bg-gold/10 rounded-xl font-semibold py-3"
-                      >
-                        No, continuar con mi selección
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ),
-              variant: "elegant",
-              duration: Number.POSITIVE_INFINITY, // Permanent until user clicks
-            })
-          }, 100)
-        }
-
-        return {
-          ...prev,
-          selectedProducts: newSelectedProducts,
-        }
+      return {
+        ...prev,
+        selectedProducts: newProducts,
       }
     })
   }
 
-  const getSelectedPlan = () => PLANS[config.plan as keyof typeof PLANS]
-  const getSelectedCategories = () => CATEGORIES.filter((c) => config.categories.includes(c.id))
+  const handleProductQuantityChange = (productId: string, quantity: number) => {
+    setConfig((prev) => {
+      const newProducts = { ...prev.selectedProducts }
 
-  const getAvailableProducts = () => {
+      if (quantity <= 0) {
+        delete newProducts[productId]
+      } else {
+        newProducts[productId] = quantity
+      }
+
+      return {
+        ...prev,
+        selectedProducts: newProducts,
+      }
+    })
+  }
+
+  const handleServiceSelect = (serviceId: string) => {
+    setConfig((prev) => {
+      const currentQuantity = prev.selectedServices[serviceId] || 0
+      const newServices = { ...prev.selectedServices }
+
+      if (currentQuantity > 0) {
+        delete newServices[serviceId]
+      } else {
+        newServices[serviceId] = 1
+      }
+
+      return {
+        ...prev,
+        selectedServices: newServices,
+      }
+    })
+  }
+
+  const handleServiceQuantityChange = (serviceId: string, quantity: number) => {
+    setConfig((prev) => {
+      const newServices = { ...prev.selectedServices }
+
+      if (quantity <= 0) {
+        delete newServices[serviceId]
+      } else {
+        newServices[serviceId] = quantity
+      }
+
+      return {
+        ...prev,
+        selectedServices: newServices,
+      }
+    })
+  }
+
+  const getAllProducts = () => {
     const products: Array<{
       id: string
       name: string
       brand: string
       description: string
       image: string
+      price: number
       available: boolean
       category: string
     }> = []
@@ -464,47 +270,24 @@ export default function TheBeautyBoxPage() {
     return products
   }
 
-  const getSelectedProducts = () => {
-    const allProducts = getAvailableProducts()
-    return allProducts.filter((product) => config.selectedProducts.includes(product.id))
+  const getAvailableServices = () => {
+    return SERVICES.filter((service) => service.available)
   }
-
-  // Auto-scroll to continue button when selection is complete
-  useEffect(() => {
-    const plan = getSelectedPlan()
-    if (!plan) return
-
-    const maxProducts = plan?.maxProducts || 0
-
-    if (config.selectedProducts.length === maxProducts && !config.unlimitedSelection) {
-      setTimeout(() => {
-        if (continueButtonRef.current) {
-          continueButtonRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
-        }
-      }, 500)
-    }
-  }, [config.selectedProducts, config.unlimitedSelection])
 
   // Auto-scroll to top when step changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [currentStep])
 
-  const progress = ((currentStep + 1) / totalSteps) * 100
-
-  // Helper function to get the icon component
-  const getIconComponent = (iconName: string) => {
-    switch (iconName) {
-      case "Package":
-        return Package
-      case "Sparkles":
-        return Sparkles
-      case "Crown":
-        return Crown
-      default:
-        return Package
+  // If plan is pre-selected from URL, skip to step 1 (plan selection) to show confirmation
+  useEffect(() => {
+    if (searchParams.get("plan") && config.name === "") {
+      // If coming from homepage with plan selected, start at step 0 to get name first
+      setCurrentStep(0)
     }
-  }
+  }, [searchParams, config.name])
+
+  const progress = ((currentStep + 1) / totalSteps) * 100
 
   const renderStep = () => {
     switch (currentStep) {
@@ -516,6 +299,14 @@ export default function TheBeautyBoxPage() {
                 ¡Hola! Diseñemos juntas tu experiencia LuVelle 🌸
               </h2>
               <p className="text-cream/80">Comencemos conociendo tu nombre para personalizar tu experiencia</p>
+              {config.selectedPlan && (
+                <div className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-gold/20 to-beige/20 text-gold px-4 py-2 rounded-full border border-gold/30">
+                  <Crown className="h-4 w-4" />
+                  <span className="font-medium">
+                    Plan {PLANS[config.selectedPlan as keyof typeof PLANS]?.name} preseleccionado
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="max-w-md mx-auto">
@@ -541,147 +332,40 @@ export default function TheBeautyBoxPage() {
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-2">Elegí tu plan</h2>
               <div className="font-playfair text-4xl text-cream mb-6">{config.name}</div>
-              <p className="text-cream/80">Cada plan está diseñado para diferentes necesidades y estilos de vida</p>
-
-              <div className="flex items-center justify-center mt-4 mb-6">
-                <span
-                  className={`text-sm px-3 py-1 rounded-l-full ${!showAnnualPrices ? "bg-gold text-dark" : "bg-dark border border-gold/30 text-cream/70"}`}
-                >
-                  <button onClick={() => setShowAnnualPrices(false)} className="w-full h-full">
-                    Mensual
-                  </button>
-                </span>
-                <span
-                  className={`text-sm px-3 py-1 rounded-r-full ${showAnnualPrices ? "bg-gold text-dark" : "bg-dark border border-gold/30 text-cream/70"}`}
-                >
-                  <button onClick={() => setShowAnnualPrices(true)} className="w-full h-full">
-                    Anual (15% desc.)
-                  </button>
-                </span>
-              </div>
-
-              {showAnnualPrices && (
-                <div className="text-sm text-gold/80 mb-4">
-                  Referí 3 amigas Deluxe y tu siguiente compra podría salirte gratis 💛
-                </div>
-              )}
+              <p className="text-cream/80 mb-6">
+                Cada plan representa un rango de valor. Selecciona el que mejor se adapte a tu presupuesto.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {Object.values(PLANS).map((plan, index) => {
-                // Calcular precio anual con 15% de descuento
-                const annualPrice = showAnnualPrices ? (plan.price * 12 * 0.85).toFixed(2) : plan.price
-
-                // Crear una copia del plan con el precio modificado para mostrar
-                const displayPlan = {
-                  ...plan,
-                  price: showAnnualPrices ? Number(annualPrice) : plan.price,
-                  priceLabel: showAnnualPrices ? "/año" : "/mes",
-                }
-
-                return (
-                  <PlanCard
-                    key={plan.id}
-                    plan={displayPlan}
-                    isSelected={config.plan === plan.id}
-                    onSelect={() => handlePlanSelect(plan.id)}
-                    isPopular={index === 1}
-                    hideButton={true}
-                    showAnnual={showAnnualPrices}
-                  />
-                )
-              })}
+              {Object.values(PLANS).map((plan, index) => (
+                <PlanCard
+                  key={plan.id}
+                  plan={plan}
+                  isSelected={config.selectedPlan === plan.id}
+                  onSelect={() => handlePlanSelect(plan.id)}
+                  isPopular={index === 1}
+                  hideButton={true}
+                />
+              ))}
             </div>
 
             <div className="text-center">
               <p className="text-sm text-cream/60 flex items-center justify-center gap-2">
                 <Info className="h-4 w-4" />
-                ¿Solo querés una vez? Lo decidís más adelante
+                Tu plan final se ajustará automáticamente según los productos que elijas
               </p>
             </div>
           </div>
         )
 
       case 2:
-        // Skip this step for Esencial plan
-        if (config.plan === "esencial") {
-          return null
-        }
-
-        return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-2">¿Qué te interesa más?</h2>
-              <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
-              <p className="text-cream/80">Esto nos ayuda a personalizar mejor tu experiencia</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-              {INTERESTS.map((interest) => {
-                const IconComponent = getIconComponent(interest.icon)
-                return (
-                  <Card
-                    key={interest.id}
-                    className={`cursor-pointer transition-all duration-300 hover-lift group ${
-                      config.interest === interest.id
-                        ? "ring-2 ring-gold bg-beige border-gold shadow-lg shadow-gold/25"
-                        : "border-gold bg-dark hover:border-gold/80 hover:shadow-lg hover:shadow-gold/10"
-                    }`}
-                    onClick={() => setConfig((prev) => ({ ...prev, interest: interest.id }))}
-                  >
-                    <CardContent className="p-8 text-center">
-                      <div className="mb-6">
-                        <div
-                          className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 transition-all duration-300 ${
-                            config.interest === interest.id
-                              ? "bg-gradient-to-br from-dark/15 to-dark/10 border-2 border-dark/30 shadow-lg"
-                              : "bg-gradient-to-br from-beige/10 to-gold/5 border border-beige/20 group-hover:border-gold/30"
-                          }`}
-                        >
-                          <IconComponent
-                            className={`h-8 w-8 transition-all duration-300 ${
-                              config.interest === interest.id
-                                ? "text-dark scale-110"
-                                : "text-beige group-hover:text-gold/80 group-hover:scale-105"
-                            }`}
-                          />
-                        </div>
-                        <h3
-                          className={`font-playfair text-xl font-medium transition-colors duration-300 ${
-                            config.interest === interest.id ? "text-dark" : "text-beige group-hover:text-gold/80"
-                          }`}
-                        >
-                          {interest.name}
-                        </h3>
-                      </div>
-
-                      {config.interest === interest.id && (
-                        <div className="flex items-center justify-center gap-2 text-dark/80 animate-pulse">
-                          <Sparkles className="h-4 w-4" />
-                          <span className="text-sm font-medium">Seleccionado</span>
-                          <Sparkles className="h-4 w-4" />
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )
-              })}
-            </div>
-          </div>
-        )
-
-      case 3:
-        // Skip this step for Esencial plan
-        if (config.plan === "esencial") {
-          return null
-        }
-
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h2 className="font-dancing text-3xl text-gold mb-2">Elegí tus categorías</h2>
               <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
-              <p className="text-cream/80 mb-4">Selecciona las categorías que más te interesan</p>
+              <p className="text-cream/80 mb-4">Selecciona todas las categorías que te interesan, sin límites</p>
               <div className="flex justify-center">
                 <div className="bg-gradient-to-r from-gold/20 to-beige/20 text-gold px-4 py-2 rounded-full border border-gold/30">
                   <span className="font-medium">{config.categories.length} categorías seleccionadas</span>
@@ -703,258 +387,195 @@ export default function TheBeautyBoxPage() {
           </div>
         )
 
-      case 4:
-        // Product selection step - only for Premium/Deluxe
-        if (config.plan === "esencial") {
-          // This step should be skipped for Esencial
-          return null
-        }
-
-        const plan = getSelectedPlan()
-        if (!plan || plan.id === "esencial") {
-          return null
-        }
-
-        const availableProducts = getAvailableProducts()
-        const maxProducts = plan?.maxProducts || 0
-        const selectedCount = config.selectedProducts.length
+      case 3:
+        const availableProducts = getAllProducts()
+        const availableServices = getAvailableServices()
 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-2">Seleccioná tus productos</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Seleccioná productos y servicios</h2>
               <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80 mb-4">
-                Elegí los productos que más te gusten de las categorías seleccionadas
+                Selecciona los productos y servicios que más te gusten para tu Beauty Box.
               </p>
-              <div className="flex justify-center">
-                <div className="bg-gradient-to-r from-gold/20 to-beige/20 text-gold px-4 py-2 rounded-full border border-gold/30">
-                  <span className="font-medium">
-                    {selectedCount} de {config.unlimitedSelection ? `${maxProducts}+` : maxProducts} productos
-                    seleccionados
-                  </span>
-                  {config.unlimitedSelection && selectedCount > maxProducts && (
-                    <span className="ml-2 text-xs bg-gold/30 px-2 py-0.5 rounded-full">
-                      {selectedCount - maxProducts} adicionales
-                    </span>
-                  )}
-                </div>
-              </div>
             </div>
-
-            {selectedCount >= maxProducts && !config.unlimitedSelection && (
-              <div className="max-w-2xl mx-auto mb-6">
-                <div className="bg-gradient-to-r from-gold/10 to-beige/10 border border-gold/20 rounded-xl p-4 flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
-                  <p className="text-cream/90 text-sm">
-                    Has alcanzado el límite de productos incluidos en tu plan. Para incluir otro producto, primero
-                    eliminá uno de tu Box o habilita la selección de productos adicionales.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {config.unlimitedSelection && selectedCount > maxProducts && (
-              <div className="max-w-2xl mx-auto mb-6">
-                <div className="bg-gradient-to-r from-gold/20 to-beige/10 border border-gold/30 rounded-xl p-4 flex items-start gap-3">
-                  <Sparkles className="h-5 w-5 text-gold mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-gold font-medium">Productos adicionales seleccionados</p>
-                    <p className="text-cream/90 text-sm">
-                      Has seleccionado {selectedCount - maxProducts} producto(s) adicional(es). Cada producto adicional
-                      tendrá un costo extra de $5.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
 
             {config.categories.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-cream/60">Primero selecciona algunas categorías en el paso anterior</p>
               </div>
-            ) : availableProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-cream/60">No hay productos disponibles para las categorías seleccionadas</p>
-              </div>
             ) : (
               <div className="space-y-8">
-                {config.categories.map((categoryId) => {
-                  const category = CATEGORIES.find((c) => c.id === categoryId)
-                  const categoryProducts = PRODUCTS[categoryId as keyof typeof PRODUCTS] || []
+                {/* Products Section */}
+                {availableProducts.length > 0 && (
+                  <div>
+                    <h3 className="font-playfair text-xl font-medium text-cream mb-6 flex items-center gap-3">
+                      <Package className="h-6 w-6 text-gold" />
+                      Productos disponibles
+                    </h3>
 
-                  if (categoryProducts.length === 0) return null
+                    {config.categories.map((categoryId) => {
+                      const category = CATEGORIES.find((c) => c.id === categoryId)
+                      const categoryProducts = PRODUCTS[categoryId as keyof typeof PRODUCTS] || []
 
-                  return (
-                    <div
-                      key={categoryId}
-                      className="bg-gradient-to-br from-dark via-dark/95 to-blue/20 rounded-2xl p-6 border border-gold/20"
-                    >
-                      <h3 className="font-playfair text-xl font-medium text-cream mb-6 flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full flex items-center justify-center border border-gold/30">
-                          <span className="text-xl">{category?.icon}</span>
+                      if (categoryProducts.length === 0) return null
+
+                      return (
+                        <div
+                          key={categoryId}
+                          className="bg-gradient-to-br from-dark via-dark/95 to-blue/20 rounded-2xl p-6 border border-gold/20 mb-6"
+                        >
+                          <h4 className="font-playfair text-lg font-medium text-cream mb-4 flex items-center gap-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-gold/20 to-gold/10 rounded-full flex items-center justify-center border border-gold/30">
+                              <span className="text-lg">{category?.icon}</span>
+                            </div>
+                            {category?.name}
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {categoryProducts.map((product) => (
+                              <ProductCard
+                                key={product.id}
+                                product={product}
+                                isSelected={(config.selectedProducts[product.id] || 0) > 0}
+                                quantity={config.selectedProducts[product.id] || 0}
+                                onSelect={() => handleProductSelect(product.id)}
+                                onQuantityChange={(quantity) => handleProductQuantityChange(product.id, quantity)}
+                              />
+                            ))}
+                          </div>
                         </div>
-                        {category?.name}
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {categoryProducts.map((product) => (
-                          <ProductCard
-                            key={product.id}
-                            product={product}
-                            isSelected={config.selectedProducts.includes(product.id)}
-                            onSelect={() => handleProductSelect(product.id)}
-                            disabled={
-                              !config.selectedProducts.includes(product.id) &&
-                              selectedCount >= maxProducts &&
-                              !config.unlimitedSelection
-                            }
-                          />
-                        ))}
-                      </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* Services Section */}
+                {availableServices.length > 0 && (
+                  <div className="bg-gradient-to-br from-dark via-dark/95 to-blue/20 rounded-2xl p-6 border border-gold/20">
+                    <h3 className="font-playfair text-xl font-medium text-cream mb-6 flex items-center gap-3">
+                      <Sparkles className="h-6 w-6 text-gold" />
+                      Servicios disponibles
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {availableServices.map((service) => (
+                        <Card
+                          key={service.id}
+                          className={`cursor-pointer transition-all duration-300 hover-lift ${
+                            (config.selectedServices[service.id] || 0) > 0
+                              ? "ring-2 ring-gold bg-beige border-gold shadow-lg shadow-gold/25"
+                              : "border-gold bg-dark hover:border-gold/80 hover:shadow-lg hover:shadow-gold/10"
+                          }`}
+                          onClick={() => handleServiceSelect(service.id)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="space-y-2">
+                              <h4
+                                className={`font-medium ${(config.selectedServices[service.id] || 0) > 0 ? "text-dark" : "text-cream"}`}
+                              >
+                                {service.name}
+                              </h4>
+                              <p
+                                className={`text-sm ${(config.selectedServices[service.id] || 0) > 0 ? "text-dark/70" : "text-gold/80"}`}
+                              >
+                                {service.provider}
+                              </p>
+                              <p
+                                className={`text-xs ${(config.selectedServices[service.id] || 0) > 0 ? "text-dark/60" : "text-cream/70"}`}
+                              >
+                                {service.description}
+                              </p>
+                              <p
+                                className={`text-sm font-bold ${(config.selectedServices[service.id] || 0) > 0 ? "text-dark" : "text-gold"}`}
+                              >
+                                ₡{service.price.toLocaleString()}
+                              </p>
+                            </div>
+
+                            {(config.selectedServices[service.id] || 0) > 0 && (
+                              <div className="mt-3 flex items-center justify-center gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleServiceQuantityChange(
+                                      service.id,
+                                      Math.max(0, (config.selectedServices[service.id] || 0) - 1),
+                                    )
+                                  }}
+                                  className="w-8 h-8 p-0 border-dark/30 text-dark hover:bg-dark/10"
+                                >
+                                  <Plus className="h-3 w-3 rotate-45" />
+                                </Button>
+                                <span className="text-dark font-medium w-8 text-center">
+                                  {config.selectedServices[service.id]}
+                                </span>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleServiceQuantityChange(
+                                      service.id,
+                                      (config.selectedServices[service.id] || 0) + 1,
+                                    )
+                                  }}
+                                  className="w-8 h-8 p-0 border-dark/30 text-dark hover:bg-dark/10"
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
-                  )
-                })}
+                  </div>
+                )}
               </div>
             )}
+
+            {/* Warnings */}
+            {pricing.utilidad < 5000 &&
+              (Object.keys(config.selectedProducts).length > 0 || Object.keys(config.selectedServices).length > 0) && (
+                <div className="max-w-2xl mx-auto">
+                  <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-xl p-4 flex items-start gap-3">
+                    <Lightbulb className="h-5 w-5 text-yellow-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-yellow-100 font-medium">💡 Tu caja tiene un margen bajo</p>
+                      <p className="text-yellow-200/80 text-sm mt-1">
+                        Considerá agregar más productos o cambiar de nivel para una mejor experiencia.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
           </div>
         )
 
-      case 5:
-        const finalPlan = getSelectedPlan()
-        const selectedCategories = getSelectedCategories()
-        const selectedProducts = getSelectedProducts()
-        const basePrice = finalPlan?.price || 0
-        const maxIncludedProducts = finalPlan?.maxProducts || 0
-        const additionalProducts = Math.max(0, config.selectedProducts.length - maxIncludedProducts)
-        const extraProductsPrice = (config.extraProducts + additionalProducts) * 5
-        const extraServicesPrice = config.extraServices * 10
-        const totalPrice = basePrice + extraProductsPrice + extraServicesPrice
+      case 4:
+        const selectedProductsList = Object.entries(config.selectedProducts)
+          .map(([productId, quantity]) => {
+            const allProducts = getAllProducts()
+            const product = allProducts.find((p) => p.id === productId)
+            return product ? { ...product, quantity } : null
+          })
+          .filter(Boolean)
 
-        const planDescription =
-          config.plan === "premium"
-            ? "Caja mixta (2-3 productos + 1 servicio o sesión mensual)"
-            : config.plan === "deluxe"
-              ? "Caja personalizada completa (3+ productos + 2 servicios) + beneficios financieros + eventos exclusivos"
-              : "Acceso a contenidos digitales y comunidad"
+        const selectedServicesList = Object.entries(config.selectedServices)
+          .map(([serviceId, quantity]) => {
+            const service = SERVICES.find((s) => s.id === serviceId)
+            return service ? { ...service, quantity } : null
+          })
+          .filter(Boolean)
 
-        // Special layout for Esencial plan
-        if (config.plan === "esencial") {
-          const premiumPlan = PLANS.premium
-          const upgradePrice = +(premiumPlan.price - basePrice).toFixed(1) // Formato con un decimal
+        const finalPlan = Object.values(PLANS).find((plan) => plan.id === pricing.planAlcanzado)
 
-          return (
-            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 items-center min-h-[600px]">
-              {/* Right side - Content - Primero en móvil */}
-              <div className="space-y-6 order-1 lg:order-2">
-                <div className="text-center lg:text-left">
-                  <h2 className="font-dancing text-3xl text-gold mb-2">¡Perfecto, {config.name}!</h2>
-                  <p className="text-cream/80 mb-6">
-                    Has elegido el plan Esencial. Tendrás acceso a contenidos digitales exclusivos y nuestra comunidad.
-                  </p>
-                </div>
-
-                {/* Plan Summary */}
-                <Card className="border-gold/20 bg-dark/80 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-gold">Plan Esencial</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-cream">Precio mensual</span>
-                      <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
-                    </div>
-                    <div className="text-sm text-cream/80 mt-2">{planDescription}</div>
-
-                    <div className="mt-4 p-3 bg-gold/5 rounded-lg border border-gold/10">
-                      <p className="text-sm text-cream/90">
-                        Incluye acceso a contenidos digitales, comunidad LuVelle, eventos online y descuentos
-                        exclusivos.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Upgrade Suggestion */}
-                <Card className="border-blue/30 bg-gradient-to-br from-dark/90 to-blue/20 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue/30 to-blue/20 rounded-full flex items-center justify-center flex-shrink-0">
-                        <Gift className="h-6 w-6 text-cream" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-cream mb-2 flex items-center gap-2">
-                          ¿Querés crear tu propia Beauty Box?
-                          <ArrowUp className="h-4 w-4 text-gold" />
-                        </h3>
-                        <p className="text-cream/90 text-sm mb-4">
-                          Por solo <span className="font-bold text-gold">${upgradePrice} más al mes</span>, podés
-                          actualizar al plan Premium y empezar a recibir productos personalizados mensualmente para
-                          concentrarte en esos días especiales de autocuidado.
-                        </p>
-                        <div className="space-y-2 text-xs text-cream/80">
-                          <div className="flex items-center gap-2">
-                            <Check className="h-3 w-3 text-gold" />
-                            <span>2-3 productos personalizados + 1 servicio mensual</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Check className="h-3 w-3 text-gold" />
-                            <span>Selección de productos según tus preferencias</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Check className="h-3 w-3 text-gold" />
-                            <span>3% de cashback por cada referida</span>
-                          </div>
-                        </div>
-                        <Button
-                          onClick={() => {
-                            setConfig((prev) => ({ ...prev, plan: "premium" }))
-                            setCurrentStep(2) // Go to interest selection for Premium
-                          }}
-                          className="mt-4 bg-gradient-to-r from-gold to-gold/80 text-dark hover:from-gold/90 hover:to-gold/70 font-semibold"
-                          size="sm"
-                        >
-                          <ArrowUp className="mr-2 h-4 w-4" />
-                          Actualizar a Premium
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Total */}
-                <Card className="border-gold/20 bg-gold/10 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center text-lg">
-                      <span className="text-cream font-semibold">Total mensual:</span>
-                      <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
-                    </div>
-                    <p className="text-xs text-cream/70 mt-2">
-                      Sin compromisos • Cancela cuando quieras • Actualiza tu plan en cualquier momento
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Left side - Image - Segundo en móvil */}
-              <div className="relative order-2 lg:order-1 mt-6 lg:mt-0">
-                <div className="relative z-10">
-                  <img
-                    src="/images/beauty-box-woman.png"
-                    alt="Mujer profesional con Beauty Box LuVelle"
-                    className="w-full max-w-md mx-auto rounded-2xl shadow-2xl hover-lift"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-blue/20 rounded-2xl blur-3xl animate-pulse-slow" />
-              </div>
-            </div>
-          )
-        }
-
-        // Regular layout for Premium/Deluxe plans
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="font-dancing text-3xl text-gold mb-2">Tu Plan LuVelle</h2>
+              <h2 className="font-dancing text-3xl text-gold mb-2">Tu Beauty Box personalizada</h2>
               <div className="font-playfair text-2xl text-cream mb-4">{config.name}</div>
               <p className="text-cream/80">Revisa tu configuración y personaliza aún más tu experiencia</p>
             </div>
@@ -963,61 +584,65 @@ export default function TheBeautyBoxPage() {
               {/* Plan Summary */}
               <Card className="border-gold/20 bg-dark">
                 <CardHeader>
-                  <CardTitle className="text-gold">Plan {finalPlan?.name}</CardTitle>
+                  <CardTitle className="text-gold flex items-center gap-2">
+                    <Crown className="h-5 w-5" />
+                    Plan {finalPlan?.name}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-between items-center mb-4">
-                    <span className="text-cream">Precio base</span>
-                    <span className="text-cream font-semibold">${finalPlan?.price}/mes</span>
+                    <span className="text-cream">Precio final</span>
+                    <span className="text-cream font-semibold">₡{pricing.precioFinal.toLocaleString()}</span>
                   </div>
-                  <div className="text-sm text-cream/80 mt-2">{planDescription}</div>
+                  <div className="text-sm text-cream/80 mt-2">{finalPlan?.description}</div>
 
-                  {config.plan !== "esencial" && (
-                    <div className="space-y-2 mt-4">
-                      <p className="text-sm text-cream/80">Categorías seleccionadas:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedCategories.map((category) => (
-                          <span key={category.id} className="text-xs bg-gold/10 text-cream px-2 py-1 rounded-full">
-                            {category.icon} {category.name}
+                  <div className="space-y-2 mt-4">
+                    <p className="text-sm text-cream/80">Categorías seleccionadas:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {config.categories.map((categoryId) => {
+                        const category = CATEGORIES.find((c) => c.id === categoryId)
+                        return (
+                          <span key={categoryId} className="text-xs bg-gold/10 text-cream px-2 py-1 rounded-full">
+                            {category?.icon} {category?.name}
                           </span>
-                        ))}
-                      </div>
+                        )
+                      })}
                     </div>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Selected Products */}
-              {config.plan !== "esencial" && selectedProducts.length > 0 && (
+              {selectedProductsList.length > 0 && (
                 <Card className="border-gold/20 bg-dark">
                   <CardHeader>
                     <CardTitle className="text-cream flex items-center justify-between">
                       <span>Productos seleccionados</span>
-                      {additionalProducts > 0 && (
-                        <span className="text-sm bg-gold/20 text-gold px-2 py-1 rounded-full">
-                          {additionalProducts} adicionales
-                        </span>
-                      )}
+                      <span className="text-sm bg-gold/20 text-gold px-2 py-1 rounded-full">
+                        {selectedProductsList.length} productos
+                      </span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {selectedProducts.map((product, index) => (
-                        <div
-                          key={product.id}
-                          className={`flex items-center space-x-3 p-2 rounded-lg ${
-                            index >= maxIncludedProducts ? "bg-gold/10 border border-gold/30" : "bg-dark/60"
-                          }`}
-                        >
-                          <img
-                            src={product.image || "/placeholder.svg"}
-                            alt={product.name}
-                            className="w-12 h-12 object-cover rounded"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-cream truncate">{product.name}</p>
-                            <p className="text-xs text-gold/80">{product.brand}</p>
-                            {index >= maxIncludedProducts && <p className="text-xs text-gold mt-1">+$5.00</p>}
+                    <div className="space-y-3">
+                      {selectedProductsList.map((product) => (
+                        <div key={product!.id} className="flex items-center justify-between p-3 bg-dark/60 rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <img
+                              src={product!.image || "/placeholder.svg"}
+                              alt={product!.name}
+                              className="w-12 h-12 object-cover rounded"
+                            />
+                            <div>
+                              <p className="text-sm font-medium text-cream">{product!.name}</p>
+                              <p className="text-xs text-gold/80">{product!.brand}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-cream">Cantidad: {product!.quantity}</p>
+                            <p className="text-xs text-gold">
+                              ₡{(product!.price * product!.quantity).toLocaleString()}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -1026,268 +651,97 @@ export default function TheBeautyBoxPage() {
                 </Card>
               )}
 
-              {/* Extras */}
-              {(config.plan === "premium" || config.plan === "deluxe") && (
+              {/* Selected Services */}
+              {selectedServicesList.length > 0 && (
                 <Card className="border-gold/20 bg-dark">
                   <CardHeader>
-                    <CardTitle className="text-cream flex items-center gap-2">
-                      <Plus className="h-5 w-5 text-gold" />
-                      Productos y servicios extras
+                    <CardTitle className="text-cream flex items-center justify-between">
+                      <span>Servicios seleccionados</span>
+                      <span className="text-sm bg-gold/20 text-gold px-2 py-1 rounded-full">
+                        {selectedServicesList.length} servicios
+                      </span>
                     </CardTitle>
-                    <p className="text-sm text-cream/70 mt-2">
-                      Los productos y servicios extras solo te llegarán este mes. A partir del próximo mes, recibirás
-                      únicamente los productos base que seleccionaste.
-                    </p>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    {/* Productos adicionales seleccionados en el paso 4 */}
-                    {additionalProducts > 0 && (
-                      <div className="bg-gradient-to-r from-gold/10 to-beige/10 border border-gold/20 rounded-lg p-4">
-                        <h4 className="text-gold font-medium mb-3 flex items-center gap-2">
-                          <Sparkles className="h-4 w-4" />
-                          Productos adicionales seleccionados ({additionalProducts})
-                        </h4>
-                        <div className="grid grid-cols-1 gap-2 mb-3">
-                          {selectedProducts.slice(maxIncludedProducts).map((product) => (
-                            <div key={product.id} className="flex items-center justify-between text-sm">
-                              <span className="text-cream/90">
-                                {product.name} - {product.brand}
-                              </span>
-                              <span className="text-gold font-medium">+$5.00</span>
-                            </div>
-                          ))}
-                        </div>
-                        <p className="text-xs text-cream/60">
-                          Estos productos fueron seleccionados en el paso anterior y solo llegarán este mes.
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Productos extra manuales */}
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="text-cream font-medium">Productos extra adicionales</span>
-                          <p className="text-xs text-cream/60">$5 cada uno - Solo para este mes</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              setConfig((prev) => ({
-                                ...prev,
-                                extraProducts: Math.max(0, prev.extraProducts - 1),
-                              }))
-                            }
-                            className="border-gold/20 text-cream hover:border-gold hover:text-gold"
-                          >
-                            -
-                          </Button>
-                          <span className="text-cream w-8 text-center font-medium">{config.extraProducts}</span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              setConfig((prev) => ({
-                                ...prev,
-                                extraProducts: prev.extraProducts + 1,
-                              }))
-                            }
-                            className="border-gold/20 text-cream hover:border-gold hover:text-gold"
-                          >
-                            +
-                          </Button>
-                        </div>
-                      </div>
-
-                      {config.plan === "deluxe" && (
-                        <div className="flex justify-between items-center">
+                  <CardContent>
+                    <div className="space-y-3">
+                      {selectedServicesList.map((service) => (
+                        <div key={service!.id} className="flex items-center justify-between p-3 bg-dark/60 rounded-lg">
                           <div>
-                            <span className="text-cream font-medium">Servicios extra adicionales</span>
-                            <p className="text-xs text-cream/60">$10 cada uno - Solo para este mes</p>
+                            <p className="text-sm font-medium text-cream">{service!.name}</p>
+                            <p className="text-xs text-gold/80">{service!.provider}</p>
+                            <p className="text-xs text-cream/70">{service!.description}</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                setConfig((prev) => ({
-                                  ...prev,
-                                  extraServices: Math.max(0, prev.extraServices - 1),
-                                }))
-                              }
-                              className="border-gold/20 text-cream hover:border-gold hover:text-gold"
-                            >
-                              -
-                            </Button>
-                            <span className="text-cream w-8 text-center font-medium">{config.extraServices}</span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() =>
-                                setConfig((prev) => ({
-                                  ...prev,
-                                  extraServices: prev.extraServices + 1,
-                                }))
-                              }
-                              className="border-gold/20 text-cream hover:border-gold hover:text-gold"
-                            >
-                              +
-                            </Button>
+                          <div className="text-right">
+                            <p className="text-sm text-cream">Cantidad: {service!.quantity}</p>
+                            <p className="text-xs text-gold">
+                              ₡{(service!.price * service!.quantity).toLocaleString()}
+                            </p>
                           </div>
                         </div>
-                      )}
+                      ))}
                     </div>
-
-                    {(additionalProducts > 0 || config.extraProducts > 0 || config.extraServices > 0) && (
-                      <div className="bg-blue/10 border border-blue/20 rounded-lg p-3">
-                        <p className="text-sm text-cream/90 flex items-start gap-2">
-                          <Info className="h-4 w-4 text-blue mt-0.5 flex-shrink-0" />
-                          <span>
-                            <strong>Importante:</strong> Los productos y servicios extras son únicamente para este mes.
-                            A partir del próximo ciclo, recibirás solo los productos base de tu plan seleccionado.
-                          </span>
-                        </p>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
               )}
 
               {/* Referral Code */}
-              {(config.plan === "premium" || config.plan === "deluxe") && (
-                <Card className="border-gold/20 bg-dark">
-                  <CardHeader>
-                    <CardTitle className="text-cream">Programa de referidos</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Usar código de referido */}
-                    <div className="space-y-2">
-                      <Label htmlFor="referralCode" className="text-cream/80">
-                        ¿Tienes un código de referido?
-                      </Label>
-                      <Input
-                        id="referralCode"
-                        type="text"
-                        placeholder="Ingresa el código que te compartieron"
-                        value={config.referralCode}
-                        onChange={(e) => setConfig((prev) => ({ ...prev, referralCode: e.target.value }))}
-                        className="bg-dark/60 border-gold/20 text-cream placeholder:text-cream/50"
-                      />
-                      <p className="text-xs text-cream/60">
-                        Si alguien te compartió un código, ingrésalo aquí para que reciba su cashback.
-                      </p>
-                    </div>
+              <Card className="border-gold/20 bg-dark">
+                <CardHeader>
+                  <CardTitle className="text-cream">Programa de referidos</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="referralCode" className="text-cream/80">
+                      ¿Tienes un código de referido?
+                    </Label>
+                    <Input
+                      id="referralCode"
+                      type="text"
+                      placeholder="Ingresa el código que te compartieron"
+                      value={config.referralCode}
+                      onChange={(e) => setConfig((prev) => ({ ...prev, referralCode: e.target.value }))}
+                      className="bg-dark/60 border-gold/20 text-cream placeholder:text-cream/50"
+                    />
+                    <p className="text-xs text-cream/60">
+                      Si alguien te compartió un código, ingrésalo aquí para que reciba su cashback.
+                    </p>
+                  </div>
 
+                  {finalPlan?.cashback && (
                     <div className="border-t border-gold/20 pt-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h4 className="text-cream font-medium">Tu código de referido</h4>
-                          <p className="text-xs text-cream/60">
-                            Comparte este código y gana {config.plan === "premium" ? "3%" : "8%"} de cashback por cada
-                            referida
-                            {config.plan === "deluxe" ? " que compre caja Deluxe de +$120" : ""}
-                          </p>
-                        </div>
-                        <Button
-                          onClick={() => {
-                            const newCode = `${config.name.toUpperCase().replace(/\s+/g, "")}${Math.random().toString(36).substr(2, 4).toUpperCase()}`
-                            setConfig((prev) => ({ ...prev, referralCode: newCode }))
-                            toast({
-                              id: "referral-generated",
-                              title: "¡Código generado!",
-                              description: (
-                                <div className="space-y-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-gold/30 to-gold/20 rounded-lg flex items-center justify-center">
-                                      <Sparkles className="h-4 w-4 text-gold" />
-                                    </div>
-                                    <div>
-                                      <p className="font-medium text-sm">Tu código está listo</p>
-                                      <p className="text-xs font-mono bg-gold/20 px-2 py-1 rounded">{newCode}</p>
-                                    </div>
-                                  </div>
-                                  <p className="text-xs">¡Compártelo con tus amigas y gana cashback!</p>
-                                </div>
-                              ),
-                              variant: "elegant",
-                              duration: 4000,
-                            })
-                          }}
-                          className="bg-gradient-to-r from-gold to-gold/80 text-dark hover:from-gold/90 hover:to-gold/70"
-                          size="sm"
-                        >
-                          Generar mi código
-                        </Button>
+                      <div className="bg-gradient-to-r from-gold/10 to-beige/10 border border-gold/20 rounded-lg p-3">
+                        <p className="text-gold font-medium text-sm">
+                          🎁 Con tu plan {finalPlan.name}, ganarás {finalPlan.cashback}% de cashback por cada referida
+                          {finalPlan.id === "deluxe" && " que compre caja Deluxe de +₡60.000"}
+                        </p>
                       </div>
-
-                      {config.referralCode && (
-                        <div className="bg-gradient-to-r from-gold/10 to-beige/10 border border-gold/20 rounded-lg p-3">
-                          <div className="flex items-center justify-between">
-                            <span className="font-mono text-gold font-medium">{config.referralCode}</span>
-                            <Button
-                              onClick={() => {
-                                navigator.clipboard.writeText(config.referralCode)
-                                toast({
-                                  id: "code-copied",
-                                  title: "¡Copiado!",
-                                  description: (
-                                    <div className="flex items-center gap-2">
-                                      <div className="w-8 h-8 bg-gradient-to-br from-green-400/30 to-green-300/20 rounded-lg flex items-center justify-center">
-                                        <Check className="h-4 w-4 text-green-600" />
-                                      </div>
-                                      <span className="text-sm">Tu código ha sido copiado al portapapeles</span>
-                                    </div>
-                                  ),
-                                  variant: "success",
-                                  duration: 2000,
-                                })
-                              }}
-                              variant="outline"
-                              size="sm"
-                              className="border-gold/30 text-gold hover:bg-gold/10"
-                            >
-                              Copiar
-                            </Button>
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+                  )}
+                </CardContent>
+              </Card>
 
-              {/* Total */}
+              {/* Pricing Breakdown */}
               <Card className="border-gold/20 bg-gold/10">
                 <CardContent className="p-6">
-                  <div className="flex justify-between items-center text-lg">
-                    <span className="text-cream font-semibold">Total mensual:</span>
-                    <span className="text-gold font-bold">${totalPrice.toFixed(2)}</span>
-                  </div>
-                  <div className="mt-2 text-sm text-cream/70">
-                    <div className="flex justify-between">
-                      <span>Plan base:</span>
-                      <span>${basePrice}</span>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm text-cream/70">
+                      <span>Costo productos:</span>
+                      <span>₡{(pricing.costoTotal - 8000).toLocaleString()}</span>
                     </div>
-                    {additionalProducts > 0 && (
-                      <div className="flex justify-between">
-                        <span>Productos adicionales ({additionalProducts}):</span>
-                        <span>${additionalProducts * 5}</span>
+                    <div className="flex justify-between text-sm text-cream/70">
+                      <span>Caja + Envío:</span>
+                      <span>₡8.000</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-cream/70">
+                      <span>Margen aplicado:</span>
+                      <span>{(pricing.margen * 100).toFixed(0)}%</span>
+                    </div>
+                    <div className="border-t border-gold/20 pt-3">
+                      <div className="flex justify-between items-center text-lg">
+                        <span className="text-cream font-semibold">Total mensual:</span>
+                        <span className="text-gold font-bold">₡{pricing.precioFinal.toLocaleString()}</span>
                       </div>
-                    )}
-                    {config.extraProducts > 0 && (
-                      <div className="flex justify-between">
-                        <span>Productos extra ({config.extraProducts}):</span>
-                        <span>${config.extraProducts * 5}</span>
-                      </div>
-                    )}
-                    {config.extraServices > 0 && (
-                      <div className="flex justify-between">
-                        <span>Servicios extra ({config.extraServices}):</span>
-                        <span>${config.extraServices * 10}</span>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -1300,20 +754,6 @@ export default function TheBeautyBoxPage() {
     }
   }
 
-  // Determine which steps to show in the progress bar
-  const getVisibleSteps = () => {
-    if (config.plan === "esencial") {
-      // For Esencial, only show steps 1 (name), 2 (plan), and 6 (summary)
-      return [0, 1, 5]
-    }
-    return Array.from({ length: totalSteps }, (_, i) => i)
-  }
-
-  const visibleSteps = getVisibleSteps()
-  const visibleStepCount = visibleSteps.length
-  const currentVisibleStepIndex = visibleSteps.indexOf(currentStep)
-  const visibleProgress = ((currentVisibleStepIndex + 1) / visibleStepCount) * 100
-
   return (
     <div className="min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4">
@@ -1321,14 +761,14 @@ export default function TheBeautyBoxPage() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-cream/60">
-              Paso {currentVisibleStepIndex + 1} de {visibleStepCount}
+              Paso {currentStep + 1} de {totalSteps}
             </span>
-            <span className="text-sm text-cream/60">{Math.round(visibleProgress)}% completado</span>
+            <span className="text-sm text-cream/60">{Math.round(progress)}% completado</span>
           </div>
           <div className="w-full bg-dark-lighter rounded-full h-2">
             <div
               className="gradient-gold h-2 rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${visibleProgress}%` }}
+              style={{ width: `${progress}%` }}
             />
           </div>
         </div>
@@ -1336,12 +776,12 @@ export default function TheBeautyBoxPage() {
         {/* Step Indicators */}
         <div className="flex justify-center mb-8">
           <div className="flex space-x-2">
-            {visibleSteps.map((stepIndex, i) => (
+            {Array.from({ length: totalSteps }, (_, i) => (
               <button
-                key={stepIndex}
-                onClick={() => handleStepClick(stepIndex)}
+                key={i}
+                onClick={() => handleStepClick(i)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  i <= currentVisibleStepIndex ? "bg-gold" : "bg-cream/30"
+                  i <= currentStep ? "bg-gold" : "bg-cream/30"
                 }`}
               />
             ))}

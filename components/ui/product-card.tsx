@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Clock, Heart, Sparkles } from "lucide-react"
+import { Check, Clock, Heart, Sparkles, Plus, Minus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
 
 interface ProductCardProps {
   product: {
@@ -12,14 +12,24 @@ interface ProductCardProps {
     brand: string
     description: string
     image: string
+    price: number
     available: boolean
   }
   isSelected: boolean
+  quantity?: number
   onSelect: () => void
+  onQuantityChange?: (quantity: number) => void
   disabled?: boolean
 }
 
-export function ProductCard({ product, isSelected, onSelect, disabled }: ProductCardProps) {
+export function ProductCard({
+  product,
+  isSelected,
+  quantity = 0,
+  onSelect,
+  onQuantityChange,
+  disabled,
+}: ProductCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
 
   if (!product.available) {
@@ -48,6 +58,7 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
             <h3 className="font-playfair text-sm font-medium text-blue">{product.name}</h3>
             <p className="text-xs text-blue font-medium">{product.brand}</p>
             <p className="text-xs text-blue line-clamp-2">{product.description}</p>
+            <p className="text-sm font-bold text-blue">₡{product.price.toLocaleString()}</p>
           </div>
         </CardContent>
       </Card>
@@ -113,18 +124,47 @@ export function ProductCard({ product, isSelected, onSelect, disabled }: Product
           <p className={`text-xs line-clamp-2 ${isSelected ? "text-dark/60" : "text-beige/70"}`}>
             {product.description}
           </p>
+          <p className={`text-sm font-bold ${isSelected ? "text-dark" : "text-gold"}`}>
+            ₡{product.price.toLocaleString()}
+          </p>
         </div>
 
-        {isSelected && (
+        {/* Quantity controls for selected products */}
+        {isSelected && onQuantityChange && (
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation()
+                onQuantityChange(Math.max(0, quantity - 1))
+              }}
+              className="w-8 h-8 p-0 border-dark/30 text-dark hover:bg-dark/10"
+            >
+              <Minus className="h-3 w-3" />
+            </Button>
+            <span className="text-dark font-medium w-8 text-center">{quantity}</span>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={(e) => {
+                e.stopPropagation()
+                onQuantityChange(quantity + 1)
+              }}
+              className="w-8 h-8 p-0 border-dark/30 text-dark hover:bg-dark/10"
+            >
+              <Plus className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
+
+        {isSelected && !onQuantityChange && (
           <div className="mt-3 flex items-center justify-center gap-1 text-dark/80">
             <Sparkles className="h-3 w-3 animate-pulse" />
             <span className="text-xs font-medium">En tu Box</span>
             <Sparkles className="h-3 w-3 animate-pulse" />
           </div>
         )}
-
-        {/* Hidden checkbox for accessibility */}
-        <Checkbox checked={isSelected} onChange={onSelect} className="sr-only" disabled={disabled} />
       </CardContent>
     </Card>
   )

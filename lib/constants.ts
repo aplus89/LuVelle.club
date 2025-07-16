@@ -2,57 +2,52 @@ export const PLANS = {
   esencial: {
     id: "esencial",
     name: "Esencial",
-    price: 9.99,
-    description: "Tu primer paso al bienestar inteligente",
-    maxCategories: 0, // No categories for Esencial
-    maxProducts: 0, // No product selection for Esencial
+    minPrice: 26000,
+    maxPrice: 30000,
+    margin: 0.5,
+    description: "Ideal para quienes empiezan su camino de autocuidado",
+    priceRange: "₡26.000 – ₡30.000",
     features: [
-      "Acceso a contenidos digitales de bienestar",
-      "LuVelle AI, podcast, newsletter",
-      "Participación en comunidad de LuVelle",
-      "Invitaciones a eventos y talleres gratuitos online",
-      "Entrada anticipada a lanzamientos",
-      "Acceso a descuentos exclusivos solo digitales",
+      "Contenido digital exclusivo",
+      "Acceso a comunidad y eventos",
+      "Caja con productos esenciales",
+      "Diseñá tu box hasta ₡30.000",
     ],
-    restrictions: ["No incluye creación de Beauty Box", "No accede a productos ni servicios personalizados"],
+    note: "Ideal para comenzar tu ritual de bienestar",
   },
   premium: {
     id: "premium",
     name: "Premium",
-    price: 24.99,
-    description: "Tu experiencia de belleza personalizada",
-    maxCategories: 4,
-    maxProducts: 3,
+    minPrice: 31000,
+    maxPrice: 39000,
+    margin: 0.45,
+    description: "Tu experiencia completa de belleza",
+    priceRange: "₡31.000 – ₡39.000",
+    cashback: 3,
     features: [
-      "Caja mixta (2-3 productos + 1 servicio o sesión mensual)",
-      "Productos personalizados según preferencias",
-      "Selección de productos recomendados por IA",
-      "Acceso al programa de puntos de fidelidad",
-      "3% de cashback por cada referida que compre",
-      "Prioridad en atención al cliente",
-      "Sorpresas mensuales exclusivas",
+      "Productos personalizados",
+      "Hasta 4 categorías recomendadas",
+      "Agregar extras de productos",
+      "3% cashback por referidas",
     ],
-    restrictions: ["No puede agregar servicios (solo productos)", "Puede agregar productos adicionales pagando extra"],
+    note: "Tu experiencia completa de belleza",
   },
   deluxe: {
     id: "deluxe",
     name: "Deluxe",
-    price: 39.99,
-    description: "Lujo, recompensas y acceso total solo para vos",
-    maxCategories: "all",
-    maxProducts: 6,
+    minPrice: 40000,
+    maxPrice: 50000,
+    margin: 0.4,
+    description: "Lujo y recompensas solo para vos",
+    priceRange: "₡40.000 – ₡50.000+",
+    cashback: 8,
     features: [
-      "Caja personalizada completa (3+ productos + 2 servicios)",
-      "Beneficios financieros y eventos exclusivos",
-      "Beauty Box 100% a tu gusto, sin límite de categorías",
-      "Acceso al programa de puntos y upgrades",
-      "Acceso exclusivo a servicios (spa, facial, masajes, etc.)",
-      "8% de cashback por referidas que compren caja Deluxe de +$120",
-      "Caja física de lujo",
-      "Acceso prioritario a proveedoras destacadas",
-      "Participación en sorteos mensuales premium",
+      "Acceso completo sin límites",
+      "Incluye productos y servicios",
+      "8% cashback por referidas Deluxe",
+      "Caja física premium incluida",
     ],
-    restrictions: ["Puede agregar productos y servicios adicionales", "Caja editable en cada ciclo mensual"],
+    note: "Lujo y recompensas solo para vos",
   },
 } as const
 
@@ -127,6 +122,7 @@ export const PRODUCTS = {
       brand: "Florina CR",
       description: "Sérum antioxidante para luminosidad y protección",
       image: "/placeholder.svg?height=200&width=200",
+      price: 8500,
       available: true,
     },
     {
@@ -135,6 +131,7 @@ export const PRODUCTS = {
       brand: "Flormar",
       description: "Hidratación profunda para todo tipo de piel",
       image: "/placeholder.svg?height=200&width=200",
+      price: 6200,
       available: true,
     },
     {
@@ -143,6 +140,7 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "Purifica y minimiza poros",
       image: "/placeholder.svg?height=200&width=200",
+      price: 4800,
       available: true,
     },
     {
@@ -151,6 +149,7 @@ export const PRODUCTS = {
       brand: "Avon",
       description: "Reduce ojeras y líneas de expresión",
       image: "/placeholder.svg?height=200&width=200",
+      price: 7300,
       available: false,
     },
   ],
@@ -161,6 +160,7 @@ export const PRODUCTS = {
       brand: "Flormar",
       description: "Cobertura natural de larga duración",
       image: "/placeholder.svg?height=200&width=200",
+      price: 9200,
       available: true,
     },
     {
@@ -169,6 +169,7 @@ export const PRODUCTS = {
       brand: "Florina CR",
       description: "Color intenso y acabado mate",
       image: "/placeholder.svg?height=200&width=200",
+      price: 3800,
       available: true,
     },
     {
@@ -177,6 +178,7 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "12 tonos versátiles para cualquier look",
       image: "/placeholder.svg?height=200&width=200",
+      price: 12500,
       available: true,
     },
     {
@@ -185,6 +187,7 @@ export const PRODUCTS = {
       brand: "Avon",
       description: "Pestañas voluminosas y definidas",
       image: "/placeholder.svg?height=200&width=200",
+      price: 5600,
       available: false,
     },
   ],
@@ -195,6 +198,7 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "Hidratación intensa para piel suave",
       image: "/placeholder.svg?height=200&width=200",
+      price: 7800,
       available: true,
     },
     {
@@ -203,6 +207,7 @@ export const PRODUCTS = {
       brand: "Florina CR",
       description: "Elimina células muertas y suaviza",
       image: "/placeholder.svg?height=200&width=200",
+      price: 5400,
       available: true,
     },
     {
@@ -211,6 +216,7 @@ export const PRODUCTS = {
       brand: "Flormar",
       description: "Nutrición profunda con aroma relajante",
       image: "/placeholder.svg?height=200&width=200",
+      price: 8900,
       available: true,
     },
   ],
@@ -221,6 +227,7 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "Repara y fortalece cabello dañado",
       image: "/placeholder.svg?height=200&width=200",
+      price: 6700,
       available: true,
     },
     {
@@ -229,6 +236,7 @@ export const PRODUCTS = {
       brand: "Avon",
       description: "Tratamiento intensivo para cabello sedoso",
       image: "/placeholder.svg?height=200&width=200",
+      price: 8200,
       available: true,
     },
     {
@@ -237,6 +245,7 @@ export const PRODUCTS = {
       brand: "Florina CR",
       description: "Nutrición y brillo natural",
       image: "/placeholder.svg?height=200&width=200",
+      price: 5900,
       available: false,
     },
   ],
@@ -247,6 +256,7 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "Relajación y aromaterapia",
       image: "/placeholder.svg?height=200&width=200",
+      price: 4200,
       available: true,
     },
     {
@@ -255,6 +265,7 @@ export const PRODUCTS = {
       brand: "Flormar",
       description: "Baño relajante y desestresante",
       image: "/placeholder.svg?height=200&width=200",
+      price: 3600,
       available: true,
     },
   ],
@@ -265,6 +276,7 @@ export const PRODUCTS = {
       brand: "Florina CR",
       description: "Cuidado delicado y protección",
       image: "/placeholder.svg?height=200&width=200",
+      price: 4800,
       available: true,
     },
     {
@@ -273,10 +285,50 @@ export const PRODUCTS = {
       brand: "Natura",
       description: "Frescura y limpieza en cualquier momento",
       image: "/placeholder.svg?height=200&width=200",
+      price: 3200,
       available: true,
     },
   ],
 } as const
+
+export const SERVICES = [
+  {
+    id: "facial-spa",
+    name: "Facial Spa Completo",
+    provider: "Spa Belleza CR",
+    description: "Tratamiento facial completo con limpieza profunda",
+    price: 15000,
+    category: "facial",
+    available: true,
+  },
+  {
+    id: "masaje-relajante",
+    name: "Masaje Relajante",
+    provider: "Wellness Center",
+    description: "Masaje corporal de 60 minutos",
+    price: 18000,
+    category: "bienestar",
+    available: true,
+  },
+  {
+    id: "manicure-pedicure",
+    name: "Manicure + Pedicure",
+    provider: "Nails Studio",
+    description: "Servicio completo de uñas",
+    price: 12000,
+    category: "belleza",
+    available: true,
+  },
+  {
+    id: "tratamiento-capilar",
+    name: "Tratamiento Capilar",
+    provider: "Hair Salon",
+    description: "Tratamiento reconstructivo para el cabello",
+    price: 20000,
+    category: "cabello",
+    available: true,
+  },
+] as const
 
 export const INTERESTS = [
   { id: "productos", name: "Productos", icon: "Package" },
@@ -292,3 +344,46 @@ export const SOCIAL_LINKS = {
   linkedin: "https://www.linkedin.com/company/luvelleai",
   twitter: "https://twitter.com/LuVelleAi",
 } as const
+
+// Costos fijos
+export const FIXED_COSTS = {
+  box: 4500, // Costo de la caja
+  shipping: 3500, // Costo de envío
+} as const
+
+// Función para determinar el margen dinámico
+export function determinarMargen(costoTotal: number): number {
+  if (costoTotal < 30000) return 0.5
+  if (costoTotal < 40000) return 0.45
+  if (costoTotal < 50000) return 0.4
+  return 0.35
+}
+
+// Función para calcular el precio final
+export function calcularPrecioFinal(costoProductos: number): {
+  costoTotal: number
+  margen: number
+  precioFinal: number
+  utilidad: number
+  planAlcanzado: string
+} {
+  const costoTotal = costoProductos + FIXED_COSTS.box + FIXED_COSTS.shipping
+  const margen = determinarMargen(costoTotal)
+  const precioFinal = Math.round(costoTotal / (1 - margen))
+  const utilidad = precioFinal - costoTotal
+
+  let planAlcanzado = "esencial"
+  if (precioFinal >= PLANS.premium.minPrice && precioFinal <= PLANS.premium.maxPrice) {
+    planAlcanzado = "premium"
+  } else if (precioFinal >= PLANS.deluxe.minPrice) {
+    planAlcanzado = "deluxe"
+  }
+
+  return {
+    costoTotal,
+    margen,
+    precioFinal,
+    utilidad,
+    planAlcanzado,
+  }
+}
