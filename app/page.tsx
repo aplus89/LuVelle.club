@@ -5,8 +5,6 @@ import Link from "next/link"
 import { ArrowRight, Star, CheckCircle, Zap, Shield, Award, Brain, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { EnvironmentCheck } from "@/components/ui/environment-check"
-import { DatabaseStatus } from "@/components/ui/database-status"
 import InteractiveCategories from "@/components/ui/interactive-categories-simple"
 import { PLANS } from "@/lib/constants"
 
@@ -109,12 +107,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
-      {/* Environment and Database Status - Only show if there are issues */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <EnvironmentCheck />
-        <DatabaseStatus />
-      </div>
-
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-dark via-dark/95 to-blue/20" />
