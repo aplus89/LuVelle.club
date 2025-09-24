@@ -4,17 +4,10 @@ import { useState } from "react"
 import { Check, Clock, Heart, Sparkles, Plus, Minus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import type { Item } from "@/lib/supabase"
 
-interface ProductCardProps {
-  product: {
-    id: string
-    name: string
-    brand: string
-    description: string
-    image: string
-    price: number
-    available: boolean
-  }
+interface ItemCardProps {
+  item: Item
   isSelected: boolean
   quantity?: number
   onSelect: () => void
@@ -22,17 +15,10 @@ interface ProductCardProps {
   disabled?: boolean
 }
 
-export function ProductCard({
-  product,
-  isSelected,
-  quantity = 0,
-  onSelect,
-  onQuantityChange,
-  disabled,
-}: ProductCardProps) {
+export function ItemCard({ item, isSelected, quantity = 0, onSelect, onQuantityChange, disabled }: ItemCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  if (!product.available) {
+  if (!item.available) {
     return (
       <Card className="relative overflow-hidden border-beige bg-cream backdrop-blur-sm opacity-80">
         <div className="absolute inset-0 bg-gradient-to-br from-blue/5 to-transparent" />
@@ -40,8 +26,8 @@ export function ProductCard({
           <div className="relative mb-3">
             <div className="w-full h-32 bg-gradient-to-br from-beige/20 to-blue/10 rounded-xl flex items-center justify-center border border-beige">
               <img
-                src={product.image || "/placeholder.svg"}
-                alt={product.name}
+                src={item.image_url || "/placeholder.svg?height=128&width=128"}
+                alt={item.name}
                 className="w-full h-full object-cover rounded-xl grayscale opacity-50"
                 onLoad={() => setImageLoaded(true)}
               />
@@ -55,10 +41,13 @@ export function ProductCard({
           </div>
 
           <div className="space-y-1">
-            <h3 className="font-playfair text-sm font-medium text-blue">{product.name}</h3>
-            <p className="text-xs text-blue font-medium">{product.brand}</p>
-            <p className="text-xs text-blue line-clamp-2">{product.description}</p>
-            <p className="text-sm font-bold text-blue">₡{product.price.toLocaleString()}</p>
+            <h3 className="font-playfair text-sm font-medium text-blue">{item.name}</h3>
+            <p className="text-xs text-blue font-medium">{item.brand || item.provider}</p>
+            <p className="text-xs text-blue line-clamp-2">{item.description}</p>
+            <p className="text-sm font-bold text-blue">₡{item.price.toLocaleString()}</p>
+            <span className="inline-block text-xs bg-blue/10 text-blue px-2 py-1 rounded-full">
+              {item.type === "product" ? "Producto" : "Servicio"}
+            </span>
           </div>
         </CardContent>
       </Card>
@@ -82,8 +71,8 @@ export function ProductCard({
         <div className="relative mb-3">
           <div className="w-full h-32 bg-gradient-to-br from-beige/10 to-gold/5 rounded-xl overflow-hidden border border-beige/20">
             <img
-              src={product.image || "/placeholder.svg"}
-              alt={product.name}
+              src={item.image_url || "/placeholder.svg?height=128&width=128"}
+              alt={item.name}
               className={`w-full h-full object-cover transition-all duration-300 ${
                 imageLoaded ? "opacity-100" : "opacity-0"
               } ${isSelected ? "scale-105" : "group-hover:scale-102"}`}
@@ -110,6 +99,19 @@ export function ProductCard({
               )}
             </div>
           </div>
+
+          {/* Type indicator */}
+          <div className="absolute top-2 left-2">
+            <span
+              className={`text-xs px-2 py-1 rounded-full ${
+                item.type === "product"
+                  ? "bg-green-500/20 text-green-300 border border-green-400/30"
+                  : "bg-purple-500/20 text-purple-300 border border-purple-400/30"
+              }`}
+            >
+              {item.type === "product" ? "Producto" : "Servicio"}
+            </span>
+          </div>
         </div>
 
         <div className="space-y-1">
@@ -118,18 +120,18 @@ export function ProductCard({
               isSelected ? "text-dark" : "text-beige group-hover:text-gold/80"
             }`}
           >
-            {product.name}
+            {item.name}
           </h3>
-          <p className={`text-xs font-medium ${isSelected ? "text-dark/70" : "text-gold/80"}`}>{product.brand}</p>
-          <p className={`text-xs line-clamp-2 ${isSelected ? "text-dark/60" : "text-beige/70"}`}>
-            {product.description}
+          <p className={`text-xs font-medium ${isSelected ? "text-dark/70" : "text-gold/80"}`}>
+            {item.brand || item.provider}
           </p>
+          <p className={`text-xs line-clamp-2 ${isSelected ? "text-dark/60" : "text-beige/70"}`}>{item.description}</p>
           <p className={`text-sm font-bold ${isSelected ? "text-dark" : "text-gold"}`}>
-            ₡{product.price.toLocaleString()}
+            ₡{item.price.toLocaleString()}
           </p>
         </div>
 
-        {/* Quantity controls for selected products */}
+        {/* Quantity controls for selected items */}
         {isSelected && onQuantityChange && (
           <div className="mt-3 flex items-center justify-center gap-2">
             <Button

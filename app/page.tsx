@@ -5,6 +5,9 @@ import Link from "next/link"
 import { ArrowRight, Star, CheckCircle, Zap, Shield, Award, Brain, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { EnvironmentCheck } from "@/components/ui/environment-check"
+import { DatabaseStatus } from "@/components/ui/database-status"
+import InteractiveCategories from "@/components/ui/interactive-categories-simple"
 import { PLANS } from "@/lib/constants"
 
 export default function HomePage() {
@@ -106,6 +109,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen">
+      {/* Environment and Database Status - Only show if there are issues */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <EnvironmentCheck />
+        <DatabaseStatus />
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-dark via-dark/95 to-blue/20" />
@@ -188,47 +197,39 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Interactive Categories Section */}
       <section className="py-20 bg-gradient-to-b from-dark/90 to-blue/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative">
-              <div className="relative z-10">
-                <img
-                  src="/images/beauty-box-woman.png"
-                  alt="Mujer disfrutando productos LuVelle"
-                  className="w-full max-w-md mx-auto rounded-2xl shadow-2xl hover-lift"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-r from-gold/20 to-blue/20 rounded-2xl blur-3xl animate-pulse-slow" />
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-6 leading-tight">
+              Accedé a todo lo que deseás. Sin límites.
+            </h2>
+            <p className="text-lg text-cream/90 mb-6 max-w-4xl mx-auto">
+              Belleza facial, bienestar corporal, productos naturales, servicios profesionales, asesoría financiera,
+              sexualidad consciente, y más.
+            </p>
+            <p className="text-lg text-cream/80 mb-8 font-medium">
+              Todo lo que necesitás, al alcance de tu propia Beauty Box.
+            </p>
+          </div>
 
-            <div className="text-center lg:text-left">
-              <h2 className="font-dancing text-4xl md:text-5xl text-gold mb-6 leading-tight">
-                Accedé a todo lo que deseás. Sin límites.
-              </h2>
-              <p className="text-lg text-cream/90 mb-6">
-                Belleza facial, bienestar corporal, productos naturales, servicios profesionales, asesoría financiera,
-                sexualidad consciente, y más.
-              </p>
-              <p className="text-lg text-cream/80 mb-6 font-medium">
-                Todo lo que necesitás, al alcance de tu propia Beauty Box.
-              </p>
-              <p className="text-cream/70 mb-8">
-                Descubrí la experiencia de miles de mujeres en LATAM que ya eligen con libertad y reciben con estilo.
-              </p>
+          {/* Interactive Categories Component */}
+          <InteractiveCategories />
 
-              <Button
-                asChild
-                size="lg"
-                className="bg-transparent border border-gold text-gold hover:bg-gold/10 transition-all font-semibold"
-              >
-                <Link href="/thebeautybox">
-                  Explorar categorías
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </div>
+          <div className="text-center mt-12">
+            <p className="text-cream/70 mb-8 max-w-2xl mx-auto">
+              Descubrí la experiencia de miles de mujeres en LATAM que ya eligen con libertad y reciben con estilo.
+            </p>
+            <Button
+              asChild
+              size="lg"
+              className="bg-transparent border border-gold text-gold hover:bg-gold/10 transition-all font-semibold"
+            >
+              <Link href="/thebeautybox">
+                Explorar todas las categorías
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

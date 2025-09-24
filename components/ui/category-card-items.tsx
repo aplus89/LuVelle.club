@@ -3,20 +3,16 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, Sparkles } from "lucide-react"
+import type { CategoryFromItems } from "@/lib/supabase"
 
-interface CategoryCardProps {
-  category: {
-    id: string
-    name: string
-    icon: string
-    available: boolean
-  }
+interface CategoryCardItemsProps {
+  category: CategoryFromItems
   isSelected: boolean
   onSelect: () => void
   onNotify?: () => void
 }
 
-export function CategoryCard({ category, isSelected, onSelect, onNotify }: CategoryCardProps) {
+export function CategoryCardItems({ category, isSelected, onSelect, onNotify }: CategoryCardItemsProps) {
   if (!category.available) {
     return (
       <Card className="relative overflow-hidden border-beige bg-cream backdrop-blur-sm opacity-90 hover:opacity-100 transition-all duration-300 hover-lift">
@@ -27,6 +23,7 @@ export function CategoryCard({ category, isSelected, onSelect, onNotify }: Categ
               <span className="text-2xl grayscale opacity-60">{category.icon}</span>
             </div>
             <h3 className="font-playfair text-lg font-medium text-blue mb-2">{category.name}</h3>
+            <p className="text-xs text-blue/70">0 productos disponibles</p>
           </div>
 
           <div className="mb-4">
@@ -85,6 +82,10 @@ export function CategoryCard({ category, isSelected, onSelect, onNotify }: Categ
           >
             {category.name}
           </h3>
+
+          <p className={`text-xs mt-1 ${isSelected ? "text-dark/70" : "text-gold/70"}`}>
+            {category.productCount} productos disponibles
+          </p>
         </div>
 
         {isSelected && (

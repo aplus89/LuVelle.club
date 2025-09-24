@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     description: "Tu experiencia mensual personalizada de belleza y bienestar",
     images: ["/images/luvelle-hero-new.png"],
   },
-    generator: 'v0.dev'
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
