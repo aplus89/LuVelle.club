@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { Instagram, Facebook, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import { SOCIAL_LINKS } from "@/lib/constants"
 
 export function Footer() {
   return (
@@ -106,19 +107,22 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-gold" />
-                <a href="mailto:hola@luvelle.club" className="text-cream/80 hover:text-gold transition-colors text-sm">
-                  hola@luvelle.club
+                <a
+                  href={`mailto:${SOCIAL_LINKS.email}`}
+                  className="text-cream/80 hover:text-gold transition-colors text-sm"
+                >
+                  {SOCIAL_LINKS.email}
                 </a>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-gold" />
                 <a
-                  href="https://wa.me/50688888888"
+                  href={SOCIAL_LINKS.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-cream/80 hover:text-gold transition-colors text-sm"
                 >
-                  +506 8888-8888
+                  +1 555 779-2120
                 </a>
               </div>
               <div className="flex items-center space-x-2">

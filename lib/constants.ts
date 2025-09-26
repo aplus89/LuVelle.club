@@ -1,56 +1,128 @@
-export const PLANS = {
+// Social media links
+export const SOCIAL_LINKS = {
+  instagram: "https://instagram.com/luvelle.club",
+  tiktok: "https://tiktok.com/@luvelle.club",
+  whatsapp: "https://wa.me/15557792120",
+  email: "mailto:hola@luvelle.club",
+}
+
+// Updated subscription plans
+export const SUBSCRIPTION_PLANS = {
   esencial: {
     id: "esencial",
     name: "Esencial",
-    minPrice: 26000,
-    maxPrice: 30000,
-    margin: 0.5,
-    description: "Ideal para quienes empiezan su camino de autocuidado",
-    priceRange: "₡26.000 – ₡30.000",
+    price: "₡26.000 – ₡30.000",
+    priceRange: { min: 26000, max: 30000 },
+    icon: "Package",
+    description: "Ideal para quienes quieren probar LuVelle por primera vez",
     features: [
-      "Contenido digital exclusivo",
-      "Acceso a comunidad y eventos",
-      "Caja con productos esenciales",
-      "Diseñá tu box hasta ₡30.000",
+      "Productos físicos seleccionados por el equipo LuVelle",
+      "No incluye servicios ni personalización",
+      "Caja curada con los mejores productos del mes",
+      "Envío incluido a toda Costa Rica",
     ],
-    note: "Ideal para comenzar tu ritual de bienestar",
+    cta: "Comenzar con Esencial",
+    action: "direct-payment", // Direct payment flow
+    popular: false,
+    color: "from-blue-500/20 to-blue-600/10",
+    borderColor: "border-blue-400/30",
   },
   premium: {
     id: "premium",
     name: "Premium",
-    minPrice: 31000,
-    maxPrice: 39000,
-    margin: 0.45,
-    description: "Tu experiencia completa de belleza",
-    priceRange: "₡31.000 – ₡39.000",
-    cashback: 3,
+    price: "₡31.000 – ₡39.000",
+    priceRange: { min: 31000, max: 39000 },
+    icon: "Crown",
+    description: "Personalización parcial con beneficios exclusivos",
     features: [
-      "Productos personalizados",
-      "Hasta 4 categorías recomendadas",
-      "Agregar extras de productos",
-      "3% cashback por referidas",
+      "Personalización parcial de productos",
+      "Posibilidad de añadir productos extra con puntos",
+      "Acceso limitado a categorías",
+      "Cashback del 3% sobre consumo superior a $120",
     ],
-    note: "Tu experiencia completa de belleza",
+    cta: "Crear mi Caja Premium",
+    action: "wizard", // Redirect to wizard
+    popular: true,
+    ribbon: "✨ Más Elegido",
+    color: "from-gold/20 to-gold/10",
+    borderColor: "border-gold/40",
   },
   deluxe: {
     id: "deluxe",
     name: "Deluxe",
-    minPrice: 40000,
-    maxPrice: 50000,
-    margin: 0.4,
-    description: "Lujo y recompensas solo para vos",
-    priceRange: "₡40.000 – ₡50.000+",
-    cashback: 8,
+    price: "₡40.000 – ₡50.000+",
+    priceRange: { min: 40000, max: 50000 },
+    icon: "Sparkles",
+    description: "Experiencia premium completa y personalizada",
     features: [
-      "Acceso completo sin límites",
-      "Incluye productos y servicios",
-      "8% cashback por referidas Deluxe",
-      "Caja física premium incluida",
+      "Personalización total: productos y servicios",
+      "Acceso completo a todas las categorías",
+      "Cashback del 8% sobre consumo superior a $120",
+      "Posibilidad de compartir o recibir una caja como regalo",
     ],
-    note: "Lujo y recompensas solo para vos",
+    cta: "Diseñar mi Experiencia Deluxe",
+    action: "wizard", // Redirect to wizard
+    popular: false,
+    color: "from-purple-500/20 to-purple-600/10",
+    borderColor: "border-purple-400/30",
   },
-} as const
+}
 
+// Legacy plans (keeping for backward compatibility)
+export const PLANS = {
+  basico: {
+    id: "basico",
+    name: "Básico",
+    price: 25000,
+    originalPrice: 30000,
+    description: "Perfecto para comenzar tu journey de belleza",
+    features: [
+      "3-4 productos de belleza premium",
+      "Envío gratis a toda Costa Rica",
+      "Acceso a la comunidad LuVelle",
+      "Garantía de satisfacción 100%",
+    ],
+    popular: false,
+    cta: "Comenzar con Básico",
+  },
+  premium: {
+    id: "premium",
+    name: "Premium",
+    price: 35000,
+    originalPrice: 45000,
+    description: "La experiencia completa de belleza personalizada",
+    features: [
+      "5-6 productos premium seleccionados",
+      "Personalización según tu perfil",
+      "Productos exclusivos y lanzamientos",
+      "Envío express gratuito",
+      "Soporte prioritario",
+      "Descuentos en compras adicionales",
+    ],
+    popular: true,
+    cta: "Elegir Premium",
+  },
+  deluxe: {
+    id: "deluxe",
+    name: "Deluxe",
+    price: 50000,
+    originalPrice: 65000,
+    description: "Lujo absoluto con productos de alta gama",
+    features: [
+      "7-8 productos de lujo internacional",
+      "Consulta personalizada con expertos",
+      "Acceso VIP a eventos exclusivos",
+      "Productos de edición limitada",
+      "Envío premium con packaging especial",
+      "Cashback del 10% en compras",
+      "Regalos sorpresa mensuales",
+    ],
+    popular: false,
+    cta: "Experiencia Deluxe",
+  },
+}
+
+// Categories for the wizard
 export const CATEGORIES = [
   {
     id: "facial",
@@ -114,6 +186,7 @@ export const CATEGORIES = [
   },
 ] as const
 
+// Products for the wizard
 export const PRODUCTS = {
   facial: [
     {
@@ -291,6 +364,7 @@ export const PRODUCTS = {
   ],
 } as const
 
+// Services for the wizard
 export const SERVICES = [
   {
     id: "facial-spa",
@@ -330,20 +404,27 @@ export const SERVICES = [
   },
 ] as const
 
+// User interests for step 1
 export const INTERESTS = [
-  { id: "productos", name: "Productos", icon: "Package" },
-  { id: "servicios", name: "Servicios", icon: "Sparkles" },
-  { id: "ambos", name: "Ambos", icon: "Crown" },
+  {
+    id: "productos",
+    name: "Productos",
+    icon: "Package",
+    description: "Productos para el cuidado facial y corporal",
+  },
+  {
+    id: "servicios",
+    name: "Servicios",
+    icon: "Sparkles",
+    description: "Cosméticos y productos de belleza",
+  },
+  {
+    id: "ambos",
+    name: "Ambos",
+    icon: "Crown",
+    description: "Productos para el bienestar integral",
+  },
 ] as const
-
-export const SOCIAL_LINKS = {
-  email: "hello@luvelle.club",
-  whatsapp: "https://wa.me/15557792120",
-  instagram: "https://www.instagram.com/luvelle_club",
-  tiktok: "https://www.tiktok.com/@luvelle.club",
-  linkedin: "https://www.linkedin.com/company/luvelleai",
-  twitter: "https://twitter.com/LuVelleAi",
-} as const
 
 // Costos fijos
 export const FIXED_COSTS = {
@@ -373,9 +454,12 @@ export function calcularPrecioFinal(costoProductos: number): {
   const utilidad = precioFinal - costoTotal
 
   let planAlcanzado = "esencial"
-  if (precioFinal >= PLANS.premium.minPrice && precioFinal <= PLANS.premium.maxPrice) {
+  if (
+    precioFinal >= SUBSCRIPTION_PLANS.premium.priceRange.min &&
+    precioFinal <= SUBSCRIPTION_PLANS.premium.priceRange.max
+  ) {
     planAlcanzado = "premium"
-  } else if (precioFinal >= PLANS.deluxe.minPrice) {
+  } else if (precioFinal >= SUBSCRIPTION_PLANS.deluxe.priceRange.min) {
     planAlcanzado = "deluxe"
   }
 

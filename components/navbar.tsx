@@ -1,43 +1,71 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import Image from "next/image"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
+  const [isScrolled, setIsScrolled] = useState(false)
 
-  const navigation = [
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  const navItems = [
     { name: "Inicio", href: "/" },
-    { name: "The Beauty Box", href: "/thebeautybox" },
-    { name: "Partners", href: "/partners" },
+    { name: "Cómo funciona", href: "#como-funciona" },
+    { name: "Planes", href: "#planes" },
+    { name: "Socios", href: "/partners" },
   ]
 
   return (
-    <nav className="sticky top-0 z-50 glass-effect border-b border-gold/20">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "bg-dark/95 backdrop-blur-sm border-b border-gold/20" : "bg-transparent"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <img src="/images/luvelle-logo.png" alt="LuVelle" className="h-8 w-auto" />
+            <Image
+              src="/images/luvelle-logo.png"
+              alt="LuVelle"
+              width={120}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-gold ${
-                  pathname === item.href ? "text-gold" : "text-cream/80"
-                }`}
+                className="text-cream hover:text-gold transition-colors duration-200 font-medium"
               >
                 {item.name}
               </Link>
             ))}
+          </div>
+
+          {/* CTA Button */}
+          <div className="hidden md:block">
+            <Button
+              asChild
+              className="bg-gradient-to-r from-gold to-gold/80 text-dark hover:from-gold/90 hover:to-gold/70 font-semibold px-6"
+            >
+              <Link href="/thebeautybox">Crear mi caja</Link>
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -50,20 +78,28 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-dark/95 backdrop-blur-sm rounded-lg mt-2">
-              {navigation.map((item) => (
+          <div className="md:hidden bg-dark/95 backdrop-blur-sm border-t border-gold/20">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`block px-3 py-2 text-base font-medium transition-colors hover:text-gold ${
-                    pathname === item.href ? "text-gold" : "text-cream/80"
-                  }`}
+                  className="block px-3 py-2 text-cream hover:text-gold transition-colors duration-200"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
+              <div className="px-3 py-2">
+                <Button
+                  asChild
+                  className="w-full bg-gradient-to-r from-gold to-gold/80 text-dark hover:from-gold/90 hover:to-gold/70 font-semibold"
+                >
+                  <Link href="/thebeautybox" onClick={() => setIsOpen(false)}>
+                    Crear mi caja
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         )}

@@ -87,6 +87,8 @@ export async function getAvailableItems(): Promise<Item[]> {
 
 export async function getItemsByCategory(category: string): Promise<Item[]> {
   try {
+    console.log("Fetching items for category:", category)
+
     // First try with available column
     let { data, error } = await supabase
       .from("items")
@@ -109,7 +111,10 @@ export async function getItemsByCategory(category: string): Promise<Item[]> {
     }
 
     // Filter by available if the property exists, otherwise return all
-    return (data || []).filter((item: Item) => item.available !== false)
+    const filteredItems = (data || []).filter((item: Item) => item.available !== false)
+    console.log(`Found ${filteredItems.length} available items for category "${category}"`)
+
+    return filteredItems
   } catch (error) {
     console.error("Unexpected error fetching items by category:", error)
     return []
@@ -191,15 +196,14 @@ export async function getCategoriesFromItems(): Promise<CategoryFromItems[]> {
       return []
     }
 
-    // Get unique categories and count available products
+    // Get unique categories and count ONLY available products
     const categoryMap = new Map<string, { available: number; total: number }>()
 
     data.forEach((item) => {
       const current = categoryMap.get(item.category) || { available: 0, total: 0 }
       current.total += 1
-      // If available column doesn't exist or is null, assume it's available
-      // If available property exists and is not false, count as available
-      if (!item.hasOwnProperty("available") || item.available !== false) {
+      // Only count as available if the available property is explicitly true or doesn't exist (assuming available)
+      if (!item.hasOwnProperty("available") || item.available === true) {
         current.available += 1
       }
       categoryMap.set(item.category, current)
@@ -238,12 +242,38 @@ export async function getCategoriesFromItems(): Promise<CategoryFromItems[]> {
         id: categoryKey,
         name: categoryName,
         icon: categoryIcons[categoryKey] || categoryIcons[categoryName.toLowerCase()] || "🌟",
-        available: counts.available > 0,
-        productCount: counts.available,
+        available: counts.available > 0, // Only available if there are available products
+        productCount: counts.available, // Show only available product count
       })
     })
 
-    return categories.sort((a, b) => a.name.localeCompare(b.name))
+    // Add categories that don't exist in database but should be shown as unavailable
+    const predefinedCategories = [
+      { name: "Medicamentos menstruales", icon: "💊" },
+      { name: "Maternidad", icon: "🤰" },
+      { name: "Lencería", icon: "👙" },
+      { name: "Perfumería", icon: "🌺" },
+    ]
+
+    predefinedCategories.forEach((predefined) => {
+      const exists = categories.find((c) => c.name.toLowerCase() === predefined.name.toLowerCase())
+      if (!exists) {
+        categories.push({
+          id: predefined.name.toLowerCase().replace(/\s+/g, "-"),
+          name: predefined.name,
+          icon: predefined.icon,
+          available: false,
+          productCount: 0,
+        })
+      }
+    })
+
+    return categories.sort((a, b) => {
+      // Sort available categories first, then by name
+      if (a.available && !b.available) return -1
+      if (!a.available && b.available) return 1
+      return a.name.localeCompare(b.name)
+    })
   } catch (error) {
     console.error("Unexpected error fetching categories from items:", error)
     return []
@@ -338,6 +368,32 @@ export function getFallbackCategories(): CategoryFromItems[] {
       productCount: 0,
     },
   ]
+}
+
+// Function to submit notification request for unavailable categories
+export async function submitCategoryNotification(data: {
+  categoryName: string
+  email?: string
+  whatsapp?: string
+}): Promise<{ success: boolean; message: string }> {
+  try {
+    // Here you would typically save to a database table like "category_notifications"
+    // For now, we'll just simulate the API call
+    console.log("Category notification submitted:", data)
+
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    return {
+      success: true,
+      message: "Notificación registrada exitosamente",
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Error al registrar notificación",
+    }
+  }
 }
 
 // Function to check environment variables

@@ -7,6 +7,7 @@ import { CategoryCardItems } from "@/components/ui/category-card-items"
 import { ItemCard } from "@/components/ui/item-card"
 import { PlanCard } from "@/components/ui/plan-card"
 import { EmptyProductsState } from "@/components/ui/empty-products-state"
+import { ProductsErrorState } from "@/components/ui/products-error-state"
 import { NotificationModal } from "@/components/ui/notification-modal"
 import { ReferralModal } from "@/components/ui/referral-modal"
 import { Button } from "@/components/ui/button"
@@ -16,9 +17,9 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useCategoriesFromItems } from "@/hooks/useProducts"
-import { getItemsByCategory, type Item } from "@/lib/supabase"
+import { getItemsByCategory, submitCategoryNotification, type Item } from "@/lib/supabase"
 import { PLANS, INTERESTS, calcularPrecioFinal } from "@/lib/constants"
-import { Crown, Package, Sparkles, Gift, Calculator, ShoppingBag } from "lucide-react"
+import { Crown, Package, Sparkles, Gift, Calculator, ShoppingBag, AlertCircle } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
 interface WizardData {
@@ -38,7 +39,12 @@ interface WizardData {
 export default function TheBeautyBoxPage() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
-  const { categories, loading: categoriesLoading } = useCategoriesFromItems()
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+    refetch: refetchCategories,
+  } = useCategoriesFromItems()
 
   const [currentStep, setCurrentStep] = useState(0)
   const [wizardData, setWizardData] = useState<WizardData>({
@@ -57,6 +63,7 @@ export default function TheBeautyBoxPage() {
 
   const [categoryItems, setCategoryItems] = useState<{ [key: string]: Item[] }>({})
   const [loadingItems, setLoadingItems] = useState(false)
+  const [itemsError, setItemsError] = useState<string | null>(null)
   const [notificationModal, setNotificationModal] = useState<{
     isOpen: boolean
     categoryName: string
@@ -70,6 +77,11 @@ export default function TheBeautyBoxPage() {
 
   const wizardRef = useRef<HTMLDivElement>(null)
 
+  // Auto-scroll to top when component mounts (coming from plans)
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [])
+
   // Check for plan parameter in URL
   useEffect(() => {
     const planParam = searchParams.get("plan")
@@ -81,23 +93,38 @@ export default function TheBeautyBoxPage() {
   // Load items when categories are selected
   useEffect(() => {
     const loadItemsForCategories = async () => {
-      if (wizardData.selectedCategories.length === 0) return
-
-      setLoadingItems(true)
-      const newCategoryItems: { [key: string]: Item[] } = {}
-
-      for (const categoryName of wizardData.selectedCategories) {
-        try {
-          const items = await getItemsByCategory(categoryName)
-          newCategoryItems[categoryName] = items
-        } catch (error) {
-          console.error(`Error loading items for ${categoryName}:`, error)
-          newCategoryItems[categoryName] = []
-        }
+      if (wizardData.selectedCategories.length === 0) {
+        setCategoryItems({})
+        return
       }
 
-      setCategoryItems(newCategoryItems)
-      setLoadingItems(false)
+      setLoadingItems(true)
+      setItemsError(null)
+      const newCategoryItems: { [key: string]: Item[] } = {}
+
+      try {
+        for (const categoryName of wizardData.selectedCategories) {
+          try {
+            console.log(`Loading items for category: "${categoryName}"`)
+            const items = await getItemsByCategory(categoryName)
+            console.log(
+              `Found ${items.length} items for "${categoryName}":`,
+              items.map((i) => i.name),
+            )
+            newCategoryItems[categoryName] = items
+          } catch (error) {
+            console.error(`Error loading items for ${categoryName}:`, error)
+            newCategoryItems[categoryName] = []
+          }
+        }
+
+        console.log("Final categoryItems:", newCategoryItems)
+        setCategoryItems(newCategoryItems)
+      } catch (error) {
+        setItemsError(error instanceof Error ? error.message : "Error loading products")
+      } finally {
+        setLoadingItems(false)
+      }
     }
 
     loadItemsForCategories()
@@ -116,7 +143,6 @@ export default function TheBeautyBoxPage() {
         block: "start",
       })
     } else {
-      // Fallback: scroll to top of page
       window.scrollTo({
         top: 0,
         behavior: "smooth",
@@ -127,7 +153,6 @@ export default function TheBeautyBoxPage() {
   const handleNext = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1)
-      // Scroll to top after state update
       setTimeout(scrollToTop, 100)
     } else {
       handleFinish()
@@ -137,7 +162,6 @@ export default function TheBeautyBoxPage() {
   const handlePrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1)
-      // Scroll to top after state update
       setTimeout(scrollToTop, 100)
     }
   }
@@ -145,7 +169,6 @@ export default function TheBeautyBoxPage() {
   const handleStepClick = (step: number) => {
     if (step <= currentStep || canProceedToStep(step)) {
       setCurrentStep(step)
-      // Scroll to top after state update
       setTimeout(scrollToTop, 100)
     }
   }
@@ -159,7 +182,17 @@ export default function TheBeautyBoxPage() {
       case 2:
         return wizardData.selectedCategories.length > 0
       case 3:
-        return Object.keys(wizardData.selectedItems).length > 0
+        // Can proceed if we have available categories with items OR if all selected categories are unavailable
+        const availableCategories = wizardData.selectedCategories.filter((categoryName) => {
+          const category = categories.find((c) => c.name === categoryName)
+          return category?.available && category?.productCount > 0
+        })
+        const hasSelectedItems = Object.keys(wizardData.selectedItems).length > 0
+
+        // Allow proceeding if either:
+        // 1. We have selected items from available categories
+        // 2. All selected categories are unavailable (they filled notification forms)
+        return hasSelectedItems || availableCategories.length === 0
       case 4:
         return (
           wizardData.personalInfo.name.trim() !== "" &&
@@ -174,11 +207,9 @@ export default function TheBeautyBoxPage() {
   const canProceed = canProceedToStep(currentStep + 1)
 
   const handleFinish = () => {
-    // Calculate final pricing
     const selectedItemsList = Object.entries(wizardData.selectedItems)
       .filter(([_, quantity]) => quantity > 0)
       .map(([itemId, quantity]) => {
-        // Find the item in categoryItems
         for (const items of Object.values(categoryItems)) {
           const item = items.find((i) => i.id === itemId)
           if (item) return { item, quantity }
@@ -187,24 +218,39 @@ export default function TheBeautyBoxPage() {
       })
       .filter(Boolean) as { item: Item; quantity: number }[]
 
-    const totalItemsCost = selectedItemsList.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0)
-    const pricing = calcularPrecioFinal(totalItemsCost)
+    if (selectedItemsList.length === 0) {
+      // Handle case where user only selected unavailable categories
+      toast({
+        title: "¡Gracias por tu interés! 💛",
+        description: "Te contactaremos cuando las categorías seleccionadas estén disponibles.",
+        variant: "elegant",
+      })
+    } else {
+      const totalItemsCost = selectedItemsList.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0)
+      const pricing = calcularPrecioFinal(totalItemsCost)
 
-    toast({
-      title: "¡Beauty Box creada exitosamente! 🎉",
-      description: `Tu box ${pricing.planAlcanzado} por ₡${pricing.precioFinal.toLocaleString()} está lista.`,
-      variant: "elegant",
-    })
+      toast({
+        title: "¡Beauty Box creada exitosamente! 🎉",
+        description: `Tu box ${pricing.planAlcanzado} por ₡${pricing.precioFinal.toLocaleString()} está lista.`,
+        variant: "elegant",
+      })
+    }
 
-    // Here you would typically send the data to your backend
     console.log("Wizard completed:", {
       wizardData,
       selectedItems: selectedItemsList,
-      pricing,
     })
   }
 
   const handleCategorySelect = (categoryName: string) => {
+    const category = categories.find((c) => c.name === categoryName)
+
+    // If category is not available, show notification modal instead of selecting
+    if (!category?.available) {
+      handleNotifyClick(categoryName, category?.icon || "🌟")
+      return
+    }
+
     const isSelected = wizardData.selectedCategories.includes(categoryName)
     const newCategories = isSelected
       ? wizardData.selectedCategories.filter((c) => c !== categoryName)
@@ -245,6 +291,69 @@ export default function TheBeautyBoxPage() {
       categoryName,
       categoryIcon,
     })
+  }
+
+  const handleNotificationSubmit = async (data: { email?: string; whatsapp?: string }) => {
+    try {
+      const result = await submitCategoryNotification({
+        categoryName: notificationModal.categoryName,
+        ...data,
+      })
+
+      if (result.success) {
+        toast({
+          title: "¡Notificación registrada! 📝",
+          description: `Te avisaremos cuando ${notificationModal.categoryName} esté disponible.`,
+          variant: "elegant",
+        })
+
+        // Add the category to selected categories so user can proceed
+        const newCategories = [...wizardData.selectedCategories, notificationModal.categoryName]
+        updateWizardData({ selectedCategories: newCategories })
+      } else {
+        toast({
+          title: "Error al registrar notificación",
+          description: result.message,
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Error al registrar notificación",
+        description: "Por favor intenta de nuevo",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleRetryItems = async () => {
+    if (wizardData.selectedCategories.length === 0) return
+
+    setLoadingItems(true)
+    setItemsError(null)
+    const newCategoryItems: { [key: string]: Item[] } = {}
+
+    try {
+      for (const categoryName of wizardData.selectedCategories) {
+        const items = await getItemsByCategory(categoryName)
+        newCategoryItems[categoryName] = items
+      }
+      setCategoryItems(newCategoryItems)
+    } catch (error) {
+      setItemsError(error instanceof Error ? error.message : "Error loading products")
+    } finally {
+      setLoadingItems(false)
+    }
+  }
+
+  const getErrorType = (error: string): "connection" | "empty" | "unknown" => {
+    if (error.includes("fetch") || error.includes("network") || error.includes("connection")) {
+      return "connection"
+    }
+    if (error.includes("empty") || error.includes("no data") || error.includes("not found")) {
+      return "empty"
+    }
+    return "unknown"
   }
 
   const renderStepContent = () => {
@@ -289,11 +398,26 @@ export default function TheBeautyBoxPage() {
         )
 
       case 1:
+        // Show error state if categories failed to load
+        if (categoriesError) {
+          return (
+            <ProductsErrorState
+              errorType={getErrorType(categoriesError)}
+              onRetry={refetchCategories}
+              isRetrying={categoriesLoading}
+              customMessage="No pudimos cargar las categorías disponibles."
+            />
+          )
+        }
+
         return (
           <div className="space-y-8">
             <div className="text-center">
               <h2 className="font-dancing text-3xl text-gold mb-4">¿Qué categorías te interesan?</h2>
               <p className="text-cream/80">Selecciona las categorías que quieres incluir en tu Beauty Box</p>
+              <p className="text-cream/60 text-sm mt-2">
+                💡 Si una categoría no está disponible, podrás registrarte para recibir notificaciones
+              </p>
             </div>
 
             {categoriesLoading ? (
@@ -323,14 +447,58 @@ export default function TheBeautyBoxPage() {
           return category?.available && category?.productCount > 0
         })
 
+        const unavailableCategories = wizardData.selectedCategories.filter((categoryName) => {
+          const category = categories.find((c) => c.name === categoryName)
+          return !category?.available || category?.productCount === 0
+        })
+
+        // Show error state if items failed to load
+        if (itemsError) {
+          return (
+            <ProductsErrorState
+              errorType={getErrorType(itemsError)}
+              onRetry={handleRetryItems}
+              isRetrying={loadingItems}
+            />
+          )
+        }
+
+        // If no available categories, show empty state
         if (availableCategories.length === 0) {
           return (
-            <EmptyProductsState
-              title="¡Pronto tendremos productos increíbles!"
-              subtitle="Las categorías que seleccionaste están en desarrollo"
-              selectedCategories={wizardData.selectedCategories}
-              showWhatsAppInput={true}
-            />
+            <div className="space-y-8">
+              {unavailableCategories.length > 0 && (
+                <div className="max-w-2xl mx-auto">
+                  <Card className="border-blue-400/30 bg-gradient-to-br from-blue-500/10 to-blue-400/5">
+                    <CardContent className="p-6 text-center">
+                      <AlertCircle className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+                      <h3 className="font-playfair text-xl text-blue-300 mb-2">Categorías en desarrollo</h3>
+                      <p className="text-cream/80 mb-4">
+                        Las categorías que seleccionaste están en desarrollo. Ya registramos tu interés y te
+                        contactaremos cuando estén disponibles.
+                      </p>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {unavailableCategories.map((categoryName) => (
+                          <span
+                            key={categoryName}
+                            className="text-xs bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full border border-blue-400/30"
+                          >
+                            {categoryName}
+                          </span>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              <EmptyProductsState
+                title="¡Pronto tendremos productos increíbles!"
+                subtitle="Mientras tanto, puedes explorar otras categorías"
+                selectedCategories={wizardData.selectedCategories}
+                showWhatsAppInput={false}
+              />
+            </div>
           )
         }
 
@@ -341,6 +509,26 @@ export default function TheBeautyBoxPage() {
               <p className="text-cream/80">Elige los productos que quieres incluir en tu Beauty Box</p>
             </div>
 
+            {unavailableCategories.length > 0 && (
+              <div className="max-w-2xl mx-auto">
+                <Card className="border-blue-400/30 bg-gradient-to-br from-blue-500/10 to-blue-400/5">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-blue-300 text-sm mb-2">✅ Ya registramos tu interés en estas categorías:</p>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {unavailableCategories.map((categoryName) => (
+                        <span
+                          key={categoryName}
+                          className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full border border-blue-400/30"
+                        >
+                          {categoryName}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
             {loadingItems ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto"></div>
@@ -350,13 +538,22 @@ export default function TheBeautyBoxPage() {
               <div className="space-y-8">
                 {availableCategories.map((categoryName) => {
                   const items = categoryItems[categoryName] || []
-                  const availableItems = items.filter((item) => item.available)
+                  const availableItems = items.filter((item) => item.available !== false)
 
-                  if (availableItems.length === 0) return null
+                  if (availableItems.length === 0) {
+                    return (
+                      <div key={categoryName} className="text-center py-8">
+                        <h3 className="font-playfair text-xl text-gold mb-2">{categoryName}</h3>
+                        <p className="text-cream/60">No hay productos disponibles en esta categoría</p>
+                      </div>
+                    )
+                  }
 
                   return (
                     <div key={categoryName}>
-                      <h3 className="font-playfair text-xl text-gold mb-4 text-center">{categoryName}</h3>
+                      <h3 className="font-playfair text-xl text-gold mb-4 text-center">
+                        {categoryName} ({availableItems.length} productos)
+                      </h3>
                       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {availableItems.map((item) => (
                           <ItemCard
@@ -389,6 +586,40 @@ export default function TheBeautyBoxPage() {
             return null
           })
           .filter(Boolean) as { item: Item; quantity: number }[]
+
+        // Handle case where user only selected unavailable categories
+        if (selectedItemsList.length === 0) {
+          return (
+            <div className="space-y-8">
+              <div className="text-center">
+                <h2 className="font-dancing text-3xl text-gold mb-4">¡Gracias por tu interés!</h2>
+                <p className="text-cream/80">
+                  Registramos tu interés en las categorías seleccionadas y te contactaremos cuando estén disponibles.
+                </p>
+              </div>
+
+              <div className="max-w-2xl mx-auto">
+                <Card className="border-gold/30 bg-gradient-to-br from-gold/10 to-gold/5">
+                  <CardContent className="p-8 text-center">
+                    <Crown className="h-16 w-16 text-gold mx-auto mb-4" />
+                    <h3 className="font-playfair text-2xl text-gold mb-4">Tu interés es valioso</h3>
+                    <p className="text-dark/80 mb-6">
+                      Estamos trabajando para traerte las mejores opciones en las categorías que seleccionaste.
+                    </p>
+                    <div className="space-y-2">
+                      {wizardData.selectedCategories.map((categoryName) => (
+                        <div key={categoryName} className="flex items-center justify-center gap-2">
+                          <span className="text-gold">✓</span>
+                          <span className="text-dark">{categoryName}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )
+        }
 
         const totalItemsCost = selectedItemsList.reduce((sum, { item, quantity }) => sum + item.price * quantity, 0)
         const pricing = calcularPrecioFinal(totalItemsCost)
@@ -617,6 +848,7 @@ export default function TheBeautyBoxPage() {
         onClose={() => setNotificationModal({ isOpen: false, categoryName: "", categoryIcon: "" })}
         categoryName={notificationModal.categoryName}
         categoryIcon={notificationModal.categoryIcon}
+        onSubmit={handleNotificationSubmit}
       />
 
       <ReferralModal isOpen={referralModal} onClose={() => setReferralModal(false)} />
