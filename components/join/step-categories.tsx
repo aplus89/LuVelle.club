@@ -7,7 +7,7 @@ import type { Category } from "@/lib/supabase/types"
 import type { WizardState } from "./join-wizard"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
-import { createLead } from "@/lib/supabase/queries"
+import { createLeadAction } from "@/app/actions"
 import { useToast } from "@/hooks/use-toast"
 
 interface StepCategoriesProps {
@@ -36,13 +36,13 @@ export function StepCategories({ categories, state, updateState, onNext, onPrev 
   const handleNotifyMe = async (category: Category) => {
     setNotifyingCategory(category.id)
 
-    const success = await createLead({
+    const result = await createLeadAction({
       persona: "user",
       notes: `Interesado en categoría próximamente: ${category.name}`,
       source: "join-wizard-notify",
     })
 
-    if (success) {
+    if (result.success) {
       toast({
         title: "Te notificaremos",
         description: `Te avisaremos cuando ${category.name} esté disponible.`,

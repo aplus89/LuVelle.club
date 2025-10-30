@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { createBrandApplication } from "@/lib/supabase/queries"
+import { createBrandApplicationAction } from "@/app/actions"
 import { Loader2 } from "lucide-react"
 
 export function BrandApplicationForm() {
@@ -41,9 +41,9 @@ export function BrandApplicationForm() {
 
     setLoading(true)
 
-    const success = await createBrandApplication(formData)
+    const result = await createBrandApplicationAction(formData)
 
-    if (success) {
+    if (result.success) {
       setSubmitted(true)
       toast({
         title: "Postulación enviada",

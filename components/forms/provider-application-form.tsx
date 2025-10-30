@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
-import { createProviderApplication } from "@/lib/supabase/queries"
+import { createProviderApplicationAction } from "@/app/actions"
 import { Loader2 } from "lucide-react"
 
 const categoryOptions = [
@@ -62,9 +62,9 @@ export function ProviderApplicationForm() {
 
     setLoading(true)
 
-    const success = await createProviderApplication(formData)
+    const result = await createProviderApplicationAction(formData)
 
-    if (success) {
+    if (result.success) {
       setSubmitted(true)
       toast({
         title: "Aplicación enviada",
