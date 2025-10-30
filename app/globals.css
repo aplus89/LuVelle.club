@@ -2,50 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
+    --font-sans: var(--font-inter);
+    --font-heading: var(--font-dancing);
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    /* LuVelle Brand Colors - Liquid Glass Theme */
+    --brand-dark: 240 20% 8%;
+    --brand-blue: 240 30% 12%;
+    --brand-cream: 40 20% 95%;
+    --brand-gold: 45 85% 70%;
+    --brand-gold-dark: 45 85% 60%;
+
+    /* Design Tokens */
+    --background: var(--brand-dark);
+    --foreground: var(--brand-cream);
+    --card: 240 15% 10%;
+    --card-foreground: var(--brand-cream);
+    --popover: 240 20% 12%;
+    --popover-foreground: var(--brand-cream);
+    --primary: var(--brand-gold);
+    --primary-foreground: var(--brand-dark);
+    --secondary: 240 15% 15%;
+    --secondary-foreground: var(--brand-cream);
+    --muted: 240 10% 20%;
+    --muted-foreground: 40 10% 70%;
+    --accent: var(--brand-gold);
+    --accent-foreground: var(--brand-dark);
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: var(--brand-cream);
+    --border: 240 15% 20%;
+    --input: 240 15% 15%;
+    --ring: var(--brand-gold);
+    --radius: 1rem;
+
+    /* Glass effect variables */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-highlight: rgba(246, 206, 111, 0.1);
   }
 }
 
@@ -53,56 +53,91 @@
   * {
     @apply border-border;
   }
+  /* Using standard CSS instead of @apply for gradient to avoid Tailwind parsing issues */
   body {
-    @apply bg-background text-foreground;
+    background: linear-gradient(to bottom right, hsl(var(--brand-dark)), hsl(var(--brand-blue)), hsl(var(--brand-dark)));
+    color: hsl(var(--foreground));
+    min-height: 100vh;
   }
 }
 
-.font-dancing {
-  font-family: "Dancing Script", cursive;
+/* Liquid Glass Card Styles */
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+    position: relative;
+  }
+
+  .glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(246, 206, 111, 0.2), transparent, rgba(246, 206, 111, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .glass-card:hover::before {
+    opacity: 1;
+  }
+
+  .glass-card-highlight {
+    @apply glass-card;
+    @apply ring-1 ring-[hsl(var(--brand-gold))]/30;
+  }
+
+  /* Replaced @apply with standard CSS to fix Tailwind parsing issues with arbitrary values */
+  .glass-button {
+    background-color: hsl(var(--brand-gold));
+    color: hsl(var(--brand-dark));
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 0 2px hsl(var(--brand-gold) / 0.2);
+  }
+
+  .glass-button:hover {
+    background-color: hsl(var(--brand-gold-dark));
+    box-shadow: 0 0 0 2px hsl(var(--brand-gold) / 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    transform: scale(1.05);
+  }
+
+  .glass-button-outline {
+    background-color: transparent;
+    border: 2px solid hsl(var(--brand-gold) / 0.5);
+    color: hsl(var(--brand-gold));
+    transition: all 0.3s ease;
+  }
+
+  .glass-button-outline:hover {
+    background-color: hsl(var(--brand-gold) / 0.1);
+    border-color: hsl(var(--brand-gold));
+  }
+
+  .heading-font {
+    font-family: var(--font-heading);
+    color: hsl(var(--brand-gold));
+  }
 }
 
-.font-playfair {
-  font-family: "Playfair Display", serif;
-}
-
-.gradient-gold {
-  background: linear-gradient(135deg, #f6ce6f 0%, #e6b85c 100%);
-}
-
-.gradient-dark {
-  background: linear-gradient(135deg, #141322 0%, #1a1a2e 100%);
-}
-
-.glass-effect {
-  backdrop-filter: blur(10px);
-  background: rgba(20, 19, 34, 0.8);
-  border: 1px solid rgba(246, 206, 111, 0.2);
-}
-
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%,
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
   100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
+    background-position: 200% center;
   }
 }
 
-.animate-pulse-slow {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(246, 206, 111, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
 }

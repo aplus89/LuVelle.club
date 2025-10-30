@@ -1,214 +1,118 @@
-"use client"
+import { BrandApplicationForm } from "@/components/forms/brand-application-form"
+import { GlassCard } from "@/components/ui/glass-card"
+import { Target, BarChart, MessageSquare, Zap, Globe, TrendingUp } from "lucide-react"
 
-import type React from "react"
-
-import { useState } from "react"
-import { CheckCircle, Send } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+const benefits = [
+  {
+    icon: Target,
+    title: "Audiencia calificada",
+    description: "Llegá a mujeres apasionadas por la belleza premium",
+  },
+  {
+    icon: BarChart,
+    title: "Distribución garantizada",
+    description: "Exposición mensual a cientos de clientas potenciales",
+  },
+  {
+    icon: MessageSquare,
+    title: "Feedback directo",
+    description: "Conocé la opinión real de tus usuarias",
+  },
+  {
+    icon: Zap,
+    title: "Lanzamientos rápidos",
+    description: "Probá nuevos productos con nuestra comunidad",
+  },
+  {
+    icon: Globe,
+    title: "Alcance nacional",
+    description: "Presencia en todo Costa Rica",
+  },
+  {
+    icon: TrendingUp,
+    title: "Crecimiento medible",
+    description: "Métricas y reportes de desempeño",
+  },
+]
 
 export default function PartnersPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false)
-  const [partnerType, setPartnerType] = useState<string>("brand")
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Simulate form submission
-    setTimeout(() => {
-      setFormSubmitted(true)
-    }, 1000)
-  }
-
   return (
-    <div className="min-h-screen py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="font-dancing text-4xl md:text-5xl text-gold mb-4">Partners LuVelle</h1>
-          <p className="text-lg text-beige/80 max-w-2xl mx-auto">
-            Únete a nuestra red exclusiva de marcas y servicios de belleza y bienestar
+    <main className="min-h-screen py-12">
+      <div className="container mx-auto px-4">
+        {/* Hero Section */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <h1 className="heading-font text-4xl md:text-6xl font-bold mb-6">Conectá tu marca con nuestra comunidad</h1>
+          <p className="text-xl text-[hsl(var(--brand-cream))]/80 leading-relaxed">
+            Distribuí tus productos de belleza con una audiencia premium y comprometida en Costa Rica.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          {/* Benefits */}
-          <div>
-            <h2 className="font-playfair text-2xl text-beige mb-6">¿Por qué ser partner de LuVelle?</h2>
+        {/* Benefits Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+          {benefits.map((benefit, index) => {
+            const Icon = benefit.icon
+            return (
+              <GlassCard key={index} className="p-6">
+                <Icon className="w-10 h-10 text-[hsl(var(--brand-gold))] mb-4" />
+                <h3 className="text-lg font-bold text-[hsl(var(--brand-cream))] mb-2">{benefit.title}</h3>
+                <p className="text-sm text-[hsl(var(--brand-cream))]/70 leading-relaxed">{benefit.description}</p>
+              </GlassCard>
+            )
+          })}
+        </div>
 
-            <div className="space-y-6">
-              {[
-                {
-                  title: "Alcance directo",
-                  description: "Llega a miles de mujeres interesadas en belleza y bienestar en toda LATAM.",
-                },
-                {
-                  title: "Exposición de marca",
-                  description: "Posiciona tu marca entre un público selecto y de alto valor.",
-                },
-                {
-                  title: "Feedback valioso",
-                  description: "Recibe opiniones directas sobre tus productos o servicios.",
-                },
-                {
-                  title: "Crecimiento conjunto",
-                  description: "Crece con nosotras en un ecosistema de belleza y bienestar en expansión.",
-                },
-              ].map((benefit, index) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <CheckCircle className="h-6 w-6 text-gold flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-medium text-beige">{benefit.title}</h3>
-                    <p className="text-beige/70">{benefit.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-12">
-              <h2 className="font-playfair text-2xl text-beige mb-6">Tipos de colaboración</h2>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Card className="border-gold/10 bg-dark/60">
-                  <CardHeader>
-                    <CardTitle className="text-gold">Marcas</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-beige/70">
-                    <p>
-                      Incluye tus productos en nuestras Beauty Boxes y llega directamente a las manos de nuestras
-                      clientas.
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-gold/10 bg-dark/60">
-                  <CardHeader>
-                    <CardTitle className="text-gold">Servicios</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-beige/70">
-                    <p>
-                      Ofrece tus servicios de belleza y bienestar a nuestra comunidad a través de experiencias
-                      exclusivas.
-                    </p>
-                  </CardContent>
-                </Card>
+        {/* Stats */}
+        <div className="mb-16">
+          <GlassCard className="p-8 md:p-12">
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <div>
+                <div className="text-4xl font-bold text-[hsl(var(--brand-gold))] mb-2">500+</div>
+                <div className="text-[hsl(var(--brand-cream))]/70">Socias activas</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-[hsl(var(--brand-gold))] mb-2">95%</div>
+                <div className="text-[hsl(var(--brand-cream))]/70">Tasa de satisfacción</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-[hsl(var(--brand-gold))] mb-2">12+</div>
+                <div className="text-[hsl(var(--brand-cream))]/70">Marcas aliadas</div>
               </div>
             </div>
-          </div>
+          </GlassCard>
+        </div>
 
-          {/* Contact Form */}
-          <div>
-            <Card className="border-gold/20 bg-dark/60">
-              <CardHeader>
-                <CardTitle className="text-gold text-center">Contáctanos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {formSubmitted ? (
-                  <div className="text-center py-8">
-                    <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center">
-                        <CheckCircle className="h-8 w-8 text-gold" />
-                      </div>
-                    </div>
-                    <h3 className="text-xl font-medium text-beige mb-2">¡Gracias por tu interés!</h3>
-                    <p className="text-beige/70">
-                      Hemos recibido tu información. Nuestro equipo se pondrá en contacto contigo en las próximas 48
-                      horas.
-                    </p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="name" className="text-beige">
-                          Nombre completo
-                        </Label>
-                        <Input
-                          id="name"
-                          placeholder="Tu nombre"
-                          required
-                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="company" className="text-beige">
-                          Empresa / Marca
-                        </Label>
-                        <Input
-                          id="company"
-                          placeholder="Nombre de tu empresa"
-                          required
-                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
-                        />
-                      </div>
-
-                      <div>
-                        <Label htmlFor="email" className="text-beige">
-                          Email
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="tu@email.com"
-                          required
-                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
-                        />
-                      </div>
-
-                      <div>
-                        <Label className="text-beige mb-2 block">Tipo de colaboración</Label>
-                        <RadioGroup
-                          value={partnerType}
-                          onValueChange={setPartnerType}
-                          className="flex space-x-4"
-                          defaultValue="brand"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="brand" id="brand" />
-                            <Label htmlFor="brand" className="text-beige">
-                              Marca / Productos
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="service" id="service" />
-                            <Label htmlFor="service" className="text-beige">
-                              Servicios
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="message" className="text-beige">
-                          Mensaje
-                        </Label>
-                        <Textarea
-                          id="message"
-                          placeholder="Cuéntanos sobre tu marca o servicio..."
-                          rows={4}
-                          className="bg-beige/5 border-beige/20 text-beige placeholder:text-beige/50"
-                        />
-                      </div>
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full bg-transparent border border-gold text-gold hover:bg-gold/10 transition-all"
-                    >
-                      Enviar solicitud
-                      <Send className="ml-2 h-4 w-4" />
-                    </Button>
-                  </form>
-                )}
-              </CardContent>
-            </Card>
+        {/* How It Works */}
+        <div className="mb-16 max-w-4xl mx-auto">
+          <h2 className="heading-font text-3xl md:text-4xl font-bold text-center mb-12">Proceso de alianza</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { step: "1", title: "Postulación", desc: "Enviá tu información y catálogo" },
+              { step: "2", title: "Evaluación", desc: "Revisamos tu marca y productos" },
+              { step: "3", title: "Negociación", desc: "Definimos términos y volúmenes" },
+              { step: "4", title: "Lanzamiento", desc: "Comenzamos la distribución" },
+            ].map((item, index) => (
+              <div key={index} className="text-center">
+                <div className="w-12 h-12 rounded-full bg-[hsl(var(--brand-gold))]/20 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-[hsl(var(--brand-gold))]">{item.step}</span>
+                </div>
+                <h3 className="font-semibold text-[hsl(var(--brand-cream))] mb-2">{item.title}</h3>
+                <p className="text-sm text-[hsl(var(--brand-cream))]/70">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Application Form */}
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="heading-font text-3xl md:text-4xl font-bold mb-4">Postulá tu marca</h2>
+            <p className="text-[hsl(var(--brand-cream))]/70">
+              Completá el formulario y nos pondremos en contacto pronto
+            </p>
+          </div>
+          <BrandApplicationForm />
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
