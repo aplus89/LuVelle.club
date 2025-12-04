@@ -66,7 +66,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social & Contact */}
           <div>
             <h4 className="font-semibold text-[hsl(var(--brand-cream))] mb-4">Conectá con nosotras</h4>
             <div className="flex gap-4 mb-4">
@@ -93,7 +92,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[hsl(var(--brand-cream))]/70 hover:text-[hsl(var(--brand-gold))]"
-                aria-label="Twitter/X"
+                aria-label="X (Twitter)"
               >
                 <Twitter className="w-5 h-5" />
               </a>
@@ -109,7 +108,7 @@ export function Footer() {
                 </svg>
               </a>
             </div>
-            <p className="text-sm text-[hsl(var(--brand-cream))]/70">
+            <p className="text-sm text-[hsl(var(--brand-cream))]/70 mb-1">
               <a href="mailto:hello@luvelle.club" className="hover:text-[hsl(var(--brand-gold))]">
                 hello@luvelle.club
               </a>

@@ -1,11 +1,11 @@
--- Seed subscription plans
+-- Updated seed data with new CRC pricing and Spanish features per spec
 INSERT INTO plans (name, slug, price_range, features, is_available, allows_product_customization, allows_service_customization, max_products, max_services)
 VALUES 
   (
     'Esencial',
     'essential',
-    '₡5,000 - ₡8,000',
-    '["Contenido digital exclusivo de LuVelle AI", "Acceso al podcast semanal", "Newsletter con tips de belleza", "Comunidad privada en redes", "Sin personalización de productos"]',
+    '₡26.000 – ₡30.000',
+    '["Caja curada por LuVelle según tu perfil", "Sin personalización de productos", "Contenido digital (LuVelle AI, podcast, newsletter)"]',
     true,
     false,
     false,
@@ -15,24 +15,24 @@ VALUES
   (
     'Premium',
     'premium',
-    '₡15,000 - ₡25,000',
-    '["Todo lo de Esencial", "3-5 productos de belleza curados", "Personalización parcial de productos", "Descuentos exclusivos con marcas aliadas", "Envío gratis en Costa Rica"]',
+    '₡31.000 – ₡39.000',
+    '["Personalización parcial de productos", "Acceso a categorías seleccionadas", "Podés añadir productos extra con puntos", "Programa de referidos: 3% cashback (compra > $120)", "Incluye todo lo de Esencial"]',
     true,
     true,
     false,
-    5,
+    3,
     0
   ),
   (
     'Deluxe',
     'deluxe',
-    '₡35,000 - ₡50,000',
-    '["Todo lo de Premium", "5-8 productos premium", "Personalización total de productos", "Acceso a servicios de belleza", "Consultoría personalizada mensual", "Prioridad en lanzamientos", "Regalos sorpresa"]',
+    '₡40.000 – ₡50.000+',
+    '["Personalización total: productos + servicios", "Acceso completo a todas las categorías", "Programa de referidos: 8% cashback (consumo > $120)", "Incluye todo lo de Premium"]',
     true,
     true,
     true,
-    8,
-    3
+    5,
+    2
   )
 ON CONFLICT (slug) DO UPDATE SET
   name = EXCLUDED.name,

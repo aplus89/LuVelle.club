@@ -2,7 +2,7 @@
 
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
-import { Check } from "lucide-react"
+import { Check, Gift } from "lucide-react"
 import Link from "next/link"
 import type { Plan } from "@/lib/supabase/types"
 
@@ -13,9 +13,18 @@ interface PlansProps {
 export function Plans({ plans }: PlansProps) {
   const getPlanCTA = (slug: string) => {
     if (slug === "essential") {
-      return { text: "Comenzar", href: "/checkout/essential" }
+      return { text: "Comenzar con Esencial", href: "/checkout/essential" }
     }
-    return { text: "Personalizar", href: "/join" }
+    if (slug === "premium") {
+      return { text: "Crear mi Caja Premium", href: "/join" }
+    }
+    return { text: "Diseñar mi Experiencia Deluxe", href: "/join" }
+  }
+
+  const getReferralBadge = (slug: string) => {
+    if (slug === "premium") return "Cashback: 3%"
+    if (slug === "deluxe") return "Cashback: 8%"
+    return null
   }
 
   return (
@@ -29,15 +38,16 @@ export function Plans({ plans }: PlansProps) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => {
+          {plans.map((plan) => {
             const cta = getPlanCTA(plan.slug)
             const isPopular = plan.slug === "premium"
+            const referralBadge = getReferralBadge(plan.slug)
 
             return (
               <GlassCard key={plan.id} highlight={isPopular} className="p-8 flex flex-col relative">
                 {isPopular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[hsl(var(--brand-gold))] text-[hsl(var(--brand-dark))] px-4 py-1 rounded-full text-sm font-semibold">
-                    Más Elegido
+                    Más elegido
                   </div>
                 )}
 
@@ -47,11 +57,10 @@ export function Plans({ plans }: PlansProps) {
                   <p className="text-sm text-[hsl(var(--brand-cream))]/60 mt-1">por mes</p>
                 </div>
 
-                {plan.slug === "essential" && (
-                  <div className="mb-6 p-3 rounded-lg bg-[hsl(var(--brand-gold))]/10 border border-[hsl(var(--brand-gold))]/30">
-                    <p className="text-sm text-[hsl(var(--brand-cream))]/90">
-                      Sin personalización. Solo contenido digital.
-                    </p>
+                {referralBadge && (
+                  <div className="mb-4 flex items-center gap-2 px-3 py-2 rounded-lg bg-[hsl(var(--brand-gold))]/20 border border-[hsl(var(--brand-gold))]/30">
+                    <Gift className="w-4 h-4 text-[hsl(var(--brand-gold))]" />
+                    <span className="text-sm font-semibold text-[hsl(var(--brand-gold))]">{referralBadge}</span>
                   </div>
                 )}
 
@@ -70,6 +79,12 @@ export function Plans({ plans }: PlansProps) {
               </GlassCard>
             )
           })}
+        </div>
+
+        <div className="mt-12 text-center max-w-2xl mx-auto">
+          <p className="text-sm text-[hsl(var(--brand-cream))]/60 leading-relaxed">
+            * Programa de referidos: Premium 3% sobre compras mayores a $120. Deluxe 8% sobre consumo mayor a $120.
+          </p>
         </div>
       </div>
     </section>
