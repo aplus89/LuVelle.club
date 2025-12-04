@@ -153,7 +153,7 @@ export function Hero() {
       id="inicio"
       className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[hsl(var(--brand-dark))] to-[hsl(var(--brand-blue))]"
     >
-      <div className="relative flex-1 flex items-center py-12 md:py-20">
+      <div className="relative flex-1 flex items-center py-8 md:py-4">
         {/* Navigation buttons - Desktop only */}
         <button
           onClick={() => go(-1)}
