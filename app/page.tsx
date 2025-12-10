@@ -1,32 +1,19 @@
 import { Header } from "@/components/sections/header"
-import { Hero } from "@/components/sections/hero"
-import { SocialProof } from "@/components/sections/social-proof"
-import { HowItWorks } from "@/components/sections/how-it-works"
-import { Plans } from "@/components/sections/plans"
-import { ProvidersBlock } from "@/components/sections/providers-block"
-import { BrandsBlock } from "@/components/sections/brands-block"
+import { HomeHero } from "@/components/sections/home-hero"
+import { ThreeProducts } from "@/components/sections/three-products"
+import { PricingSummary } from "@/components/sections/pricing-summary"
 import { Testimonials } from "@/components/sections/testimonials"
-import { FAQ } from "@/components/sections/faq"
-import { FinalCTA } from "@/components/sections/final-cta"
 import { Footer } from "@/components/sections/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-import { getPlans } from "@/lib/supabase/queries"
 
 export default async function HomePage() {
-  const plans = await getPlans()
-
   return (
     <main className="relative">
       <Header />
-      <Hero />
-      <SocialProof />
-      <HowItWorks />
-      <Plans plans={plans} />
-      <ProvidersBlock />
-      <BrandsBlock />
+      <HomeHero />
+      <ThreeProducts />
+      <PricingSummary />
       <Testimonials />
-      <FAQ />
-      <FinalCTA />
       <Footer />
       <WhatsAppButton />
     </main>
