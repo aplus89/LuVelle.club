@@ -127,7 +127,11 @@ export function BeautyBoxPlans() {
 
                 <Button
                   asChild
-                  className={`w-full ${plan.popular ? "bg-brand-gold hover:bg-brand-gold/90" : "bg-box-gold hover:bg-box-gold/90"} text-brand-dark font-semibold`}
+                  className={`w-full font-semibold ${
+                    plan.popular
+                      ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141321]"
+                      : "bg-[#141321] hover:bg-[#141321]/90 text-[#f4cc6e] border-2 border-[#f4cc6e]"
+                  }`}
                 >
                   <Link href="/join">Crear mi {plan.name}</Link>
                 </Button>

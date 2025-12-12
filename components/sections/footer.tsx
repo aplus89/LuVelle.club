@@ -1,39 +1,63 @@
+"use client"
+
 import Link from "next/link"
 import { Instagram, Linkedin, Twitter } from "lucide-react"
+import { LuVelleLogo } from "@/components/ui/luvelle-logo"
 
 export function Footer() {
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
-    <footer className="border-t border-white/10 py-12 md:py-16">
+    <footer className="border-t border-white/10 py-12 md:py-16 bg-[#141322]">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
           <div>
-            <h3 className="font-heading text-3xl font-bold text-brand-gold mb-4">LuVelle</h3>
-            <p className="text-sm text-brand-cream/70 leading-relaxed">
+            <Link href="/" onClick={handleNavClick} className="inline-block mb-4">
+              <LuVelleLogo variant="gold" width={120} height={48} />
+            </Link>
+            <p className="text-sm text-[#e8ded3]/70 leading-relaxed">
               Una plataforma. Tres formas de transformar tu bienestar.
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-brand-cream mb-4">Productos</h4>
+            <h4 className="font-semibold text-[#e8ded3] mb-4">Productos</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/ai" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
-                  Club LuVelle Ai
+                <Link
+                  href="/ai"
+                  onClick={handleNavClick}
+                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
+                >
+                  LuVelle Ai
                 </Link>
               </li>
               <li>
-                <Link href="/beauty-box" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <Link
+                  href="/beauty-box"
+                  onClick={handleNavClick}
+                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
+                >
                   The Beauty Box
                 </Link>
               </li>
               <li>
-                <Link href="/providers" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <Link
+                  href="/providers"
+                  onClick={handleNavClick}
+                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
+                >
                   LuVelle Pro – Servicios
                 </Link>
               </li>
               <li>
-                <Link href="/partners" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <Link
+                  href="/partners"
+                  onClick={handleNavClick}
+                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
+                >
                   LuVelle Pro – Marcas
                 </Link>
               </li>
@@ -41,20 +65,24 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-brand-cream mb-4">Recursos</h4>
+            <h4 className="font-semibold text-[#e8ded3] mb-4">Recursos</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/#como-funciona" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <a href="/#como-funciona" className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors">
                   Cómo funciona
                 </a>
               </li>
               <li>
-                <a href="/#planes" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <a href="/#planes" className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors">
                   Planes y precios
                 </a>
               </li>
               <li>
-                <Link href="/join" className="text-brand-cream/70 hover:text-brand-gold transition-colors">
+                <Link
+                  href="/join"
+                  onClick={handleNavClick}
+                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
+                >
                   Comenzar ahora
                 </Link>
               </li>
@@ -62,13 +90,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-brand-cream mb-4">Conectá con nosotras</h4>
+            <h4 className="font-semibold text-[#e8ded3] mb-4">Conectá con nosotras</h4>
             <div className="flex gap-4 mb-4">
               <a
                 href="https://www.instagram.com/luvelle_club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-cream/70 hover:text-brand-gold transition-colors"
+                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
@@ -77,7 +105,7 @@ export function Footer() {
                 href="https://www.linkedin.com/company/luvelleai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-cream/70 hover:text-brand-gold transition-colors"
+                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
@@ -86,7 +114,7 @@ export function Footer() {
                 href="https://twitter.com/LuVelleAi"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-cream/70 hover:text-brand-gold transition-colors"
+                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
                 aria-label="X (Twitter)"
               >
                 <Twitter className="w-5 h-5" />
@@ -95,7 +123,7 @@ export function Footer() {
                 href="https://www.tiktok.com/@luvelle.club"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-cream/70 hover:text-brand-gold transition-colors"
+                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
                 aria-label="TikTok"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -103,20 +131,20 @@ export function Footer() {
                 </svg>
               </a>
             </div>
-            <p className="text-sm text-brand-cream/70 mb-1">
-              <a href="mailto:hello@luvelle.club" className="hover:text-brand-gold transition-colors">
+            <p className="text-sm text-[#e8ded3]/70 mb-1">
+              <a href="mailto:hello@luvelle.club" className="hover:text-[#f4cc6e] transition-colors">
                 hello@luvelle.club
               </a>
             </p>
-            <p className="text-sm text-brand-cream/70">
-              <a href="https://wa.me/15557792120" className="hover:text-brand-gold transition-colors">
+            <p className="text-sm text-[#e8ded3]/70">
+              <a href="https://wa.me/15557792120" className="hover:text-[#f4cc6e] transition-colors">
                 WhatsApp: +1 555 779 2120
               </a>
             </p>
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 text-center text-sm text-brand-cream/60">
+        <div className="border-t border-white/10 pt-8 text-center text-sm text-[#e8ded3]/60">
           <p>&copy; {new Date().getFullYear()} LuVelle.club. Todos los derechos reservados.</p>
         </div>
       </div>

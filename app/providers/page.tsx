@@ -20,23 +20,15 @@ export default function ProvidersPage() {
       <ProvidersForm />
 
       {/* Link to Partners */}
-      <section className="py-12 px-4 border-t border-white/10">
+      <section className="py-12 px-4 border-t border-white/10 bg-[#141322]">
         <div className="container mx-auto max-w-4xl">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-brand-cream/70">¿Vendés productos? Postulá tu marca →</p>
+            <p className="text-[#e8ded3]/70">¿Vendés productos? Postulá tu marca →</p>
             <div className="flex gap-4">
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-gold text-brand-gold hover:bg-brand-gold/10 bg-transparent"
-              >
+              <Button asChild className="bg-[#141322] hover:bg-[#141322]/80 text-[#f4cc6e] border-2 border-[#f4cc6e]">
                 <Link href="/partners">Ir a Marcas</Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-gold text-brand-gold hover:bg-brand-gold/10 bg-transparent"
-              >
+              <Button asChild className="bg-[#141322] hover:bg-[#141322]/80 text-[#f4cc6e] border-2 border-[#f4cc6e]">
                 <Link href="/">Volver al inicio</Link>
               </Button>
             </div>

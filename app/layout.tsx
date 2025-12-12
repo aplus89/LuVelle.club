@@ -1,14 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Dancing_Script } from "next/font/google"
+import { Plus_Jakarta_Sans, Dancing_Script } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { PersonaProvider } from "@/components/persona-provider"
 import "./globals.css"
 
-const inter = Inter({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-plus-jakarta",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 })
 
 const dancingScript = Dancing_Script({
@@ -18,21 +19,21 @@ const dancingScript = Dancing_Script({
 })
 
 export const metadata: Metadata = {
-  title: "LuVelle.club - Tu belleza, curada con amor",
+  title: "LuVelle.club - Tu bienestar, transformado",
   description:
-    "Suscripción mensual de productos de belleza premium curados especialmente para ti. Skincare, maquillaje y más en Costa Rica.",
-  keywords: "beauty box, belleza, suscripción, Costa Rica, skincare, maquillaje, LuVelle",
+    "Una sola plataforma. Tres formas de transformar tu bienestar. LuVelle Ai, The Beauty Box y LuVelle Pro.",
+  keywords: "beauty box, belleza, bienestar, suscripción, Costa Rica, skincare, maquillaje, LuVelle, proveedoras",
   openGraph: {
-    title: "LuVelle.club - Tu belleza, curada con amor",
-    description: "Suscripción mensual de productos de belleza premium curados especialmente para ti.",
+    title: "LuVelle.club - Tu bienestar, transformado",
+    description: "Una sola plataforma. Tres formas de transformar tu bienestar.",
     type: "website",
     locale: "es_CR",
     siteName: "LuVelle.club",
   },
   twitter: {
     card: "summary_large_image",
-    title: "LuVelle.club - Tu belleza, curada con amor",
-    description: "Suscripción mensual de productos de belleza premium curados especialmente para ti.",
+    title: "LuVelle.club - Tu bienestar, transformado",
+    description: "Una sola plataforma. Tres formas de transformar tu bienestar.",
   },
   alternates: {
     languages: {
@@ -48,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es-CR" className={`${inter.variable} ${dancingScript.variable}`}>
+    <html lang="es-CR" className={`${plusJakarta.variable} ${dancingScript.variable}`}>
       <body className="font-sans antialiased">
         <PersonaProvider>{children}</PersonaProvider>
         <Analytics />

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { Menu, X, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { LuVelleLogo } from "@/components/ui/luvelle-logo"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
@@ -24,16 +25,17 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [proMenuOpen, setProMenuOpen] = useState(false)
 
+  const handleNavClick = () => {
+    setMobileMenuOpen(false)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[hsl(var(--brand-dark))]/95 border-b border-white/10">
+    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#141322]/95 border-b border-white/10">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="font-heading text-3xl md:text-4xl font-bold text-[hsl(var(--brand-gold))] hover:opacity-80 transition-opacity"
-          >
-            LuVelle
+          <Link href="/" onClick={handleNavClick} className="hover:opacity-80 transition-opacity">
+            <LuVelleLogo variant="gold" width={100} height={40} />
           </Link>
 
           {/* Desktop Navigation */}
@@ -43,14 +45,13 @@ export function Header() {
                 return (
                   <div key={idx} className="relative group">
                     <button
-                      className="text-sm text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] transition-colors font-medium flex items-center gap-1"
+                      className="text-sm text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium flex items-center gap-1"
                       onMouseEnter={() => setProMenuOpen(true)}
                       onMouseLeave={() => setProMenuOpen(false)}
                     >
                       {link.label}
                       <ChevronDown className="w-4 h-4" />
                     </button>
-                    {/* Dropdown Menu */}
                     <div
                       className={cn(
                         "absolute top-full left-0 mt-2 w-48 glass-card p-2 transition-all duration-200",
@@ -63,7 +64,8 @@ export function Header() {
                         <Link
                           key={sublink.href}
                           href={sublink.href}
-                          className="block px-4 py-2 text-sm text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] hover:bg-white/5 rounded-lg transition-colors"
+                          onClick={handleNavClick}
+                          className="block px-4 py-2 text-sm text-[#efedea] hover:text-[#f4cc6e] hover:bg-white/5 rounded-lg transition-colors"
                         >
                           {sublink.label}
                         </Link>
@@ -76,7 +78,8 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] transition-colors font-medium"
+                  onClick={handleNavClick}
+                  className="text-sm text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium"
                 >
                   {link.label}
                 </Link>
@@ -84,9 +87,11 @@ export function Header() {
             })}
           </nav>
 
-          {/* CTA Button - Desktop */}
           <div className="hidden lg:block">
-            <Button asChild className="glass-button px-6">
+            <Button
+              asChild
+              className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] px-6 rounded-full font-semibold"
+            >
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                 Empezar por WhatsApp
               </a>
@@ -96,7 +101,7 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] transition-colors p-2"
+            className="lg:hidden text-[#efedea] hover:text-[#f4cc6e] transition-colors p-2"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -115,14 +120,14 @@ export function Header() {
               if (link.submenu) {
                 return (
                   <div key={idx}>
-                    <div className="text-[hsl(var(--brand-gold))] font-medium py-2">{link.label}</div>
+                    <div className="text-[#f4cc6e] font-medium py-2">{link.label}</div>
                     <div className="flex flex-col gap-2 pl-4">
                       {link.submenu.map((sublink) => (
                         <Link
                           key={sublink.href}
                           href={sublink.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] transition-colors py-2"
+                          onClick={handleNavClick}
+                          className="text-[#efedea] hover:text-[#f4cc6e] transition-colors py-2"
                         >
                           {sublink.label}
                         </Link>
@@ -135,15 +140,18 @@ export function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-[hsl(var(--brand-cream))] hover:text-[hsl(var(--brand-gold))] transition-colors font-medium py-2"
+                  onClick={handleNavClick}
+                  className="text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium py-2"
                 >
                   {link.label}
                 </Link>
               )
             })}
-            <Button asChild className="glass-button w-full mt-2">
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+            <Button
+              asChild
+              className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] w-full mt-2 rounded-full font-semibold"
+            >
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleNavClick}>
                 Empezar por WhatsApp
               </a>
             </Button>

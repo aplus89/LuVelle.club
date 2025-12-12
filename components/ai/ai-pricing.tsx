@@ -60,6 +60,7 @@ export function AiPricing() {
           if (entry.isIntersecting) {
             entry.target.classList.add("animate-fade-in-up")
             entry.target.style.animationDelay = `${index * 0.15}s`
+            entry.target.style.animationFillMode = "forwards"
           }
         })
       },
@@ -77,13 +78,11 @@ export function AiPricing() {
     <section id="planes" className="py-16 md:py-24 px-4 bg-white/[0.02]">
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-16">
-          <h2 className="font-heading text-4xl md:text-5xl text-brand-gold mb-4">Planes Club LuVelle Ai</h2>
-          <p className="text-lg text-brand-cream/70 max-w-2xl mx-auto mb-4">
+          <h2 className="font-heading text-4xl md:text-5xl text-[#f4cc6e] mb-4">Planes Club LuVelle Ai</h2>
+          <p className="text-lg text-[#e8ded3]/70 max-w-2xl mx-auto mb-4">
             Elegí el plan que mejor se adapte a tus necesidades
           </p>
-          <p className="text-sm text-brand-cream/50 italic">
-            Precios de lanzamiento. Sujeto a iteración según feedback.
-          </p>
+          <p className="text-sm text-[#e8ded3]/50 italic">Precios de lanzamiento. Sujeto a iteración según feedback.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -96,35 +95,42 @@ export function AiPricing() {
               className="opacity-0"
             >
               <GlassCard
-                className={`p-8 h-full flex flex-col ${plan.popular ? "ring-2 ring-brand-gold scale-105" : ""}`}
+                className={`p-8 h-full flex flex-col ${plan.popular ? "ring-2 ring-[#f4cc6e] scale-105" : ""}`}
               >
                 {plan.popular && (
-                  <div className="bg-brand-gold text-brand-dark text-xs font-bold uppercase px-3 py-1 rounded-full w-fit mb-4">
+                  <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full w-fit mb-4">
                     Más popular
                   </div>
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-brand-cream mb-2">{plan.name}</h3>
-                  <p className="text-sm text-brand-cream/60 mb-4">{plan.description}</p>
+                  <h3 className="text-2xl font-bold text-[#e8ded3] mb-2">{plan.name}</h3>
+                  <p className="text-sm text-[#e8ded3]/60 mb-4">{plan.description}</p>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-brand-gold">{plan.price}</span>
-                    <span className="text-brand-cream/60">{plan.period}</span>
+                    <span className="text-4xl font-bold text-[#f4cc6e]">{plan.price}</span>
+                    <span className="text-[#e8ded3]/60">{plan.period}</span>
                   </div>
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">
                   {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-sm text-brand-cream/80">
-                      <Check className="w-5 h-5 text-ai-accent flex-shrink-0 mt-0.5" />
+                    <li key={idx} className="flex items-start gap-3 text-sm text-[#e8ded3]/80">
+                      <Check className="w-5 h-5 text-[#1A5276] flex-shrink-0 mt-0.5" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
 
+                {/* Enforce button color rules:
+                    - Popular (gold bg #f4cc6e): text #141322
+                    - Non-popular (blue bg #1A5276): text #f4cc6e */}
                 <Button
                   asChild
-                  className={`w-full ${plan.popular ? "bg-brand-gold hover:bg-brand-gold/90 text-brand-dark" : "bg-ai-accent hover:bg-ai-accent/90 text-white"}`}
+                  className={`w-full font-semibold ${
+                    plan.popular
+                      ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322]"
+                      : "bg-[#1A5276] hover:bg-[#1A5276]/90 text-[#f4cc6e]"
+                  }`}
                 >
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     {plan.cta}

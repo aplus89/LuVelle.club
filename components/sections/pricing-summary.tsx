@@ -131,6 +131,7 @@ export function PricingSummary() {
   const [openSection, setOpenSection] = useState<string | null>(null)
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const titleRefs = useRef<(HTMLDivElement | null)[]>([])
+  const toggleRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -154,7 +155,14 @@ export function PricingSummary() {
   }, [])
 
   const toggleSection = (id: string) => {
+    const isOpening = openSection !== id
     setOpenSection(openSection === id ? null : id)
+
+    if (isOpening) {
+      requestAnimationFrame(() => {
+        toggleRefs.current[id]?.scrollIntoView({ behavior: "smooth", block: "start" })
+      })
+    }
   }
 
   return (
@@ -177,10 +185,10 @@ export function PricingSummary() {
                 key={product.id}
                 ref={(el) => {
                   titleRefs.current[index] = el
+                  toggleRefs.current[product.id] = el
                 }}
                 className={`opacity-0 overflow-hidden rounded-2xl border border-white/10 transition-all duration-500 ${product.bgColor}`}
               >
-                {/* Header - Always visible */}
                 <button
                   onClick={() => toggleSection(product.id)}
                   className={`w-full p-6 md:p-8 flex items-center justify-between transition-all duration-300 ${product.textColor}`}
@@ -199,7 +207,6 @@ export function PricingSummary() {
                   <ChevronDown className={`w-6 h-6 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
                 </button>
 
-                {/* Content - Expandable */}
                 <div
                   ref={(el) => {
                     sectionRefs.current[product.id] = el

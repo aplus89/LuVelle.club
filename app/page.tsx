@@ -1,6 +1,10 @@
 import { Header } from "@/components/sections/header"
 import { HomeHero } from "@/components/sections/home-hero"
 import { ThreeProducts } from "@/components/sections/three-products"
+import { AiScrollStory } from "@/components/scroll-stories/ai-scroll-story"
+import { ProScrollStory } from "@/components/scroll-stories/pro-scroll-story"
+import { BeautyBoxScrollStory } from "@/components/scroll-stories/beauty-box-scroll-story"
+// </CHANGE>
 import { PricingSummary } from "@/components/sections/pricing-summary"
 import { Testimonials } from "@/components/sections/testimonials"
 import { Footer } from "@/components/sections/footer"
@@ -12,6 +16,10 @@ export default async function HomePage() {
       <Header />
       <HomeHero />
       <ThreeProducts />
+      <AiScrollStory />
+      <ProScrollStory />
+      <BeautyBoxScrollStory />
+      {/* </CHANGE> */}
       <PricingSummary />
       <Testimonials />
       <Footer />

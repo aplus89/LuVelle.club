@@ -6,35 +6,40 @@
   .text-balance {
     text-wrap: balance;
   }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
 }
 
 @layer base {
   :root {
-    --font-sans: var(--font-inter);
+    /* Updated font variable to Plus Jakarta Sans */
+    --font-sans: var(--font-plus-jakarta);
     --font-heading: var(--font-dancing);
 
-    /* Updated color palettes with exact specifications */
+    /* Brand color palette - exact hex values */
     --brand-dark: 240 20% 8%; /* #141322 */
     --brand-gold: 45 85% 70%; /* #f4cc6e */
     --brand-cream: 40 20% 92%; /* #efedea */
     --brand-light: 40 35% 91%; /* #eae0d5 */
+    --brand-beige: 35 30% 87%; /* #e8ded3 */
 
-    /* LuVelle Ai color palette - prominent #141322, then #1A5276, #f4cc6e, #eae0d5, #efedea */
-    --ai-bg: 240 20% 8%; /* #141322 - primary */
-    --ai-accent: 207 65% 29%; /* #1A5276 - secondary */
+    /* LuVelle Ai palette: prominent #141322, then #1A5276, #f4cc6e, #eae0d5, #efedea */
+    --ai-bg: 240 20% 8%; /* #141322 */
+    --ai-accent: 207 65% 29%; /* #1A5276 */
     --ai-gold: 45 85% 70%; /* #f4cc6e */
     --ai-cream: 40 35% 91%; /* #eae0d5 */
     --ai-light: 40 20% 92%; /* #efedea */
 
-    /* The Beauty Box color palette - prominent #f4cc6e, second #141321, use #e8ded3 only with #141321 */
-    --box-gold: 45 85% 70%; /* #f4cc6e - primary */
-    --box-bg: 240 20% 8%; /* #141321 - secondary */
-    --box-cream: 40 35% 90%; /* #e8ded3 - only with dark bg */
+    /* The Beauty Box palette: prominent #f4cc6e, second #141321, use #e8ded3 only with #141321 */
+    --box-gold: 45 85% 70%; /* #f4cc6e */
+    --box-bg: 240 20% 8%; /* #141321 */
+    --box-cream: 35 30% 87%; /* #e8ded3 - only with dark bg */
 
-    /* LuVelle Pro color palette - prominent #1b5276, then #f4cc6e and #efedea only with #1b5276 */
-    --pro-accent: 203 64% 28%; /* #1b5276 - primary */
-    --pro-gold: 45 85% 70%; /* #f4cc6e - secondary */
-    --pro-light: 40 20% 92%; /* #efedea - only with pro-accent bg */
+    /* LuVelle Pro palette: prominent #1b5276, then #f4cc6e and #efedea only with #1b5276 */
+    --pro-accent: 203 64% 28%; /* #1b5276 */
+    --pro-gold: 45 85% 70%; /* #f4cc6e */
+    --pro-light: 40 20% 92%; /* #efedea */
 
     /* Design Tokens */
     --background: var(--brand-dark);
@@ -76,7 +81,6 @@
   }
 }
 
-/* Liquid Glass Card Styles */
 @layer components {
   .glass-card {
     @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
@@ -108,72 +112,103 @@
     @apply ring-1 ring-[hsl(var(--brand-gold))]/30;
   }
 
+  /* Button styles with strict color rules */
+  /* Gold background → dark text */
   .glass-button {
-    background-color: hsl(var(--brand-gold));
-    color: hsl(var(--brand-dark));
+    background-color: #f4cc6e;
+    color: #141322;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 0 0 2px hsl(var(--brand-gold) / 0.2);
+    box-shadow: 0 0 0 2px rgba(244, 204, 110, 0.2);
   }
 
   .glass-button:hover {
-    background-color: hsl(45 85% 60%);
-    box-shadow: 0 0 0 2px hsl(var(--brand-gold) / 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    transform: scale(1.05);
+    background-color: #e5bd5f;
+    box-shadow: 0 0 0 2px rgba(244, 204, 110, 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    transform: scale(1.02);
+  }
+
+  /* Blue background → gold text */
+  .btn-blue {
+    background-color: #1b5276;
+    color: #f4cc6e;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-blue:hover {
+    background-color: #1a4a6a;
+    transform: scale(1.02);
+  }
+
+  /* Dark background → cream text */
+  .btn-dark {
+    background-color: #141322;
+    color: #e8ded3;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .btn-dark:hover {
+    background-color: #1a1a2e;
+    border-color: rgba(244, 204, 110, 0.3);
   }
 
   .glass-button-outline {
     background-color: transparent;
-    border: 2px solid hsl(var(--brand-gold) / 0.5);
-    color: hsl(var(--brand-gold));
+    border: 2px solid rgba(244, 204, 110, 0.5);
+    color: #f4cc6e;
     transition: all 0.3s ease;
   }
 
   .glass-button-outline:hover {
-    background-color: hsl(var(--brand-gold) / 0.1);
-    border-color: hsl(var(--brand-gold));
+    background-color: rgba(244, 204, 110, 0.1);
+    border-color: #f4cc6e;
   }
 
-  .heading-font {
+  /* Dancing Script only for accent text */
+  .heading-accent {
     font-family: var(--font-heading);
-    color: hsl(var(--brand-gold));
+    color: #f4cc6e;
   }
 
-  /* Added product-specific color utilities */
+  /* Product-specific utilities */
+  .bg-ai {
+    background-color: #141322;
+  }
   .bg-ai-accent {
-    background-color: hsl(var(--ai-accent));
+    background-color: #1a5276;
   }
-
   .text-ai-accent {
-    color: hsl(var(--ai-accent));
+    color: #1a5276;
   }
-
   .border-ai-accent {
-    border-color: hsl(var(--ai-accent));
+    border-color: #1a5276;
   }
 
-  .bg-box-cream {
-    background-color: hsl(var(--box-cream));
+  .bg-box {
+    background-color: #f4cc6e;
   }
-
+  .bg-box-dark {
+    background-color: #141321;
+  }
   .text-box-cream {
-    color: hsl(var(--box-cream));
+    color: #e8ded3;
   }
 
-  .bg-pro-accent {
-    background-color: hsl(var(--pro-accent));
+  .bg-pro {
+    background-color: #1b5276;
   }
-
-  .text-pro-accent {
-    color: hsl(var(--pro-accent));
+  .text-pro-gold {
+    color: #f4cc6e;
   }
-
-  .border-pro-accent {
-    border-color: hsl(var(--pro-accent));
+  .text-pro-light {
+    color: #efedea;
   }
 }
 
-/* Animations */
+/* Animations with fill-mode forwards to stay visible */
 @keyframes shimmer {
   0% {
     background-position: -200% center;
@@ -189,7 +224,6 @@
   animation: shimmer 3s infinite;
 }
 
-/* Updated animation to stay visible after animating */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -203,7 +237,6 @@
 
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
-  animation-fill-mode: forwards;
 }
 
 @keyframes fadeIn {
@@ -217,4 +250,18 @@
 
 .animate-fade-in {
   animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }

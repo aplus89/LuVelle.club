@@ -1,7 +1,5 @@
 import type { Config } from "tailwindcss"
 
-// all in fixtures is set to tailwind v3 as interims solutions
-
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -13,7 +11,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["var(--font-plus-jakarta)", "sans-serif"],
         heading: ["var(--font-dancing)", "cursive"],
       },
       colors: {
@@ -67,14 +65,12 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        "ai-accent": "hsl(var(--ai-accent))",
-        "ai-gold": "hsl(var(--ai-gold))",
-        "box-cream": "hsl(var(--box-cream))",
-        "box-gold": "hsl(var(--box-gold))",
-        "pro-accent": "hsl(var(--pro-accent))",
-        "pro-gold": "hsl(var(--pro-gold))",
-        "brand-gold": "hsl(var(--brand-gold))",
-        "brand-cream": "hsl(var(--brand-cream))",
+        "ai-accent": "#1A5276",
+        "pro-accent": "#1b5276",
+        "brand-dark": "#141322",
+        "brand-gold": "#f4cc6e",
+        "brand-cream": "#efedea",
+        "brand-beige": "#e8ded3",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -83,20 +79,12 @@ const config: Config = {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
