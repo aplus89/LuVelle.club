@@ -1,10 +1,29 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 import Image from "next/image"
+import { Button } from "@/components/ui/button" // Fixed import to use named export instead of default
+
+function CylinderBoxIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="12" cy="7" rx="7" ry="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+      <path d="M5 7 L5 17 Q5 20 12 20 Q19 20 19 17 L19 7" stroke="currentColor" strokeWidth="1.5" fill="none" />
+      <ellipse
+        cx="12"
+        cy="17"
+        rx="7"
+        ry="3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        fill="currentColor"
+        fillOpacity="0.1"
+      />
+    </svg>
+  )
+}
 
 export function BeautyBoxScrollStory() {
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -151,10 +170,12 @@ export function BeautyBoxScrollStory() {
           {/* Header */}
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 rounded-full">
-              <Sparkles className="w-4 h-4 text-[#f4cc6e]" />
+              <CylinderBoxIcon className="w-4 h-4 text-[#f4cc6e]" />
               <span className="text-sm text-[#f4cc6e] font-medium">The Beauty Box</span>
             </div>
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl text-[#f4cc6e]">Recibí y disfrutá cada mes</h2>
+            <h2 className="heading-accent text-3xl md:text-4xl lg:text-5xl text-left md:text-left">
+              Una caja sorpresa solo para vos
+            </h2>
           </div>
 
           {/* Steps */}
@@ -167,9 +188,9 @@ export function BeautyBoxScrollStory() {
                 <span className="text-[#141321] font-bold text-base md:text-lg">1</span>
               </div>
               <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Elegí tu plan</h3>
+                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Personalización total</h3>
                 <p className="text-[#e8ded3] leading-relaxed text-sm">
-                  Seleccioná entre Esencial, Premium o Deluxe según cuántos productos querés recibir cada mes.
+                  Elegí las categorías que más te interesan y recibí productos curados solo para vos.
                 </p>
               </div>
             </div>
@@ -182,9 +203,9 @@ export function BeautyBoxScrollStory() {
                 <span className="text-[#141321] font-bold text-base md:text-lg">2</span>
               </div>
               <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Personalizá tu caja</h3>
+                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Ahorro real</h3>
                 <p className="text-[#e8ded3] leading-relaxed text-sm">
-                  Seleccioná las categorías que más te interesan: skincare, makeup, haircare, nails y más.
+                  El valor de tu caja siempre es mayor a lo que pagás. Girls math que funciona 💅
                 </p>
               </div>
             </div>
@@ -197,24 +218,33 @@ export function BeautyBoxScrollStory() {
                 <span className="text-[#141321] font-bold text-base md:text-lg">3</span>
               </div>
               <div>
-                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Recibí y disfrutá</h3>
+                <h3 className="text-lg md:text-xl font-semibold text-white mb-1">Una experiencia aspiracional</h3>
                 <p className="text-[#e8ded3] leading-relaxed text-sm">
-                  Cada mes recibirás productos curados especialmente para vos, con sorpresas y descuentos exclusivos.
+                  Abrir tu Beauty Box es un ritual. Un momento de anticipación y alegría solo para vos.
                 </p>
               </div>
             </div>
           </div>
 
           {/* CTA */}
-          <div className="space-y-2 pt-2">
-            <Button
-              asChild
-              size="lg"
-              className="w-full sm:w-auto bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141321] font-semibold"
-            >
-              <Link href="/beauty-box">Crear mi Beauty Box</Link>
-            </Button>
-            <p className="text-sm text-[#e8ded3]/60 italic">Configuralá ahora, decidís mes a mes.</p>
+          <div className="space-y-3 pt-2">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <LuVelleButton asChild size="lg" variant="box" className="w-full sm:w-auto">
+                <Link href="/beauty-box">Crear mi Beauty Box</Link>
+              </LuVelleButton>
+              <Button
+                asChild
+                size="lg"
+                variant="ghost"
+                className="w-full sm:w-auto text-[#e8ded3] hover:text-[#f4cc6e] hover:bg-[#f4cc6e]/10"
+              >
+                <Link href="/beauty-box">Ver cómo funciona paso a paso</Link>
+              </Button>
+            </div>
+            <p className="text-sm text-[#e8ded3]/80 italic leading-relaxed">
+              💡 El valor real de tu Beauty Box es siempre mayor que lo que pagás. Más ahorro, más sorpresas, más
+              momentos para vos.
+            </p>
           </div>
         </div>
       </div>

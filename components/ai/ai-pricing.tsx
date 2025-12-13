@@ -9,7 +9,7 @@ const whatsappUrl = "https://wa.me/15557792120?text=Hola!%20Quiero%20unirme%20al
 
 const plans = [
   {
-    name: "Gratuito",
+    name: "Free",
     price: "₡0",
     period: "",
     description: "Probá LuVelle Ai sin compromiso",
@@ -33,7 +33,7 @@ const plans = [
     popular: true,
   },
   {
-    name: "Club LuVelle Plus",
+    name: "LuVelle Plus",
     price: "$6.99",
     period: "/mes",
     description: "La experiencia completa de LuVelle",

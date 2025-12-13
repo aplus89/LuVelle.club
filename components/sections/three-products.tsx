@@ -29,9 +29,10 @@ function CylinderBoxIcon({ className }: { className?: string }) {
 const products = [
   {
     id: "ai",
+    label: "Para vos",
     icon: Sparkles,
     title: "LuVelle Ai",
-    subtitle: "Tu asistente de bienestar 24/7 en WhatsApp.",
+    subtitle: "El chat de WhatsApp que te ayuda a cuidar tu belleza como una amiga experta.",
     features: ["Recomendaciones personalizadas", "Encuentra servicios y productos", "Tips de belleza y bienestar"],
     bgColor: "bg-[#141322]",
     iconBg: "bg-[#1A5276]",
@@ -45,10 +46,11 @@ const products = [
   },
   {
     id: "pro",
+    label: "Para profesionales",
     icon: Briefcase,
     title: "LuVelle Pro",
-    subtitle: "Herramientas para proveedoras de servicios y marcas.",
-    features: ["Conectá con clientas", "Gestión simplificada", "Crece tu negocio"],
+    subtitle: "Convertí tu talento en ingresos constantes, sin hacer malabares con WhatsApp, Excel y agendas de papel.",
+    features: ["Más clientas", "Menos desorden", "Pagos claros y a tiempo"],
     bgColor: "bg-[#1b5276]",
     iconBg: "bg-[#f4cc6e]",
     textColor: "text-[#f4cc6e]",
@@ -62,10 +64,11 @@ const products = [
   },
   {
     id: "box",
+    label: "Para regalos y sorpresas",
     icon: CylinderBoxIcon,
     title: "The Beauty Box",
-    subtitle: "Personalizá tu caja mensual de belleza y bienestar.",
-    features: ["Productos curados mensualmente", "Personalización total", "Descuentos exclusivos"],
+    subtitle: "Una caja sorpresa creada solo para vos (o para alguien que querés), todos los meses.",
+    features: ["Personalización total", "Ahorro percibido", "Experiencia aspiracional"],
     bgColor: "bg-[#f4cc6e]",
     iconBg: "bg-[#141321]",
     textColor: "text-[#141321]",
@@ -117,14 +120,23 @@ export function ThreeProducts() {
                 ref={(el) => {
                   cardsRef.current[index] = el
                 }}
-                className={`${product.bgColor} p-8 border-l-4 ${product.borderColor} opacity-0 hover:scale-105 transition-all duration-300 rounded-2xl shadow-2xl relative overflow-hidden`}
+                className={`${product.bgColor} p-8 border-l-4 ${product.borderColor} opacity-0 hover:scale-105 hover:shadow-2xl transition-all duration-300 rounded-2xl shadow-xl relative overflow-hidden group`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(244,204,110,0.15),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 <div className="space-y-6 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-xs uppercase tracking-wider font-semibold ${product.secondaryText || "text-white/60"}`}
+                    >
+                      {product.label}
+                    </span>
+                  </div>
+
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-12 h-12 rounded-xl ${product.iconBg} flex items-center justify-center flex-shrink-0`}
+                      className={`w-12 h-12 rounded-xl ${product.iconBg} flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110`}
                     >
                       <Icon
                         className={`w-6 h-6 ${product.id === "box" ? "text-[#f4cc6e]" : product.id === "pro" ? "text-[#1b5276]" : "text-[#f4cc6e]"}`}

@@ -17,20 +17,20 @@ const pricingData = [
     borderColor: "border-[#1A5276]/30",
     plans: [
       {
-        name: "Gratuito",
+        name: "Free",
         price: "₡0",
         period: "",
         features: ["IA básica en WhatsApp", "Recomendaciones limitadas", "Sin cashback"],
       },
       {
-        name: "Club",
+        name: "Club LuVelle",
         price: "$3.99",
         period: "/mes",
         features: ["Recomendaciones ilimitadas", "Cashback en compras", "Contenido exclusivo"],
         popular: false,
       },
       {
-        name: "Club Plus",
+        name: "LuVelle Plus",
         price: "$6.99",
         period: "/mes",
         features: ["Todo lo anterior", "Mayor % de cashback", "Prioridad en respuestas", "Eventos exclusivos"],

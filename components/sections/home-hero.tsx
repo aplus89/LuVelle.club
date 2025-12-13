@@ -60,7 +60,7 @@ export function HomeHero() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/80 via-[#141322]/60 to-[#141322]/90" />
 
-      <div className="relative z-10 flex items-center justify-center min-h-[85vh] px-4">
+      <div className="relative z-10 flex items-center lg:items-start lg:pt-24 justify-center min-h-[85vh] px-4">
         <div className="max-w-3xl text-center space-y-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-[#efedea]">Una sola plataforma.</span>
@@ -75,20 +75,29 @@ export function HomeHero() {
             proveedoras en una experiencia única de belleza y bienestar.
           </p>
 
-          <div className="pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button
               asChild
               size="lg"
               className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141321] font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <Link
-                href="https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20saber%20m%C3%A1s"
+                href="https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20Ai%20gratis"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Empezar por WhatsApp
+                Probar LuVelle Ai gratis en WhatsApp
               </Link>
+            </Button>
+
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-2 border-[#f4cc6e] bg-transparent hover:bg-[#f4cc6e]/10 text-[#f4cc6e] font-semibold px-8 py-6 text-lg rounded-full transition-all duration-300"
+            >
+              <Link href="#productos">Ver todos los planes</Link>
             </Button>
           </div>
 

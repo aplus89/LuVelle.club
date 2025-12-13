@@ -20,17 +20,18 @@ export function ProvidersHero() {
           {/* Title */}
           <div className="space-y-4">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
-              <span className="text-[#e8ded3]">Crecé tu negocio con</span>
+              <span className="text-[#e8ded3]">Convertí tu talento en</span>
               <br />
-              <span className="font-heading text-[#f4cc6e]">LuVelle Pro</span>
+              <span className="font-heading text-[#f4cc6e]">ingresos constantes</span>
             </h1>
-            <p className="text-2xl md:text-3xl text-[#1A5276] font-semibold">Profesionales de belleza y bienestar</p>
+            <p className="text-2xl md:text-3xl text-[#1A5276] font-semibold">
+              Sin hacer malabares con WhatsApp, Excel y agendas de papel
+            </p>
           </div>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-[#e8ded3]/80 max-w-3xl mx-auto leading-relaxed">
-            Conseguí clientas, reservas y pagos en un solo lugar. Simplificá tu negocio y enfocáte en lo que mejor
-            hacés.
+            Más clientas. Menos desorden. Pagos claros y a tiempo. LuVelle Pro te da las herramientas para crecer.
           </p>
 
           {/* CTA - Button color: gold bg (#f4cc6e), dark text (#141322) */}

@@ -25,13 +25,15 @@ export function AiHero() {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
               <span className="font-heading text-brand-gold">LuVelle Ai</span>
             </h1>
-            <p className="text-2xl md:text-3xl text-brand-cream font-light">Tu asistente de bienestar en WhatsApp</p>
+            <p className="text-2xl md:text-3xl text-brand-cream font-light">
+              El chat de WhatsApp que te ayuda a cuidar tu belleza como una amiga experta
+            </p>
           </div>
 
           {/* Subtitle */}
           <p className="text-lg md:text-xl text-brand-cream/70 max-w-3xl mx-auto leading-relaxed">
-            Preguntá por productos, servicios y rutinas personalizadas. Recibí recomendaciones inteligentes 24/7,
-            directamente en tu WhatsApp.
+            Recomendaciones personalizadas, acceso a proveedores y productos de confianza, y una compañera 24/7 que
+            siempre está disponible para ayudarte con tu bienestar.
           </p>
 
           {/* CTAs */}
