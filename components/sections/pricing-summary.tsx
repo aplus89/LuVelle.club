@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import { ChevronDown, Sparkles, Box, Briefcase } from "lucide-react"
 
 const pricingData = [
@@ -21,6 +21,7 @@ const pricingData = [
         price: "₡0",
         period: "",
         features: ["IA básica en WhatsApp", "Recomendaciones limitadas", "Sin cashback"],
+        referralPercent: 0,
       },
       {
         name: "Club LuVelle",
@@ -28,6 +29,7 @@ const pricingData = [
         period: "/mes",
         features: ["Recomendaciones ilimitadas", "Cashback en compras", "Contenido exclusivo"],
         popular: false,
+        referralPercent: 3,
       },
       {
         name: "LuVelle Plus",
@@ -35,6 +37,7 @@ const pricingData = [
         period: "/mes",
         features: ["Todo lo anterior", "Mayor % de cashback", "Prioridad en respuestas", "Eventos exclusivos"],
         popular: true,
+        referralPercent: 5,
       },
     ],
     ctaText: "Ver planes Ai",
@@ -234,6 +237,12 @@ export function PricingSummary() {
                               Popular
                             </div>
                           )}
+                          {plan.referralPercent > 0 && (
+                            <div className="absolute -top-3 right-4 px-2 py-1 rounded-full text-xs font-semibold bg-white/20 text-[#f4cc6e] border border-[#f4cc6e]/30 flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              {plan.referralPercent}%
+                            </div>
+                          )}
                           <div className="mb-4">
                             <h4 className={`font-bold text-xl mb-2 ${product.textColor}`}>{plan.name}</h4>
                             <div className="flex items-baseline gap-1">
@@ -260,12 +269,9 @@ export function PricingSummary() {
                     )}
 
                     <div className="text-center">
-                      <Button
-                        asChild
-                        className={`${product.id === "box" ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141321]" : product.id === "pro" ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#1b5276]" : "bg-[#1A5276] hover:bg-[#1A5276]/90 text-[#eae0d5]"} font-semibold px-8`}
-                      >
+                      <LuVelleButton variant={product.id === "ai" ? "blue" : "gold"} className="px-8" asChild>
                         <Link href={product.ctaHref}>{product.ctaText}</Link>
-                      </Button>
+                      </LuVelleButton>
                     </div>
                   </div>
                 </div>

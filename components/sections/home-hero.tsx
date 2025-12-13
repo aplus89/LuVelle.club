@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { MessageCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 
 const heroImages = [
   {
@@ -58,28 +58,27 @@ export function HomeHero() {
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/80 via-[#141322]/60 to-[#141322]/90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/85 via-[#141322]/75 to-[#141322]/90" />
 
-      <div className="relative z-10 flex items-center lg:items-start lg:pt-24 justify-center min-h-[85vh] px-4">
-        <div className="max-w-3xl text-center space-y-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-            <span className="text-[#efedea]">Una sola plataforma.</span>
-            <br />
-            <span className="font-heading text-[#f4cc6e]">Tres formas</span>
-            <br />
-            <span className="text-[#efedea]">de transformar tu bienestar.</span>
+      <div className="relative z-10 flex items-center justify-center min-h-[85vh] px-4 py-16 sm:py-20">
+        <div className="max-w-3xl w-full text-center space-y-6 sm:space-y-8">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-[90vw] sm:max-w-full mx-auto">
+            <span className="text-[#efedea] block">Una sola plataforma.</span>
+            <span className="font-heading text-[#f4cc6e] block">Tres formas</span>
+            <span className="text-[#efedea] block">de transformar tu bienestar.</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-[#e8ded3]/90 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-[#e8ded3]/90 max-w-[90vw] sm:max-w-2xl mx-auto leading-relaxed">
             LuVelle combina inteligencia artificial, una beauty box personalizada y herramientas profesionales para
             proveedoras en una experiencia única de belleza y bienestar.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4">
+            <LuVelleButton
               asChild
               size="lg"
-              className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141321] font-semibold px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+              variant="gold"
+              className="px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full"
             >
               <Link
                 href="https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20Ai%20gratis"
@@ -87,18 +86,18 @@ export function HomeHero() {
                 rel="noopener noreferrer"
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Probar LuVelle Ai gratis en WhatsApp
+                <span className="leading-tight">Probar LuVelle Ai gratis en WhatsApp</span>
               </Link>
-            </Button>
+            </LuVelleButton>
 
-            <Button
+            <LuVelleButton
               asChild
               size="lg"
               variant="outline"
-              className="border-2 border-[#f4cc6e] bg-transparent hover:bg-[#f4cc6e]/10 text-[#f4cc6e] font-semibold px-8 py-6 text-lg rounded-full transition-all duration-300"
+              className="px-6 sm:px-8 py-5 sm:py-6 text-base sm:text-lg rounded-full"
             >
               <Link href="#productos">Ver todos los planes</Link>
-            </Button>
+            </LuVelleButton>
           </div>
 
           <div className="flex justify-center gap-2 pt-4">

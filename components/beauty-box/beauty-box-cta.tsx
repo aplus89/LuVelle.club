@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 
 export function BeautyBoxCTA() {
@@ -12,9 +12,9 @@ export function BeautyBoxCTA() {
           <p className="text-xl text-brand-cream/70 max-w-2xl mx-auto">
             Creá tu Beauty Box personalizada en minutos y recibí productos premium cada mes.
           </p>
-          <Button size="lg" asChild className="bg-box-gold hover:bg-box-gold/90 text-brand-dark px-12">
+          <LuVelleButton size="lg" asChild variant="gold" className="px-12">
             <Link href="/join">Crear mi Beauty Box ahora</Link>
-          </Button>
+          </LuVelleButton>
           <p className="text-sm text-brand-cream/50">Cancelá cuando quieras • Sin compromisos</p>
         </div>
       </div>

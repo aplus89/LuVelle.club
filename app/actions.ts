@@ -71,6 +71,7 @@ export async function createProviderApplicationAction(data: {
   categories: string[]
   portfolio_url?: string
   message?: string
+  plan_requested?: string
 }) {
   try {
     const supabase = await getSupabaseServerClient()
@@ -86,6 +87,7 @@ export async function createProviderApplicationAction(data: {
           categories: data.categories,
           portfolio_url: data.portfolio_url,
           message: data.message,
+          plan_requested: data.plan_requested, // Added plan_requested parameter to store selected plan
         },
       ])
       .select()
@@ -217,7 +219,7 @@ export async function getCategoriesAction() {
       .from("categories")
       .select("*")
       .eq("is_active", true)
-      .order("display_order", { ascending: true })
+      .order("name", { ascending: true })
 
     if (error) {
       console.error("[v0] Error fetching categories:", error.message)

@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Check, Sparkles } from "lucide-react"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import { GlassCard } from "@/components/ui/glass-card"
 
 const whatsappUrl = "https://wa.me/15557792120?text=Hola!%20Quiero%20unirme%20al%20Club%20LuVelle"
@@ -16,6 +16,7 @@ const plans = [
     features: ["Acceso a IA básica", "Recomendaciones limitadas por mes", "Sin cashback", "Soporte por comunidad"],
     cta: "Comenzar gratis",
     popular: false,
+    referralPercent: 0,
   },
   {
     name: "Club LuVelle",
@@ -31,6 +32,7 @@ const plans = [
     ],
     cta: "Unirme al Club",
     popular: true,
+    referralPercent: 3,
   },
   {
     name: "LuVelle Plus",
@@ -47,6 +49,7 @@ const plans = [
     ],
     cta: "Quiero Plus",
     popular: false,
+    referralPercent: 5,
   },
 ]
 
@@ -97,11 +100,19 @@ export function AiPricing() {
               <GlassCard
                 className={`p-8 h-full flex flex-col ${plan.popular ? "ring-2 ring-[#f4cc6e] scale-105" : ""}`}
               >
-                {plan.popular && (
-                  <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full w-fit mb-4">
-                    Más popular
-                  </div>
-                )}
+                <div className="flex items-center justify-between mb-4">
+                  {plan.popular && (
+                    <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full">
+                      Más popular
+                    </div>
+                  )}
+                  {plan.referralPercent > 0 && (
+                    <div className="bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 text-[#f4cc6e] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 ml-auto">
+                      <Sparkles className="w-3 h-3" />
+                      {plan.referralPercent}% cashback
+                    </div>
+                  )}
+                </div>
 
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold text-[#e8ded3] mb-2">{plan.name}</h3>
@@ -121,21 +132,11 @@ export function AiPricing() {
                   ))}
                 </ul>
 
-                {/* Enforce button color rules:
-                    - Popular (gold bg #f4cc6e): text #141322
-                    - Non-popular (blue bg #1A5276): text #f4cc6e */}
-                <Button
-                  asChild
-                  className={`w-full font-semibold ${
-                    plan.popular
-                      ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322]"
-                      : "bg-[#1A5276] hover:bg-[#1A5276]/90 text-[#f4cc6e]"
-                  }`}
-                >
+                <LuVelleButton variant={plan.popular ? "gold" : "blue"} className="w-full" asChild>
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     {plan.cta}
                   </a>
-                </Button>
+                </LuVelleButton>
               </GlassCard>
             </div>
           ))}

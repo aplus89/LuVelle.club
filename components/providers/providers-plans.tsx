@@ -1,9 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
 import { Check, Briefcase } from "lucide-react"
-import Link from "next/link"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 
 const plans = [
   {
@@ -12,6 +11,7 @@ const plans = [
     period: "/1er mes",
     features: ["Acceso completo Pro Plus", "Todas las funciones IA", "Sin compromiso", "Decidí después del mes"],
     popular: false,
+    slug: "pro-trial",
   },
   {
     name: "Pro",
@@ -26,6 +26,7 @@ const plans = [
       "Comisión reducida",
     ],
     popular: false,
+    slug: "pro",
   },
   {
     name: "Pro Plus",
@@ -41,12 +42,24 @@ const plans = [
       "Comisión mínima",
     ],
     popular: true,
+    slug: "pro-plus",
   },
 ]
 
 export function ProvidersPlans() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
+
+  const scrollToForm = (planSlug: string) => {
+    const formSection = document.getElementById("aplicacion")
+    if (formSection) {
+      formSection.scrollIntoView({ behavior: "smooth", block: "start" })
+      // Store selected plan in sessionStorage for form to pick up
+      sessionStorage.setItem("selectedProviderPlan", planSlug)
+      // Dispatch event so form can update
+      window.dispatchEvent(new CustomEvent("providerPlanSelected", { detail: { plan: planSlug } }))
+    }
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -134,18 +147,13 @@ export function ProvidersPlans() {
                   ))}
                 </ul>
 
-                <Button
-                  asChild
-                  className={`w-full font-semibold ${
-                    plan.popular
-                      ? "bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322]"
-                      : "bg-[#141322] hover:bg-[#141322]/80 text-[#f4cc6e] border-2 border-[#f4cc6e]"
-                  }`}
+                <LuVelleButton
+                  variant={plan.popular ? "gold" : "outline"}
+                  className="w-full"
+                  onClick={() => scrollToForm(plan.slug)}
                 >
-                  <Link href="/join?product=pro">
-                    {plan.name === "Prueba Gratis" ? "Empezar prueba" : `Elegir ${plan.name}`}
-                  </Link>
-                </Button>
+                  {plan.name === "Prueba Gratis" ? "Empezar prueba" : `Elegir ${plan.name}`}
+                </LuVelleButton>
               </div>
             </div>
           ))}

@@ -2,9 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { GlassCard } from "@/components/ui/glass-card"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -37,7 +37,25 @@ export function ProviderApplicationForm() {
     categories: [] as string[],
     portfolio_url: "",
     message: "",
+    selectedPlan: "", // Added selectedPlan field
   })
+
+  useEffect(() => {
+    const handlePlanSelected = (e: CustomEvent) => {
+      setFormData((prev) => ({ ...prev, selectedPlan: e.detail.plan }))
+    }
+
+    // Check sessionStorage on mount
+    const storedPlan = sessionStorage.getItem("selectedProviderPlan")
+    if (storedPlan) {
+      setFormData((prev) => ({ ...prev, selectedPlan: storedPlan }))
+    }
+
+    window.addEventListener("providerPlanSelected", handlePlanSelected as EventListener)
+    return () => {
+      window.removeEventListener("providerPlanSelected", handlePlanSelected as EventListener)
+    }
+  }, [])
 
   const handleCategoryToggle = (category: string) => {
     setFormData((prev) => ({
@@ -62,7 +80,10 @@ export function ProviderApplicationForm() {
 
     setLoading(true)
 
-    const result = await createProviderApplicationAction(formData)
+    const result = await createProviderApplicationAction({
+      ...formData,
+      plan_requested: formData.selectedPlan || undefined,
+    })
 
     if (result.success) {
       setSubmitted(true)
@@ -70,6 +91,9 @@ export function ProviderApplicationForm() {
         title: "Aplicación enviada",
         description: "Gracias por tu interés. Nos pondremos en contacto pronto.",
       })
+
+      // Clear sessionStorage
+      sessionStorage.removeItem("selectedProviderPlan")
 
       // Reset form
       setFormData({
@@ -80,6 +104,7 @@ export function ProviderApplicationForm() {
         categories: [],
         portfolio_url: "",
         message: "",
+        selectedPlan: "",
       })
     } else {
       toast({
@@ -100,9 +125,9 @@ export function ProviderApplicationForm() {
         <p className="text-[hsl(var(--brand-cream))]/70 mb-6">
           Gracias por tu interés en unirte a LuVelle. Revisaremos tu aplicación y nos pondremos en contacto pronto.
         </p>
-        <Button onClick={() => setSubmitted(false)} variant="outline" className="glass-button-outline bg-transparent">
+        <LuVelleButton variant="outline" onClick={() => setSubmitted(false)}>
           Enviar otra aplicación
-        </Button>
+        </LuVelleButton>
       </GlassCard>
     )
   }
@@ -110,6 +135,14 @@ export function ProviderApplicationForm() {
   return (
     <GlassCard className="p-8">
       <form onSubmit={handleSubmit} className="space-y-6">
+        {formData.selectedPlan && (
+          <div className="bg-[#f4cc6e]/10 border border-[#f4cc6e]/30 rounded-lg p-4">
+            <p className="text-sm text-[#f4cc6e] font-semibold">
+              Plan seleccionado: {formData.selectedPlan.replace("pro-", "Pro ").replace("-", " ")}
+            </p>
+          </div>
+        )}
+
         {/* Name */}
         <div>
           <Label htmlFor="name" className="text-[hsl(var(--brand-cream))]">
@@ -226,7 +259,7 @@ export function ProviderApplicationForm() {
         </div>
 
         {/* Submit */}
-        <Button type="submit" disabled={loading} className="glass-button w-full" size="lg">
+        <LuVelleButton type="submit" disabled={loading} variant="gold" className="w-full" size="lg">
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
@@ -235,7 +268,7 @@ export function ProviderApplicationForm() {
           ) : (
             "Enviar aplicación"
           )}
-        </Button>
+        </LuVelleButton>
       </form>
     </GlassCard>
   )

@@ -31,10 +31,10 @@ export function BeautyBoxHero() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center pt-4">
-              <LuVelleButton asChild size="lg" variant="pro">
+              <LuVelleButton asChild size="lg" variant="gold">
                 <Link href="/join">Crear mi Beauty Box</Link>
               </LuVelleButton>
-              <LuVelleButton asChild size="lg" variant="pro-outline">
+              <LuVelleButton asChild size="lg" variant="outline">
                 <a href="#planes">Ver planes</a>
               </LuVelleButton>
             </div>

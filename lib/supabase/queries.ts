@@ -151,7 +151,7 @@ export async function getPlans(): Promise<Plan[]> {
 export async function getCategories(): Promise<Category[]> {
   try {
     const supabase = await getSupabaseServerClient()
-    const { data, error } = await supabase.from("categories").select("*").order("display_order", { ascending: true })
+    const { data, error } = await supabase.from("categories").select("*").order("name", { ascending: true })
 
     if (error) {
       if (isMissingTableError(error)) {
@@ -180,7 +180,7 @@ export async function getActiveCategories(): Promise<Category[]> {
       .from("categories")
       .select("*")
       .eq("is_active", true)
-      .order("display_order", { ascending: true })
+      .order("name", { ascending: true })
 
     if (error) {
       if (isMissingTableError(error)) {

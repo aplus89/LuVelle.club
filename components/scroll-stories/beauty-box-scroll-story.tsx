@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button" // Fixed import to use named export instead of default
 
 function CylinderBoxIcon({ className }: { className?: string }) {
   return (
@@ -48,7 +47,7 @@ export function BeautyBoxScrollStory() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const lidTranslateY = scrollProgress * -120
+  const lidTranslateY = scrollProgress * -70
   const lidRotateX = scrollProgress * 35
   const lidScale = 1 - scrollProgress * 0.08
   const boxScale = 1 + scrollProgress * 0.03
@@ -139,7 +138,7 @@ export function BeautyBoxScrollStory() {
 
           {/* Base box - positioned at bottom, slightly overlapping lid */}
           <div
-            className="relative z-0 flex justify-center -mt-[15%] md:-mt-[12%] transition-all duration-300 ease-out"
+            className="relative z-0 flex justify-center -mt-[8%] md:-mt-[6%] transition-all duration-300 ease-out"
             style={{
               transform: `scale(${boxScale})`,
             }}
@@ -229,17 +228,12 @@ export function BeautyBoxScrollStory() {
           {/* CTA */}
           <div className="space-y-3 pt-2">
             <div className="flex flex-col sm:flex-row gap-3">
-              <LuVelleButton asChild size="lg" variant="box" className="w-full sm:w-auto">
+              <LuVelleButton asChild size="lg" variant="gold" className="w-full sm:w-auto">
                 <Link href="/beauty-box">Crear mi Beauty Box</Link>
               </LuVelleButton>
-              <Button
-                asChild
-                size="lg"
-                variant="ghost"
-                className="w-full sm:w-auto text-[#e8ded3] hover:text-[#f4cc6e] hover:bg-[#f4cc6e]/10"
-              >
+              <LuVelleButton asChild size="lg" variant="outline" className="w-full sm:w-auto">
                 <Link href="/beauty-box">Ver cómo funciona paso a paso</Link>
-              </Button>
+              </LuVelleButton>
             </div>
             <p className="text-sm text-[#e8ded3]/80 italic leading-relaxed">
               💡 El valor real de tu Beauty Box es siempre mayor que lo que pagás. Más ahorro, más sorpresas, más

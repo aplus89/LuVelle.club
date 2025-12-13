@@ -17,8 +17,8 @@ const benefits = [
   },
   {
     icon: DollarSign,
-    title: "Ingresos predecibles",
-    description: "Flujo constante de reservas mensuales con pago garantizado.",
+    title: "Primer mes gratis",
+    description: "Probá Pro Plus sin costo durante el primer mes. Después elegís el plan que mejor se adapte.",
   },
   {
     icon: TrendingUp,
