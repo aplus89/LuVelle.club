@@ -47,7 +47,7 @@ export function BeautyBoxScrollStory() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const lidTranslateY = scrollProgress * -70
+  const lidTranslateY = scrollProgress * -90 // Moves up 90px when scrolling
   const lidRotateX = scrollProgress * 35
   const lidScale = 1 - scrollProgress * 0.08
   const boxScale = 1 + scrollProgress * 0.03
@@ -121,7 +121,7 @@ export function BeautyBoxScrollStory() {
 
           {/* Lid - positioned relative to container */}
           <div
-            className="relative z-10 flex justify-center transition-all duration-300 ease-out"
+            className="relative z-10 flex justify-center transition-all duration-300 ease-out mb-0"
             style={{
               transform: `translateY(${lidTranslateY}px) rotateX(${lidRotateX}deg) scale(${lidScale})`,
               transformOrigin: "center bottom",
@@ -138,7 +138,7 @@ export function BeautyBoxScrollStory() {
 
           {/* Base box - positioned at bottom, slightly overlapping lid */}
           <div
-            className="relative z-0 flex justify-center -mt-[8%] md:-mt-[6%] transition-all duration-300 ease-out"
+            className="relative z-0 flex justify-center -mt-[2%] md:-mt-[1%] transition-all duration-300 ease-out"
             style={{
               transform: `scale(${boxScale})`,
             }}
