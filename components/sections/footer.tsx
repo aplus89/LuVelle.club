@@ -137,7 +137,10 @@ export function Footer() {
               </a>
             </p>
             <p className="text-sm text-[#e8ded3]/70">
-              <a href="https://wa.me/15557792120" className="hover:text-[#f4cc6e] transition-colors">
+              <a
+                href="https://wa.me/15557792120?text=Hola!%20Quiero%20saber%20más%20sobre%20LuVelle"
+                className="hover:text-[#f4cc6e] transition-colors"
+              >
                 WhatsApp: +1 555 779 2120
               </a>
             </p>

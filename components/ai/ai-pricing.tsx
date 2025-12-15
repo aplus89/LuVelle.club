@@ -17,6 +17,7 @@ const plans = [
     cta: "Comenzar gratis",
     popular: false,
     referralPercent: 0,
+    girlsMath: null,
   },
   {
     name: "Club LuVelle",
@@ -25,14 +26,16 @@ const plans = [
     description: "Para quienes quieren más de LuVelle",
     features: [
       "Recomendaciones ilimitadas",
-      "Cashback en compras seleccionadas",
+      "3% cashback en compras seleccionadas",
       "Acceso a contenido exclusivo",
       "Podcast y newsletter",
       "Descuentos en Beauty Box",
+      "Incluye acceso a Beauty Box Esencial",
     ],
     cta: "Unirme al Club",
     popular: true,
     referralPercent: 3,
+    girlsMath: "Pagás menos que un café a la semana y ahorrás en cada compra",
   },
   {
     name: "LuVelle Plus",
@@ -41,15 +44,16 @@ const plans = [
     description: "La experiencia completa de LuVelle",
     features: [
       "Todo lo de Club LuVelle",
-      "Mayor % de cashback",
+      "5% cashback en todas las compras",
       "Prioridad en respuestas de IA",
       "Acceso temprano a promos",
-      "Beauty Box especiales prioritarios",
+      "Beauty Box Premium con descuento",
       "Eventos exclusivos",
     ],
     cta: "Quiero Plus",
     popular: false,
     referralPercent: 5,
+    girlsMath: "Tu inversión se paga sola con el cashback de 2-3 compras",
   },
 ]
 
@@ -117,10 +121,11 @@ export function AiPricing() {
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold text-[#e8ded3] mb-2">{plan.name}</h3>
                   <p className="text-sm text-[#e8ded3]/60 mb-4">{plan.description}</p>
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-baseline gap-1 mb-2">
                     <span className="text-4xl font-bold text-[#f4cc6e]">{plan.price}</span>
                     <span className="text-[#e8ded3]/60">{plan.period}</span>
                   </div>
+                  {plan.girlsMath && <p className="text-xs text-[#f4cc6e]/80 italic">Girls Math: {plan.girlsMath}</p>}
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">

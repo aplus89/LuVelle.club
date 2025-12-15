@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { PhoneMockup } from "./phone-mockup"
 import { Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 
 const whatsappUrl = "https://wa.me/15557792120?text=Hola!%20Quiero%20probar%20LuVelle%20Ai"
@@ -84,10 +84,10 @@ export function AiScrollStory() {
                 <span className="text-sm text-[#f4cc6e] font-medium">LuVelle Ai</span>
               </div>
 
-              <h2 className="font-heading text-4xl md:text-6xl text-[#f4cc6e]">
-                Tu amiga experta en belleza, siempre disponible
-              </h2>
+              {/* Updated headline to be more conversational */}
+              <h2 className="font-heading text-4xl md:text-6xl text-[#f4cc6e]">Cómo LuVelle Ai acompaña tu día</h2>
 
+              {/* Emphasized emotional benefit */}
               <p className="text-lg text-[#efedea] leading-relaxed">
                 El chat de WhatsApp que te ayuda a cuidar tu belleza como una amiga experta. Nunca estás sola en tu
                 rutina de bienestar.
@@ -139,19 +139,14 @@ export function AiScrollStory() {
               </div>
 
               <div className="pt-4 flex flex-col sm:flex-row gap-3">
-                <Button asChild size="lg" className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] font-semibold">
+                <LuVelleButton asChild size="lg" variant="gold">
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     Probar LuVelle Ai gratis
                   </a>
-                </Button>
-                <Button
-                  asChild
-                  size="lg"
-                  variant="outline"
-                  className="border-[#f4cc6e] text-[#f4cc6e] hover:bg-[#f4cc6e]/10 bg-transparent"
-                >
+                </LuVelleButton>
+                <LuVelleButton asChild size="lg" variant="outline">
                   <Link href="/ai">Ver planes del Club LuVelle</Link>
-                </Button>
+                </LuVelleButton>
               </div>
             </div>
 

@@ -42,7 +42,7 @@ export function HomeHero() {
   }, [])
 
   return (
-    <section className="relative min-h-[85vh] overflow-hidden">
+    <section className="relative min-h-[70vh] md:min-h-[85vh] overflow-hidden">
       <div className="absolute inset-0">
         {heroImages.map((image, index) => (
           <div
@@ -58,17 +58,18 @@ export function HomeHero() {
         ))}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/85 via-[#141322]/75 to-[#141322]/90" />
+      <div className="absolute inset-0 bg-[#141322]/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/50 via-transparent to-[#141322]/80" />
 
-      <div className="relative z-10 flex items-center justify-center min-h-[85vh] px-4 py-16 sm:py-20">
-        <div className="max-w-3xl w-full text-center space-y-6 sm:space-y-8">
+      <div className="relative z-10 flex items-center justify-center min-h-[70vh] md:min-h-[85vh] px-4 py-16 sm:py-20">
+        <div className="max-w-sm sm:max-w-3xl w-full mx-auto text-center space-y-6 sm:space-y-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight max-w-[90vw] sm:max-w-full mx-auto">
             <span className="text-[#efedea] block">Una sola plataforma.</span>
             <span className="font-heading text-[#f4cc6e] block">Tres formas</span>
             <span className="text-[#efedea] block">de transformar tu bienestar.</span>
           </h1>
 
-          <p className="text-base sm:text-lg md:text-xl text-[#e8ded3]/90 max-w-[90vw] sm:max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-[#e8ded3]/90 max-w-2xl mx-auto leading-relaxed">
             LuVelle combina inteligencia artificial, una beauty box personalizada y herramientas profesionales para
             proveedoras en una experiencia única de belleza y bienestar.
           </p>

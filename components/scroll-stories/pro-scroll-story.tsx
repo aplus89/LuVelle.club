@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { PhoneMockup } from "./phone-mockup"
 import { Briefcase, DollarSign, Calendar, TrendingUp, MessageCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 
 export function ProScrollStory() {
@@ -72,8 +72,8 @@ export function ProScrollStory() {
               </h2>
 
               <p className="text-lg text-[#efedea] leading-relaxed">
-                Sin hacer malabares con WhatsApp, Excel y agendas de papel. LuVelle Pro te da todo lo que necesitás para
-                crecer.
+                Sin hacer malabares con WhatsApp, Excel y agendas de papel. Mientras das un servicio, LuVelle se encarga
+                de las reservas y los cobros.
               </p>
 
               <div className="space-y-4">
@@ -120,13 +120,9 @@ export function ProScrollStory() {
               </div>
 
               <div className="pt-4 space-y-2">
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full sm:w-auto bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#1b5276] font-semibold"
-                >
+                <LuVelleButton asChild size="lg" variant="gold" className="w-full sm:w-auto">
                   <Link href="/providers">Empezar prueba gratis Pro (1 mes)</Link>
-                </Button>
+                </LuVelleButton>
                 <p className="text-sm text-[#efedea]/60">Sin tarjeta, sin compromiso. Decidís después.</p>
               </div>
             </div>

@@ -1,12 +1,13 @@
 import { Header } from "@/components/sections/header"
 import { PartnersHero } from "@/components/partners/partners-hero"
 import { PartnersBenefits } from "@/components/partners/partners-benefits"
+import { PartnersDashboardPreview } from "@/components/partners/partners-dashboard-preview"
 import { PartnersProcess } from "@/components/partners/partners-process"
 import { PartnersForm } from "@/components/partners/partners-form"
 import { Footer } from "@/components/sections/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 
 export default function PartnersPage() {
   return (
@@ -14,6 +15,7 @@ export default function PartnersPage() {
       <Header />
       <PartnersHero />
       <PartnersBenefits />
+      <PartnersDashboardPreview />
       <PartnersProcess />
       <PartnersForm />
 
@@ -23,20 +25,12 @@ export default function PartnersPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-brand-cream/70">¿Sos profesional de servicios? Aplicá aquí →</p>
             <div className="flex gap-4">
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-gold text-brand-gold hover:bg-brand-gold/10 bg-transparent"
-              >
+              <LuVelleButton variant="outline" asChild>
                 <Link href="/providers">Ir a Proveedoras</Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="border-brand-gold text-brand-gold hover:bg-brand-gold/10 bg-transparent"
-              >
+              </LuVelleButton>
+              <LuVelleButton variant="outline" asChild>
                 <Link href="/">Volver al inicio</Link>
-              </Button>
+              </LuVelleButton>
             </div>
           </div>
         </div>

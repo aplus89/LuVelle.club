@@ -1,23 +1,20 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 
 export function ProvidersHero() {
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-20 overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-12 md:py-16 overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: "url('/images/gemini-generated-image-nsehmznsehmznseh.png')",
         }}
       />
-      {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#141322]/90 via-[#141322]/80 to-[#141322]" />
 
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="text-center space-y-8">
-          {/* Title */}
           <div className="space-y-4">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold">
               <span className="text-[#e8ded3]">Convertí tu talento en</span>
@@ -29,15 +26,13 @@ export function ProvidersHero() {
             </p>
           </div>
 
-          {/* Subtitle */}
           <p className="text-lg md:text-xl text-[#e8ded3]/80 max-w-3xl mx-auto leading-relaxed">
             Más clientas. Menos desorden. Pagos claros y a tiempo. LuVelle Pro te da las herramientas para crecer.
           </p>
 
-          {/* CTA - Button color: gold bg (#f4cc6e), dark text (#141322) */}
-          <Button size="lg" asChild className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] px-8 font-semibold">
+          <LuVelleButton size="lg" asChild variant="gold">
             <a href="#planes">Conocer planes Pro</a>
-          </Button>
+          </LuVelleButton>
         </div>
       </div>
     </section>

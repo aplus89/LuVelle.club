@@ -1,13 +1,14 @@
 import { Header } from "@/components/sections/header"
 import { ProvidersHero } from "@/components/providers/providers-hero"
 import { ProvidersBenefits } from "@/components/providers/providers-benefits"
+import { ProvidersDashboardPreview } from "@/components/providers/providers-dashboard-preview"
 import { ProvidersPlans } from "@/components/providers/providers-plans"
 import { ProvidersOnboarding } from "@/components/providers/providers-onboarding"
 import { ProvidersForm } from "@/components/providers/providers-form"
 import { Footer } from "@/components/sections/footer"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { LuVelleButton } from "@/components/ui/luvelle-button"
 
 export default function ProvidersPage() {
   return (
@@ -15,6 +16,7 @@ export default function ProvidersPage() {
       <Header />
       <ProvidersHero />
       <ProvidersBenefits />
+      <ProvidersDashboardPreview />
       <ProvidersPlans />
       <ProvidersOnboarding />
       <ProvidersForm />
@@ -25,12 +27,12 @@ export default function ProvidersPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <p className="text-[#e8ded3]/70">¿Vendés productos? Postulá tu marca →</p>
             <div className="flex gap-4">
-              <Button asChild className="bg-[#141322] hover:bg-[#141322]/80 text-[#f4cc6e] border-2 border-[#f4cc6e]">
+              <LuVelleButton asChild variant="outline">
                 <Link href="/partners">Ir a Marcas</Link>
-              </Button>
-              <Button asChild className="bg-[#141322] hover:bg-[#141322]/80 text-[#f4cc6e] border-2 border-[#f4cc6e]">
+              </LuVelleButton>
+              <LuVelleButton asChild variant="outline">
                 <Link href="/">Volver al inicio</Link>
-              </Button>
+              </LuVelleButton>
             </div>
           </div>
         </div>

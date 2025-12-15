@@ -15,6 +15,11 @@ const config: Config = {
         heading: ["var(--font-dancing)", "cursive"],
       },
       colors: {
+        "brand-navy": "#141322",
+        "brand-blue": "#1A5276",
+        "brand-gold": "#F6CE6F",
+        "brand-cream": "#EFEDEA",
+        "brand-beige": "#EAE0D5",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -67,10 +72,6 @@ const config: Config = {
         },
         "ai-accent": "#1A5276",
         "pro-accent": "#1b5276",
-        "brand-dark": "#141322",
-        "brand-gold": "#f4cc6e",
-        "brand-cream": "#efedea",
-        "brand-beige": "#e8ded3",
       },
       borderRadius: {
         lg: "var(--radius)",

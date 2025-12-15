@@ -6,17 +6,18 @@ import { GlassCard } from "@/components/ui/glass-card"
 import { LuVelleButton } from "@/components/ui/luvelle-button"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
+import { toCrc, toUsd } from "@/lib/utils/currency"
 
 const FALLBACK_PLANS = [
   {
     name: "Esencial",
     slug: "beauty-box-esencial",
-    price: "$59.99",
+    price_local: 29900,
     features: [
-      "3-4 productos de belleza seleccionados",
-      "Marcas reconocidas",
-      "Descuentos exclusivos",
-      "Sorpresas mensuales",
+      "3-4 productos seleccionados mensualmente",
+      "Categorías: Skincare y Makeup básico",
+      "Marcas reconocidas y confiables",
+      "Descuentos exclusivos en compras",
     ],
     referralPercent: 0,
     popular: false,
@@ -24,12 +25,12 @@ const FALLBACK_PLANS = [
   {
     name: "Premium",
     slug: "beauty-box-premium",
-    price: "$79.99",
+    price_local: 39900,
     features: [
-      "5-6 productos premium",
-      "Marcas de alta gama",
-      "Personalización según tu perfil",
-      "3% cashback en referidos",
+      "5-6 productos premium cada mes",
+      "Categorías: Skincare, Makeup, Haircare",
+      "Personalización según tu perfil de belleza",
+      "3% cashback (Girls Math: ganás por cada caja que referís)",
       "Acceso anticipado a lanzamientos",
     ],
     referralPercent: 3,
@@ -38,14 +39,14 @@ const FALLBACK_PLANS = [
   {
     name: "Deluxe",
     slug: "beauty-box-deluxe",
-    price: "$99.99",
+    price_local: 49900,
     features: [
-      "7-8 productos de lujo",
-      "Marcas exclusivas internacionales",
-      "Caja totalmente personalizada",
-      "8% cashback en referidos",
-      "Consulta virtual mensual con experto",
-      "Envío prioritario",
+      "7-8 productos de lujo mensuales",
+      "Todas las categorías: Skincare, Makeup, Haircare, Nails y más",
+      "Caja 100% personalizada para vos",
+      "8% cashback (Girls Math: ¡tu caja se paga sola con referidos!)",
+      "Consulta virtual mensual con experto en belleza",
+      "Envío prioritario y exclusivo",
     ],
     referralPercent: 8,
     popular: false,
@@ -74,7 +75,7 @@ export function BeautyBoxPlans() {
         const formattedPlans = data.map((plan) => ({
           name: plan.name,
           slug: plan.slug,
-          price: plan.price_range,
+          price_local: plan.price_local || 29900,
           features: plan.features || [],
           referralPercent: plan.referral_percent || 0,
           popular: plan.slug === "beauty-box-premium",
@@ -147,10 +148,18 @@ export function BeautyBoxPlans() {
 
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold text-brand-cream mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1 mb-4">
-                    <span className="text-4xl font-bold text-brand-gold">{plan.price}</span>
-                    <span className="text-brand-cream/60">/mes</span>
+                  <div className="mb-4">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-4xl font-bold text-brand-gold">{toCrc(plan.price_local)}</span>
+                      <span className="text-brand-cream/60">/mes</span>
+                    </div>
+                    <div className="text-sm text-brand-cream/50 mt-1">≈ {toUsd(plan.price_local)} USD</div>
                   </div>
+                  {plan.referralPercent > 0 && (
+                    <p className="text-xs text-brand-gold/80 italic mb-2">
+                      Girls Math: {plan.referralPercent}% de tus compras vuelve a vos en créditos LuVelle
+                    </p>
+                  )}
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">

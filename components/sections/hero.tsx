@@ -52,7 +52,11 @@ const heroContent = {
   brand: {
     bullets: ["Exposición a audiencia calificada", "Distribución mensual garantizada", "Feedback directo de usuarias"],
     cta1: { text: "Postular mi marca", href: "/partners" },
-    cta2: { text: "Hablar por WhatsApp", href: "https://wa.me/15557792120", external: true },
+    cta2: {
+      text: "Hablar por WhatsApp",
+      href: "https://wa.me/15557792120?text=Hola!%20Soy%20una%20marca%20y%20quiero%20saber%20más%20sobre%20LuVelle",
+      external: true,
+    },
   },
 }
 

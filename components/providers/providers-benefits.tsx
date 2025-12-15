@@ -52,7 +52,7 @@ export function ProvidersBenefits() {
   }, [])
 
   return (
-    <section className="relative py-16 md:py-24 px-4 overflow-hidden">
+    <section className="relative py-12 md:py-16 px-4 overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -71,7 +71,7 @@ export function ProvidersBenefits() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon
             return (
