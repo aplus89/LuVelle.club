@@ -198,14 +198,19 @@ export function BrandApplicationForm() {
         </div>
 
         {/* Submit */}
-        <Button type="submit" disabled={loading} className="glass-button w-full" size="lg">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-semibold w-full"
+          size="lg"
+        >
           {loading ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
               Enviando...
             </>
           ) : (
-            "Enviar postulación"
+            "Postular mi marca"
           )}
         </Button>
       </form>

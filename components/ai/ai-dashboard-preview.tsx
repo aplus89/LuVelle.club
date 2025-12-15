@@ -63,8 +63,8 @@ export function AiDashboardPreview() {
                 <Sparkles className="w-4 h-4 text-brand-gold" />
               </div>
               <div>
-                <h3 className="text-brand-cream font-semibold text-sm">LuVelle Ai</h3>
-                <p className="text-brand-cream/50 text-xs">en línea</p>
+                <h3 className="text-brand-dark font-semibold text-sm bg-brand-gold px-3 py-1 rounded-lg">LuVelle Ai</h3>
+                <p className="text-brand-cream/50 text-xs mt-0.5">en línea</p>
               </div>
             </div>
 

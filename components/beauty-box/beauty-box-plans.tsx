@@ -132,23 +132,17 @@ export function BeautyBoxPlans() {
               <GlassCard
                 className={`p-8 h-full flex flex-col ${plan.popular ? "ring-2 ring-brand-gold scale-105" : ""}`}
               >
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4">
                   {plan.popular && (
-                    <div className="bg-brand-gold text-brand-dark text-xs font-bold uppercase px-3 py-1 rounded-full">
+                    <div className="bg-brand-gold text-brand-dark text-xs font-bold uppercase px-3 py-1 rounded-full inline-block">
                       Más elegido
-                    </div>
-                  )}
-                  {plan.referralPercent > 0 && (
-                    <div className="bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 text-[#f4cc6e] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 ml-auto">
-                      <Sparkles className="w-3 h-3" />
-                      {plan.referralPercent}% cashback
                     </div>
                   )}
                 </div>
 
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-brand-cream mb-2">{plan.name}</h3>
-                  <div className="mb-4">
+                  <h3 className="text-2xl font-bold text-brand-cream mb-4">{plan.name}</h3>
+                  <div className="mb-2">
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-bold text-brand-gold">{toCrc(plan.price_local)}</span>
                       <span className="text-brand-cream/60">/mes</span>
@@ -156,9 +150,15 @@ export function BeautyBoxPlans() {
                     <div className="text-sm text-brand-cream/50 mt-1">≈ {toUsd(plan.price_local)} USD</div>
                   </div>
                   {plan.referralPercent > 0 && (
-                    <p className="text-xs text-brand-gold/80 italic mb-2">
-                      Girls Math: {plan.referralPercent}% de tus compras vuelve a vos en créditos LuVelle
-                    </p>
+                    <>
+                      <div className="bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 text-[#f4cc6e] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 inline-flex mb-2">
+                        <Sparkles className="w-3 h-3" />
+                        {plan.referralPercent}% cashback
+                      </div>
+                      <p className="text-xs text-brand-gold/80 italic">
+                        Girls Math: {plan.referralPercent}% de tus compras vuelve a vos en créditos LuVelle
+                      </p>
+                    </>
                   )}
                 </div>
 

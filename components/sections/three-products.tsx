@@ -133,7 +133,7 @@ export function ThreeProducts() {
                   <div className="space-y-6 relative z-10">
                     {product.popular && (
                       <div className="flex justify-between items-center">
-                        <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full">
+                        <div className="bg-white/10 text-white text-xs font-bold uppercase px-3 py-1 rounded-full ring-1 ring-white/20">
                           Más popular
                         </div>
                       </div>

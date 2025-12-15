@@ -106,14 +106,8 @@ export function AiPricing() {
               >
                 <div className="flex items-center justify-between mb-4">
                   {plan.popular && (
-                    <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full">
+                    <div className="bg-[#f4cc6e] text-[#141322] text-xs font-bold uppercase px-3 py-1 rounded-full inline-block">
                       Más popular
-                    </div>
-                  )}
-                  {plan.referralPercent > 0 && (
-                    <div className="bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 text-[#f4cc6e] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 ml-auto">
-                      <Sparkles className="w-3 h-3" />
-                      {plan.referralPercent}% cashback
                     </div>
                   )}
                 </div>
@@ -125,7 +119,17 @@ export function AiPricing() {
                     <span className="text-4xl font-bold text-[#f4cc6e]">{plan.price}</span>
                     <span className="text-[#e8ded3]/60">{plan.period}</span>
                   </div>
-                  {plan.girlsMath && <p className="text-xs text-[#f4cc6e]/80 italic">Girls Math: {plan.girlsMath}</p>}
+                  {plan.referralPercent > 0 && (
+                    <>
+                      <div className="bg-[#f4cc6e]/20 border border-[#f4cc6e]/30 text-[#f4cc6e] text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 inline-flex mb-2">
+                        <Sparkles className="w-3 h-3" />
+                        {plan.referralPercent}% cashback
+                      </div>
+                      {plan.girlsMath && (
+                        <p className="text-xs text-[#f4cc6e]/80 italic">Girls Math: {plan.girlsMath}</p>
+                      )}
+                    </>
+                  )}
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">
