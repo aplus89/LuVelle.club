@@ -47,11 +47,12 @@ export function BeautyBoxScrollStory() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const lidTranslateY = scrollProgress * -90 // Moves up 90px when scrolling
+  const baseOffsetY = 25 // Start only 50px above box (very close)
+  const lidTranslateY = baseOffsetY - scrollProgress * 340 // Moves from +50px to -90px
   const lidRotateX = scrollProgress * 35
   const lidScale = 1 - scrollProgress * 0.08
   const boxScale = 1 + scrollProgress * 0.03
-  const lightOpacity = scrollProgress > 0.2 ? Math.min(1, (scrollProgress - 0.2) * 1.5) : 0
+  const lightOpacity = scrollProgress > 0.3 ? Math.min(1, (scrollProgress - 0.2) * 1.5) : 0
   const lightScale = 0.5 + scrollProgress * 0.8
 
   return (
@@ -70,58 +71,9 @@ export function BeautyBoxScrollStory() {
         style={{ perspective: "1200px" }}
       >
         <div className="relative w-full md:w-[55vw] lg:w-[50vw] max-w-[700px] mx-auto md:mx-0 md:ml-[-5%] lg:ml-0">
-          {/* Light effect rays */}
-          <div
-            className="absolute left-1/2 -translate-x-1/2 bottom-[40%] md:bottom-[45%] transition-all duration-500 ease-out"
-            style={{
-              opacity: lightOpacity,
-              transform: `translateX(-50%) scale(${lightScale})`,
-            }}
-          >
-            {/* Conic light rays */}
-            <div
-              className="w-40 md:w-64 lg:w-80 h-60 md:h-96 lg:h-[450px]"
-              style={{
-                background: `conic-gradient(from 180deg at 50% 100%, transparent 130deg, rgba(244, 204, 110, 0.4) 150deg, rgba(244, 204, 110, 0.6) 180deg, rgba(244, 204, 110, 0.4) 210deg, transparent 230deg)`,
-                filter: "blur(25px)",
-              }}
-            />
-            {/* Inner white light */}
-            <div className="absolute inset-0 flex items-end justify-center">
-              <div
-                className="w-24 md:w-40 lg:w-52 h-40 md:h-64 lg:h-80"
-                style={{
-                  background: `conic-gradient(from 180deg at 50% 100%, transparent 140deg, rgba(255, 255, 255, 0.3) 160deg, rgba(255, 255, 255, 0.5) 180deg, rgba(255, 255, 255, 0.3) 200deg, transparent 220deg)`,
-                  filter: "blur(18px)",
-                }}
-              />
-            </div>
-            {/* Center glow */}
-            <div
-              className="absolute bottom-[30%] left-1/2 -translate-x-1/2 w-32 md:w-48 lg:w-56 h-12 md:h-20 lg:h-24 rounded-full"
-              style={{
-                background: `radial-gradient(ellipse at center, rgba(244, 204, 110, 0.8) 0%, rgba(244, 204, 110, 0.4) 40%, transparent 70%)`,
-                filter: "blur(12px)",
-              }}
-            />
-            {/* Sparkle particles */}
-            <div
-              className="absolute w-2 h-2 bg-white rounded-full animate-pulse bottom-[60%] left-1/4"
-              style={{ opacity: lightOpacity * 0.8 }}
-            />
-            <div
-              className="absolute w-1.5 h-1.5 bg-[#f4cc6e] rounded-full animate-pulse bottom-[50%] right-1/3"
-              style={{ animationDelay: "0.3s", opacity: lightOpacity * 0.6 }}
-            />
-            <div
-              className="absolute w-2 h-2 bg-white rounded-full animate-pulse bottom-[70%] right-1/4"
-              style={{ animationDelay: "0.6s", opacity: lightOpacity * 0.7 }}
-            />
-          </div>
-
           {/* Lid - positioned relative to container */}
           <div
-            className="relative z-10 flex justify-center transition-all duration-300 ease-out mb-0"
+            className="relative z-5 flex justify-center transition-all duration-300 ease-out mb-0"
             style={{
               transform: `translateY(${lidTranslateY}px) rotateX(${lidRotateX}deg) scale(${lidScale})`,
               transformOrigin: "center bottom",
@@ -132,13 +84,13 @@ export function BeautyBoxScrollStory() {
               alt="Tapa de The Beauty Box"
               width={600}
               height={260}
-              className="w-[80%] md:w-[85%] h-auto drop-shadow-2xl"
+              className="w-[90%] md:w-[95%] h-auto drop-shadow-2xl"
             />
           </div>
 
           {/* Base box - positioned at bottom, slightly overlapping lid */}
           <div
-            className="relative z-0 flex justify-center -mt-[2%] md:-mt-[1%] transition-all duration-300 ease-out"
+            className="relative z-0 flex justify-center -mt-[2%] md:-mt-[1%] transition-all duration-200 ease-out"
             style={{
               transform: `scale(${boxScale})`,
             }}
@@ -150,6 +102,55 @@ export function BeautyBoxScrollStory() {
               height={400}
               className="w-[80%] md:w-[85%] h-auto"
             />
+
+            {/* Light effect rays coming from the box */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 top-0 transition-all duration-500 ease-out pointer-events-none"
+              style={{
+                opacity: lightOpacity,
+                transform: `translateX(-50%) scale(${lightScale})`,
+              }}
+            >
+              {/* Conic light rays */}
+              <div
+                className="w-40 md:w-64 lg:w-80 h-60 md:h-96 lg:h-[450px]"
+                style={{
+                  background: `conic-gradient(from 180deg at 50% 100%, transparent 130deg, rgba(244, 204, 110, 0.4) 150deg, rgba(244, 204, 110, 0.6) 180deg, rgba(244, 204, 110, 0.4) 210deg, transparent 230deg)`,
+                  filter: "blur(25px)",
+                }}
+              />
+              {/* Inner white light */}
+              <div className="absolute inset-0 flex items-end justify-center">
+                <div
+                  className="w-24 md:w-40 lg:w-52 h-40 md:h-64 lg:h-80"
+                  style={{
+                    background: `conic-gradient(from 180deg at 50% 100%, transparent 140deg, rgba(255, 255, 255, 0.3) 160deg, rgba(255, 255, 255, 0.5) 180deg, rgba(255, 255, 255, 0.3) 200deg, transparent 220deg)`,
+                    filter: "blur(18px)",
+                  }}
+                />
+              </div>
+              {/* Center glow */}
+              <div
+                className="absolute bottom-[30%] left-1/2 -translate-x-1/2 w-32 md:w-48 lg:w-56 h-12 md:h-20 lg:h-24 rounded-full"
+                style={{
+                  background: `radial-gradient(ellipse at center, rgba(244, 204, 110, 0.8) 0%, rgba(244, 204, 110, 0.4) 40%, transparent 70%)`,
+                  filter: "blur(12px)",
+                }}
+              />
+              {/* Sparkle particles */}
+              <div
+                className="absolute w-2 h-2 bg-white rounded-full animate-pulse bottom-[60%] left-1/4"
+                style={{ opacity: lightOpacity * 0.8 }}
+              />
+              <div
+                className="absolute w-1.5 h-1.5 bg-[#f4cc6e] rounded-full animate-pulse bottom-[50%] right-1/3"
+                style={{ animationDelay: "0.3s", opacity: lightOpacity * 0.6 }}
+              />
+              <div
+                className="absolute w-2 h-2 bg-white rounded-full animate-pulse bottom-[70%] right-1/4"
+                style={{ animationDelay: "0.6s", opacity: lightOpacity * 0.7 }}
+              />
+            </div>
           </div>
 
           {/* Background glow behind box */}
