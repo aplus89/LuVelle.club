@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, Dancing_Script } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { PersonaProvider } from "@/components/persona-provider"
 import { GoogleTagManager } from "@/components/gtm"
+import { GoogleAnalytics } from "@/components/google-analytics"
 import "./globals.css"
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -53,6 +54,7 @@ export default function RootLayout({
     <html lang="es-CR" className={`${plusJakarta.variable} ${dancingScript.variable}`}>
       <head>
         <GoogleTagManager />
+        <GoogleAnalytics />
       </head>
       <body className="font-sans antialiased">
         <noscript>
