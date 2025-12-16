@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { Check, Briefcase } from "lucide-react"
 import { LuVelleButton } from "@/components/ui/luvelle-button"
+import { trackProviderTrial, trackPlanSelected } from "@/lib/gtm-events"
 
 const plans = [
   {
@@ -51,12 +52,13 @@ export function ProvidersPlans() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([])
 
   const scrollToForm = (planSlug: string) => {
+    trackProviderTrial(planSlug)
+    trackPlanSelected("provider", planSlug)
+
     const formSection = document.getElementById("aplicacion")
     if (formSection) {
       formSection.scrollIntoView({ behavior: "smooth", block: "start" })
-      // Store selected plan in sessionStorage for form to pick up
       sessionStorage.setItem("selectedProviderPlan", planSlug)
-      // Dispatch event so form can update
       window.dispatchEvent(new CustomEvent("providerPlanSelected", { detail: { plan: planSlug } }))
     }
   }

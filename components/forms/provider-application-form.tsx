@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/hooks/use-toast"
 import { createProviderApplicationAction } from "@/app/actions"
 import { Loader2 } from "lucide-react"
+import { trackFormSubmit } from "@/lib/gtm-events"
 
 const categoryOptions = [
   "Skincare",
@@ -86,16 +87,16 @@ export function ProviderApplicationForm() {
     })
 
     if (result.success) {
+      trackFormSubmit("provider")
+
       setSubmitted(true)
       toast({
         title: "Aplicación enviada",
         description: "Gracias por tu interés. Nos pondremos en contacto pronto.",
       })
 
-      // Clear sessionStorage
       sessionStorage.removeItem("selectedProviderPlan")
 
-      // Reset form
       setFormData({
         name: "",
         whatsapp: "",

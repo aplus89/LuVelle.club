@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { MessageCircle } from "lucide-react"
 import { LuVelleButton } from "@/components/ui/luvelle-button"
+import { trackWhatsAppClick } from "@/lib/gtm-events"
 
 const heroImages = [
   {
@@ -85,6 +86,7 @@ export function HomeHero() {
                 href="https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20Ai%20gratis"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("home_hero")}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 <span className="leading-tight">Probar LuVelle Ai gratis en WhatsApp</span>

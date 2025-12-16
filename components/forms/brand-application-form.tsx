@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { createBrandApplicationAction } from "@/app/actions"
 import { Loader2 } from "lucide-react"
+import { trackFormSubmit } from "@/lib/gtm-events"
 
 export function BrandApplicationForm() {
   const [loading, setLoading] = useState(false)
@@ -44,6 +45,8 @@ export function BrandApplicationForm() {
     const result = await createBrandApplicationAction(formData)
 
     if (result.success) {
+      trackFormSubmit("brand")
+
       setSubmitted(true)
       toast({
         title: "Postulación enviada",

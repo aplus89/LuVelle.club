@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { LuVelleButton } from "@/components/ui/luvelle-button"
+import { trackBeautyBoxStart } from "@/lib/gtm-events"
 
 export function BeautyBoxHero() {
   return (
@@ -27,7 +28,7 @@ export function BeautyBoxHero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-center pt-4">
-              <LuVelleButton asChild size="lg" variant="gold">
+              <LuVelleButton asChild size="lg" variant="gold" onClick={() => trackBeautyBoxStart("beauty_box_hero")}>
                 <Link href="/join">Crear mi Beauty Box</Link>
               </LuVelleButton>
               <LuVelleButton asChild size="lg" variant="outline">
