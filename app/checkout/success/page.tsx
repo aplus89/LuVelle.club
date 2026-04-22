@@ -74,7 +74,7 @@ export default function CheckoutSuccessPage() {
             </LuVelleButton>
           </Link>
           <a
-            href="https://wa.me/50688888888?text=Hola!%20Acabo%20de%20suscribirme%20a%20LuVelle"
+            href="https://wa.me/15557792120?text=Hola!%20Acabo%20de%20suscribirme%20a%20LuVelle"
             target="_blank"
             rel="noopener noreferrer"
             className="block"
