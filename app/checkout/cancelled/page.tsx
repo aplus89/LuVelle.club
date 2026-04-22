@@ -34,7 +34,7 @@ export default function CheckoutCancelledPage() {
             </LuVelleButton>
           </Link>
           <a
-            href="https://wa.me/50688888888?text=Hola!%20Tuve%20un%20problema%20con%20el%20pago"
+            href="https://wa.me/15557792120?text=Hola!%20Tuve%20un%20problema%20con%20el%20pago"
             target="_blank"
             rel="noopener noreferrer"
             className="block"

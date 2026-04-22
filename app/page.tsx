@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { MessageCircle, Sparkles, Heart, Search, Gift, Calendar, User, ChevronDown, Check, Instagram } from "lucide-react"
 import { trackWhatsAppClick } from "@/lib/gtm-events"
 
-const WHATSAPP_URL = "https://wa.me/50688888000?text=Hola%20LuVelle%2C%20quiero%20probar%20el%20asistente%20de%20belleza"
+const WHATSAPP_URL = "https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20el%20asistente%20de%20belleza"
 
 // Reusable CTA Button
 function CTAButton({ 
@@ -65,8 +66,15 @@ function Navbar() {
       scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-transparent"
     }`}>
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-[#2A2233]">
-          LuVelle
+        <Link href="/" className="flex items-center gap-2">
+          <Image 
+            src="/images/luvelle-logo.png" 
+            alt="LuVelle" 
+            width={32} 
+            height={32}
+            className="w-8 h-8"
+          />
+          <span className="text-xl font-bold text-[#2A2233]">LuVelle</span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
