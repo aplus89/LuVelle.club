@@ -1,101 +1,40 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
-import { MessageCircle, Sparkles, Heart, Search, Gift, Calendar, User, ChevronDown, Check, ArrowRight, Star } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { MessageCircle, Sparkles, Calendar, DollarSign, Users, Clock, CheckCircle, ChevronDown, Instagram, ArrowRight, Zap, Shield, TrendingUp, Bell, Star } from "lucide-react"
 import { trackWhatsAppClick } from "@/lib/gtm-events"
 
-const WHATSAPP_URL = "https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20el%20asistente%20de%20belleza"
+const WHATSAPP_URL = "https://wa.me/15557792120?text=Hola%20LuVelle%2C%20soy%20profesional%20de%20belleza%20y%20quiero%20unirme"
+const WHATSAPP_CONSUMER_URL = "https://wa.me/15557792120?text=Hola%20LuVelle%2C%20quiero%20probar%20el%20asistente%20de%20belleza"
 
-// Animated Gradient Background
+// Animated gradient background
 function AnimatedBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden -z-10">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#FFF7F3] via-[#FFD8CC]/30 to-[#B388FF]/20" />
+      <div className="absolute inset-0 bg-[#FFF7F3]" />
       <motion.div
-        className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-to-br from-[#FF7A59]/20 via-[#E94B8A]/10 to-transparent blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-        }}
+        className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full opacity-40 blur-3xl"
+        style={{ background: "radial-gradient(circle, #FFD8CC 0%, transparent 70%)" }}
+        animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full opacity-30 blur-3xl"
+        style={{ background: "radial-gradient(circle, #B388FF 0%, transparent 70%)" }}
+        animate={{ x: [0, -30, 0], y: [0, -40, 0] }}
         transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-[#B388FF]/20 via-[#5B2A86]/10 to-transparent blur-3xl"
-        animate={{
-          scale: [1, 1.1, 1],
-          x: [0, -30, 0],
-          y: [0, 30, 0],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#F2C572]/10 to-[#FFD8CC]/20 blur-3xl"
-        animate={{
-          scale: [1, 1.3, 1],
-          rotate: [0, 180, 360],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       />
     </div>
   )
 }
 
-// CTA Button with premium effects
-function CTAButton({ 
-  variant = "primary", 
-  children, 
-  href,
-  onClick,
-  className = "",
-  size = "default"
-}: { 
-  variant?: "primary" | "secondary" | "ghost"
-  children: React.ReactNode
-  href?: string
-  onClick?: () => void
-  className?: string
-  size?: "default" | "large"
-}) {
-  const sizeStyles = size === "large" ? "px-8 py-4 text-base md:text-lg" : "px-6 py-3 text-sm md:text-base"
-  const baseStyles = `inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 ${sizeStyles}`
-  
-  const variants = {
-    primary: "bg-gradient-to-r from-[#FF7A59] to-[#E94B8A] text-white hover:shadow-lg hover:shadow-[#E94B8A]/30 hover:scale-105 active:scale-100",
-    secondary: "bg-white text-[#241335] border-2 border-[#E94B8A]/30 hover:border-[#E94B8A] hover:bg-[#FFD8CC]/20 hover:shadow-md",
-    ghost: "bg-[#241335] text-white hover:bg-[#5B2A86] hover:shadow-lg"
-  }
-  
-  const handleClick = () => {
-    if (href?.includes("wa.me")) {
-      trackWhatsAppClick("cta_button")
-    }
-    onClick?.()
-  }
-
-  const content = (
-    <motion.span
-      className={`${baseStyles} ${variants[variant]} ${className}`}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      {children}
-    </motion.span>
-  )
-
-  if (href) {
-    return <Link href={href} onClick={handleClick}>{content}</Link>
-  }
-  
-  return <button onClick={handleClick}>{content}</button>
-}
-
-// Navbar
+// Sticky Navbar
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -103,431 +42,310 @@ function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const navLinks = [
+    { href: "#como-funciona", label: "Cómo funciona" },
+    { href: "#beneficios", label: "Beneficios" },
+    { href: "#planes", label: "Planes" },
+    { href: "#faq", label: "FAQ" },
+  ]
+
   return (
-    <motion.nav 
+    <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/90 backdrop-blur-lg shadow-sm" : "bg-transparent"
+        scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-transparent"
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Image 
-            src="/images/luvelle-logo.png" 
-            alt="LuVelle" 
-            width={40} 
-            height={40}
-            className="w-10 h-10"
-          />
-          <span className="text-xl font-bold text-[#241335]">LuVelle</span>
-        </Link>
-        
-        <div className="hidden md:flex items-center gap-8">
-          {["Cómo funciona", "Casos de uso", "Planes", "FAQ"].map((item) => (
-            <a 
-              key={item}
-              href={`#${item.toLowerCase().replace(/\s+/g, "-").replace("ó", "o")}`} 
-              className="text-sm text-[#5B2A86] hover:text-[#E94B8A] transition-colors font-medium"
-            >
-              {item}
-            </a>
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          <Link href="/" className="flex items-center gap-2">
+            <Image src="/images/luvelle-logo.png" alt="LuVelle" width={36} height={36} className="w-9 h-9" />
+            <span className="text-xl font-bold text-[#241335]">LuVelle</span>
+          </Link>
 
-        <CTAButton href={WHATSAPP_URL} variant="primary" className="hidden md:inline-flex">
-          <MessageCircle className="w-4 h-4" />
-          Empezar gratis
-        </CTAButton>
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-[#5B2A86] hover:text-[#E94B8A] transition-colors font-medium text-sm"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          <div className="hidden md:block">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick("navbar_cta")}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white font-semibold rounded-full hover:shadow-lg hover:shadow-[#E94B8A]/30 transition-all duration-300 hover:scale-105"
+            >
+              <span>Unirme como profesional</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-[#241335]"
+          >
+            <div className="w-6 h-5 flex flex-col justify-between">
+              <span className={`block h-0.5 w-full bg-current transition-transform ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
+              <span className={`block h-0.5 w-full bg-current transition-opacity ${mobileMenuOpen ? "opacity-0" : ""}`} />
+              <span className={`block h-0.5 w-full bg-current transition-transform ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+            </div>
+          </button>
+        </div>
       </div>
+
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white border-t"
+          >
+            <div className="px-4 py-4 space-y-3">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-[#5B2A86] font-medium"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("mobile_menu_cta")}
+                className="block w-full text-center py-3 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white font-semibold rounded-full mt-4"
+              >
+                Unirme como profesional
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   )
 }
 
-// Floating Phone with animated messages
-function FloatingPhone() {
-  const messages = [
-    { from: "user", text: "Hola! Busco una rutina para piel mixta", delay: 0 },
-    { from: "ai", text: "Hola! Te ayudo con eso. Tu piel tiende a ser más grasa en la zona T?", delay: 0.8 },
-    { from: "user", text: "Sí, y tengo poros visibles", delay: 1.6 },
-    { from: "ai", text: "Te recomiendo: limpiador en gel + sérum niacinamida + hidratante ligera. Quieres que te sugiera productos según tu presupuesto?", delay: 2.4 },
+// Phone mockup with provider notifications
+function ProviderPhoneMockup() {
+  const notifications = [
+    { icon: Bell, text: "Nueva solicitud: Manicure gel", time: "Ahora", color: "#E94B8A" },
+    { icon: Calendar, text: "Cita confirmada: Mañana 3pm", time: "Hace 2 min", color: "#5B2A86" },
+    { icon: DollarSign, text: "Pago recibido: ₡15,000", time: "Hace 5 min", color: "#22C55E" },
+    { icon: Users, text: "Nueva clienta referida", time: "Hace 10 min", color: "#FF7A59" },
   ]
 
-  const [visibleMessages, setVisibleMessages] = useState(0)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setVisibleMessages((prev) => (prev < messages.length ? prev + 1 : prev))
-    }, 1200)
-    return () => clearInterval(interval)
-  }, [messages.length])
-
   return (
-    <motion.div 
-      className="relative"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.3 }}
-    >
-      {/* Glow effect */}
-      <div className="absolute -inset-8 bg-gradient-to-r from-[#B388FF]/30 via-[#E94B8A]/20 to-[#FF7A59]/30 rounded-full blur-3xl animate-pulse" />
-      
-      {/* Phone frame */}
-      <motion.div 
-        className="relative bg-[#241335] rounded-[3rem] p-3 shadow-2xl shadow-[#5B2A86]/30"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      >
-        {/* Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-7 bg-[#241335] rounded-b-2xl z-10" />
-        
-        {/* Screen */}
-        <div className="bg-gradient-to-b from-[#FFF7F3] to-white rounded-[2.5rem] overflow-hidden w-[280px] md:w-[300px]">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-[#5B2A86] to-[#E94B8A] px-4 py-3 flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <p className="text-white font-semibold text-sm">LuVelle AI</p>
-              <p className="text-white/70 text-xs flex items-center gap-1">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                en línea
-              </p>
+    <div className="relative">
+      <div className="relative w-[280px] sm:w-[320px] h-[560px] sm:h-[640px] bg-[#241335] rounded-[3rem] p-3 shadow-2xl shadow-[#5B2A86]/30">
+        <div className="w-full h-full bg-gradient-to-b from-[#FFF7F3] to-white rounded-[2.5rem] overflow-hidden relative">
+          <div className="flex justify-between items-center px-6 py-3 text-xs text-[#241335]/60">
+            <span>9:41</span>
+            <div className="w-4 h-2 bg-[#241335]/60 rounded-sm" />
+          </div>
+
+          <div className="px-4 py-3 border-b border-[#FFD8CC]">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E94B8A] to-[#FF7A59] flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-semibold text-[#241335]">LuVelle Pro</p>
+                <p className="text-xs text-[#5B2A86]">Tu asistente de negocio</p>
+              </div>
             </div>
           </div>
-          
-          {/* Messages */}
-          <div className="p-4 space-y-3 min-h-[320px] md:min-h-[360px]">
-            {messages.slice(0, visibleMessages).map((msg, i) => (
+
+          <div className="p-4 space-y-3">
+            {notifications.map((notif, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.4 }}
-                className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.3 + 0.5, duration: 0.5 }}
+                className="bg-white rounded-2xl p-4 shadow-md border border-[#FFD8CC]/50"
               >
-                <div className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-                  msg.from === "user" 
-                    ? "bg-gradient-to-r from-[#FF7A59] to-[#E94B8A] text-white rounded-br-md" 
-                    : "bg-white text-[#241335] shadow-md border border-[#FFD8CC]/50 rounded-bl-md"
-                }`}>
-                  {msg.text}
-                </div>
-              </motion.div>
-            ))}
-            {visibleMessages < messages.length && (
-              <motion.div 
-                className="flex justify-start"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <div className="bg-white rounded-2xl px-4 py-3 shadow-md border border-[#FFD8CC]/50">
-                  <div className="flex gap-1">
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={i}
-                        className="w-2 h-2 bg-[#B388FF] rounded-full"
-                        animate={{ scale: [1, 1.3, 1] }}
-                        transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.2 }}
-                      />
-                    ))}
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${notif.color}20` }}
+                  >
+                    <notif.icon className="w-5 h-5" style={{ color: notif.color }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-[#241335] text-sm">{notif.text}</p>
+                    <p className="text-xs text-[#5B2A86]/60 mt-0.5">{notif.time}</p>
                   </div>
                 </div>
               </motion.div>
-            )}
+            ))}
           </div>
         </div>
+      </div>
+
+      <motion.div
+        className="absolute -top-4 -right-4 w-20 h-20 bg-gradient-to-br from-[#B388FF] to-[#5B2A86] rounded-2xl flex items-center justify-center shadow-lg"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      >
+        <TrendingUp className="w-10 h-10 text-white" />
       </motion.div>
-    </motion.div>
+
+      <motion.div
+        className="absolute -bottom-2 -left-6 px-4 py-2 bg-white rounded-full shadow-lg border border-[#FFD8CC]"
+        animate={{ y: [0, 5, 0] }}
+        transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+      >
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-sm font-medium text-[#241335]">3 nuevas solicitudes</span>
+        </div>
+      </motion.div>
+    </div>
   )
 }
 
 // Hero Section
 function HeroSection() {
   return (
-    <section className="relative min-h-screen pt-24 pb-16 md:pt-32 md:pb-24 px-4 overflow-hidden">
+    <section className="relative min-h-screen pt-24 lg:pt-32 pb-16 overflow-hidden">
       <AnimatedBackground />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-8 items-center">
-          {/* Text Content */}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center md:text-left"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center lg:text-left"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 mb-6 border border-[#E94B8A]/20"
-            >
-              <Sparkles className="w-4 h-4 text-[#E94B8A]" />
-              <span className="text-sm text-[#5B2A86] font-medium">Tu asistente de belleza con IA</span>
-            </motion.div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#241335] leading-tight mb-6 text-balance">
-              Cuidar tu belleza nunca fue{" "}
-              <span className="bg-gradient-to-r from-[#FF7A59] via-[#E94B8A] to-[#B388FF] bg-clip-text text-transparent">
-                tan fácil
-              </span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-[#5B2A86] mb-8 max-w-lg mx-auto md:mx-0 leading-relaxed">
-              LuVelle AI te ayuda a descubrir rutinas, productos y servicios personalizados por WhatsApp. Sin buscar, sin complicaciones.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-              <CTAButton href={WHATSAPP_URL} variant="primary" size="large">
-                <MessageCircle className="w-5 h-5" />
-                Empezar por WhatsApp
-              </CTAButton>
-              <CTAButton href="#como-funciona" variant="secondary" size="large">
-                Ver cómo funciona
-                <ArrowRight className="w-4 h-4" />
-              </CTAButton>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#5B2A86]/10 rounded-full mb-6">
+              <Sparkles className="w-4 h-4 text-[#5B2A86]" />
+              <span className="text-sm font-medium text-[#5B2A86]">Impulsado por AI</span>
             </div>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="mt-8 flex items-center gap-4 justify-center md:justify-start"
-            >
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FFD8CC] to-[#E94B8A] border-2 border-white" />
-                ))}
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#241335] leading-tight mb-6">
+              Más clientas.{" "}
+              <span className="bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] bg-clip-text text-transparent">
+                Menos caos.
+              </span>
+              <br />
+              Un solo flujo con LuVelle.
+            </h1>
+
+            <p className="text-lg sm:text-xl text-[#5B2A86] mb-8 max-w-xl mx-auto lg:mx-0">
+              LuVelle ayuda a profesionales de belleza y bienestar a recibir solicitudes, 
+              responder más rápido y cerrar citas a través de una experiencia guiada con AI y WhatsApp.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick("hero_primary")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white font-bold rounded-full text-lg hover:shadow-xl hover:shadow-[#E94B8A]/30 transition-all duration-300 hover:scale-105"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>Unirme como profesional</span>
+              </a>
+
+              <a
+                href="#como-funciona"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#5B2A86] font-semibold rounded-full text-lg border-2 border-[#5B2A86]/20 hover:border-[#5B2A86]/40 hover:bg-[#5B2A86]/5 transition-all duration-300"
+              >
+                <span>Ver cómo funciona</span>
+                <ArrowRight className="w-5 h-5" />
+              </a>
+            </div>
+
+            <div className="flex items-center gap-6 mt-10 justify-center lg:justify-start">
+              <div className="flex items-center gap-2 text-[#5B2A86]/70">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="text-sm">Sin descargas</span>
               </div>
-              <p className="text-sm text-[#5B2A86]">
-                <span className="font-semibold">+500</span> mujeres ya usan LuVelle
-              </p>
-            </motion.div>
+              <div className="flex items-center gap-2 text-[#5B2A86]/70">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="text-sm">Funciona en WhatsApp</span>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Phone Mockup */}
-          <div className="flex justify-center md:justify-end">
-            <FloatingPhone />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex justify-center lg:justify-end"
+          >
+            <ProviderPhoneMockup />
+          </motion.div>
         </div>
       </div>
     </section>
   )
 }
 
-// Trust Strip with animated icons
-function TrustStrip() {
-  const points = [
-    { icon: MessageCircle, text: "100% por WhatsApp", color: "from-[#FF7A59] to-[#E94B8A]" },
-    { icon: Sparkles, text: "Recomendaciones con IA", color: "from-[#B388FF] to-[#5B2A86]" },
-    { icon: Heart, text: "Personalizado para vos", color: "from-[#E94B8A] to-[#B388FF]" },
-    { icon: User, text: "Conexión con profesionales", color: "from-[#5B2A86] to-[#241335]" },
+// Why providers join
+function WhyProvidersSection() {
+  const benefits = [
+    {
+      icon: Users,
+      title: "Más solicitudes calificadas",
+      description: "Clientas que ya saben lo que quieren y están listas para agendar.",
+      color: "#E94B8A",
+    },
+    {
+      icon: Clock,
+      title: "Menos tiempo en WhatsApp",
+      description: "LuVelle filtra y organiza las consultas antes de que lleguen a vos.",
+      color: "#5B2A86",
+    },
+    {
+      icon: Zap,
+      title: "Menos desorden al coordinar",
+      description: "Todo en un solo lugar: solicitudes, confirmaciones y seguimiento.",
+      color: "#FF7A59",
+    },
+    {
+      icon: TrendingUp,
+      title: "Más cierres de citas",
+      description: "Respuestas rápidas y profesionales que convierten consultas en citas.",
+      color: "#B388FF",
+    },
   ]
 
   return (
-    <section className="py-12 bg-gradient-to-r from-[#241335] via-[#5B2A86] to-[#241335]">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {points.map((point, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              className="flex flex-col items-center text-center gap-3"
-            >
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${point.color} flex items-center justify-center shadow-lg`}>
-                <point.icon className="w-6 h-6 text-white" />
-              </div>
-              <p className="text-sm text-white font-medium">{point.text}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Interactive How It Works
-function HowItWorks() {
-  const [activeStep, setActiveStep] = useState(0)
-  
-  const steps = [
-    {
-      number: "01",
-      title: "Contanos lo que necesitás",
-      description: "Escribinos por WhatsApp sobre tu piel, rutina, presupuesto o lo que buscás. Sin formularios, solo conversación natural.",
-      visual: "chat"
-    },
-    {
-      number: "02", 
-      title: "LuVelle AI analiza tu contexto",
-      description: "Nuestra IA entiende tus necesidades, preferencias y situación para darte recomendaciones realmente relevantes.",
-      visual: "ai"
-    },
-    {
-      number: "03",
-      title: "Recibís soluciones personalizadas",
-      description: "Te sugerimos productos, rutinas, o te conectamos directamente con la profesional de belleza adecuada.",
-      visual: "result"
-    }
-  ]
-
-  return (
-    <section id="como-funciona" className="py-20 md:py-28 px-4 bg-gradient-to-b from-white to-[#FFF7F3]">
-      <div className="max-w-6xl mx-auto">
+    <section id="beneficios" className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-[#E94B8A] font-semibold text-sm mb-3 tracking-wider uppercase">
-            Simple y poderoso
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
-            Cómo funciona LuVelle
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
+            Por qué las profesionales eligen LuVelle
           </h2>
           <p className="text-lg text-[#5B2A86] max-w-2xl mx-auto">
-            Una experiencia de belleza guiada por inteligencia artificial, en 3 simples pasos
+            Dejá de perseguir mensajes y empezá a cerrar más citas
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Steps */}
-          <div className="space-y-4">
-            {steps.map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                onClick={() => setActiveStep(i)}
-                className={`cursor-pointer p-6 rounded-2xl transition-all duration-300 ${
-                  activeStep === i 
-                    ? "bg-gradient-to-r from-[#FF7A59]/10 to-[#E94B8A]/10 border-2 border-[#E94B8A] shadow-lg" 
-                    : "bg-white border-2 border-transparent hover:border-[#FFD8CC] shadow-sm"
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <span className={`text-2xl font-bold ${activeStep === i ? "text-[#E94B8A]" : "text-[#B388FF]/50"}`}>
-                    {step.number}
-                  </span>
-                  <div>
-                    <h3 className="font-bold text-[#241335] text-lg mb-2">{step.title}</h3>
-                    <p className="text-[#5B2A86] text-sm leading-relaxed">{step.description}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Visual */}
-          <motion.div
-            key={activeStep}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="relative"
-          >
-            <div className="absolute -inset-4 bg-gradient-to-r from-[#B388FF]/20 via-[#E94B8A]/20 to-[#FF7A59]/20 rounded-3xl blur-2xl" />
-            <div className="relative bg-gradient-to-br from-[#241335] to-[#5B2A86] rounded-3xl p-8 md:p-12 aspect-square flex items-center justify-center">
-              <AnimatePresence mode="wait">
-                {activeStep === 0 && (
-                  <motion.div
-                    key="chat"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="text-center"
-                  >
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#25D366] to-[#128C7E] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <MessageCircle className="w-10 h-10 text-white" />
-                    </div>
-                    <p className="text-white font-medium">Conversación natural por WhatsApp</p>
-                  </motion.div>
-                )}
-                {activeStep === 1 && (
-                  <motion.div
-                    key="ai"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="text-center"
-                  >
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#B388FF] to-[#E94B8A] rounded-2xl flex items-center justify-center mx-auto mb-4 relative">
-                      <Sparkles className="w-10 h-10 text-white" />
-                      <motion.div
-                        className="absolute -inset-2 bg-gradient-to-r from-[#B388FF] to-[#E94B8A] rounded-2xl opacity-50"
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      />
-                    </div>
-                    <p className="text-white font-medium">IA analizando tu contexto</p>
-                  </motion.div>
-                )}
-                {activeStep === 2 && (
-                  <motion.div
-                    key="result"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="text-center"
-                  >
-                    <div className="w-20 h-20 bg-gradient-to-br from-[#F2C572] to-[#FF7A59] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <Heart className="w-10 h-10 text-white" />
-                    </div>
-                    <p className="text-white font-medium">Soluciones personalizadas para vos</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Use Cases with hover effects
-function UseCases() {
-  const cases = [
-    { icon: Sparkles, title: "Rutina facial", example: "Quiero una rutina simple para piel mixta", color: "from-[#FF7A59] to-[#E94B8A]" },
-    { icon: Gift, title: "Ideas de regalo", example: "Necesito un regalo de belleza para mi mamá", color: "from-[#E94B8A] to-[#B388FF]" },
-    { icon: Search, title: "Productos por presupuesto", example: "Tengo $15.000, qué me recomiendas?", color: "from-[#B388FF] to-[#5B2A86]" },
-    { icon: Heart, title: "Tips de bienestar", example: "Cómo puedo mejorar mi autocuidado?", color: "from-[#5B2A86] to-[#241335]" },
-    { icon: Calendar, title: "Servicios cerca", example: "Busco manicure en Heredia esta semana", color: "from-[#F2C572] to-[#FF7A59]" },
-    { icon: User, title: "Encontrar profesional", example: "Necesito una facialist para mi tipo de piel", color: "from-[#FF7A59] to-[#E94B8A]" },
-  ]
-
-  return (
-    <section id="casos-de-uso" className="py-20 md:py-28 px-4">
-      <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block text-[#E94B8A] font-semibold text-sm mb-3 tracking-wider uppercase">
-            Casos de uso
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
-            Qué podés preguntarle a LuVelle?
-          </h2>
-          <p className="text-lg text-[#5B2A86]">
-            Desde rutinas hasta reservas, te acompañamos en todo
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {cases.map((item, i) => (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {benefits.map((benefit, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
@@ -535,27 +353,16 @@ function UseCases() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="group relative bg-white rounded-2xl p-6 shadow-sm border border-[#FFD8CC]/50 hover:shadow-xl hover:border-[#E94B8A]/30 transition-all duration-300 overflow-hidden"
+              className="group relative bg-gradient-to-b from-[#FFF7F3] to-white p-6 rounded-3xl border border-[#FFD8CC] hover:shadow-xl hover:shadow-[#E94B8A]/10 transition-all duration-300"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-              
-              <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 shadow-lg`}>
-                <item.icon className="w-7 h-7 text-white" />
-              </div>
-              
-              <h3 className="font-bold text-[#241335] text-lg mb-3">{item.title}</h3>
-              
-              <div className="bg-[#FFF7F3] rounded-xl p-3 border border-[#FFD8CC]/50">
-                <p className="text-sm text-[#5B2A86] italic">{`"${item.example}"`}</p>
-              </div>
-              
-              <motion.div
-                className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
-                initial={{ x: 10 }}
-                whileHover={{ x: 0 }}
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
+                style={{ backgroundColor: `${benefit.color}15` }}
               >
-                <ArrowRight className="w-5 h-5 text-[#E94B8A]" />
-              </motion.div>
+                <benefit.icon className="w-7 h-7" style={{ color: benefit.color }} />
+              </div>
+              <h3 className="text-xl font-bold text-[#241335] mb-2">{benefit.title}</h3>
+              <p className="text-[#5B2A86]/80">{benefit.description}</p>
             </motion.div>
           ))}
         </div>
@@ -564,224 +371,439 @@ function UseCases() {
   )
 }
 
-// Concierge Flow Section
-function ConciergeSection() {
+// How it works
+function HowItWorksSection() {
+  const [activeStep, setActiveStep] = useState(0)
+
   const steps = [
-    { icon: User, label: "Tu necesidad", color: "#FF7A59" },
-    { icon: Sparkles, label: "LuVelle AI", color: "#E94B8A" },
-    { icon: Search, label: "Match perfecto", color: "#B388FF" },
-    { icon: Calendar, label: "Reserva", color: "#F2C572" },
-  ]
-
-  return (
-    <section className="py-20 md:py-28 px-4 bg-gradient-to-br from-[#241335] via-[#5B2A86] to-[#241335] relative overflow-hidden">
-      {/* Animated background elements */}
-      <motion.div
-        className="absolute top-20 right-20 w-64 h-64 bg-[#E94B8A]/20 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute bottom-20 left-20 w-48 h-48 bg-[#B388FF]/20 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 6, repeat: Infinity, delay: 2 }}
-      />
-
-      <div className="max-w-5xl mx-auto relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block text-[#F2C572] font-semibold text-sm mb-3 tracking-wider uppercase">
-            Tu concierge de belleza
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-            No necesitás buscar entre cientos de opciones
-          </h2>
-          <p className="text-lg text-white/70 max-w-2xl mx-auto">
-            LuVelle AI te conecta con la profesional perfecta según tu necesidad. Sin directorios, sin perder tiempo.
-          </p>
-        </motion.div>
-
-        {/* Flow visualization */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-12">
-          {steps.map((step, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
-              className="flex items-center gap-4 md:gap-8"
-            >
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                className="relative"
-              >
-                <div 
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl"
-                  style={{ backgroundColor: step.color }}
-                >
-                  <step.icon className="w-10 h-10 text-white" />
-                </div>
-                <motion.div
-                  className="absolute -inset-2 rounded-2xl"
-                  style={{ backgroundColor: step.color }}
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
-                />
-                <p className="text-white text-sm font-medium text-center mt-3">{step.label}</p>
-              </motion.div>
-              
-              {i < steps.length - 1 && (
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.15 + 0.3 }}
-                  className="hidden md:block w-12 h-0.5 bg-gradient-to-r from-white/50 to-white/20"
-                />
-              )}
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center"
-        >
-          <CTAButton href={WHATSAPP_URL} variant="primary" size="large">
-            <MessageCircle className="w-5 h-5" />
-            Probá la experiencia
-          </CTAButton>
-        </motion.div>
-      </div>
-    </section>
-  )
-}
-
-// Pricing Section with premium effects
-function PricingSection() {
-  const plans = [
     {
-      name: "LuVelle AI Gratis",
-      price: "₡0",
-      description: "Empezá sin compromiso",
-      features: [
-        "Consultas básicas ilimitadas",
-        "Recomendaciones de productos",
-        "Tips de belleza y bienestar"
-      ],
-      cta: "Empezar gratis",
-      featured: false
+      number: "01",
+      title: "La clienta habla con LuVelle AI",
+      description: "La clienta escribe por WhatsApp lo que necesita: un servicio, una consulta, una idea.",
     },
     {
-      name: "Club LuVelle",
-      price: "₡4.900",
-      period: "/mes",
-      description: "La experiencia completa",
-      features: [
-        "Todo lo de Gratis",
-        "Rutinas personalizadas avanzadas",
-        "Conexión con profesionales verificadas",
-        "Descuentos exclusivos en servicios",
-        "Soporte prioritario"
-      ],
-      cta: "Unirme al Club",
-      featured: true
-    }
+      number: "02",
+      title: "LuVelle entiende la necesidad",
+      description: "Nuestra AI interpreta el pedido, hace preguntas de seguimiento y califica la solicitud.",
+    },
+    {
+      number: "03",
+      title: "Te conectamos con la clienta",
+      description: "Recibís la solicitud ya filtrada con toda la info que necesitás para responder.",
+    },
+    {
+      number: "04",
+      title: "Cerrás la cita fácilmente",
+      description: "Confirmás disponibilidad, coordinás los detalles y listo. Clienta nueva ganada.",
+    },
   ]
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % steps.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [steps.length])
+
   return (
-    <section id="planes" className="py-20 md:py-28 px-4 bg-gradient-to-b from-[#FFF7F3] to-white">
-      <div className="max-w-4xl mx-auto">
+    <section id="como-funciona" className="py-20 bg-gradient-to-b from-[#FFF7F3] to-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-block text-[#E94B8A] font-semibold text-sm mb-3 tracking-wider uppercase">
-            Planes simples
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
-            Elegí tu experiencia
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
+            Cómo funciona LuVelle
           </h2>
-          <p className="text-lg text-[#5B2A86]">
-            Empezá gratis, mejorá cuando quieras
+          <p className="text-lg text-[#5B2A86] max-w-2xl mx-auto">
+            Un flujo simple que convierte conversaciones en citas reales
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-4">
+            {steps.map((step, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                onClick={() => setActiveStep(i)}
+                className={`cursor-pointer p-6 rounded-2xl transition-all duration-300 ${
+                  activeStep === i
+                    ? "bg-gradient-to-r from-[#5B2A86] to-[#E94B8A] text-white shadow-xl"
+                    : "bg-white hover:bg-[#FFF7F3] border border-[#FFD8CC]"
+                }`}
+              >
+                <div className="flex items-start gap-4">
+                  <span className={`text-2xl font-bold ${activeStep === i ? "text-white/50" : "text-[#E94B8A]"}`}>
+                    {step.number}
+                  </span>
+                  <div>
+                    <h3 className={`text-xl font-bold mb-2 ${activeStep === i ? "text-white" : "text-[#241335]"}`}>
+                      {step.title}
+                    </h3>
+                    <p className={activeStep === i ? "text-white/80" : "text-[#5B2A86]/70"}>
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            key={activeStep}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative flex justify-center"
+          >
+            <div className="w-full max-w-md bg-gradient-to-br from-[#241335] to-[#5B2A86] rounded-3xl p-8 shadow-2xl">
+              <div className="bg-white/10 backdrop-blur rounded-2xl p-6 min-h-[300px] flex items-center justify-center">
+                {activeStep === 0 && (
+                  <div className="space-y-4 w-full">
+                    <div className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-[#E94B8A] flex-shrink-0" />
+                      <div className="bg-white/20 rounded-2xl rounded-tl-none p-4 text-white">
+                        Hola! Busco alguien para uñas semipermanentes cerca de Escazú
+                      </div>
+                    </div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 }}
+                      className="flex gap-3 justify-end"
+                    >
+                      <div className="bg-[#F2C572] rounded-2xl rounded-tr-none p-4 text-[#241335]">
+                        Perfecto! Te ayudo a encontrar la profesional ideal...
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-[#B388FF] flex-shrink-0 flex items-center justify-center">
+                        <Sparkles className="w-4 h-4 text-white" />
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
+                {activeStep === 1 && (
+                  <div className="text-center text-white">
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#B388FF] to-[#E94B8A] flex items-center justify-center"
+                    >
+                      <Sparkles className="w-10 h-10" />
+                    </motion.div>
+                    <p className="text-xl font-semibold">Analizando solicitud...</p>
+                    <p className="text-white/60 mt-2">Servicio: Uñas semipermanentes</p>
+                    <p className="text-white/60">Zona: Escazú</p>
+                    <p className="text-white/60">Urgencia: Esta semana</p>
+                  </div>
+                )}
+                {activeStep === 2 && (
+                  <div className="w-full space-y-4">
+                    <div className="bg-white rounded-xl p-4 shadow-lg">
+                      <div className="flex items-center gap-3 mb-3">
+                        <Bell className="w-5 h-5 text-[#E94B8A]" />
+                        <span className="font-semibold text-[#241335]">Nueva solicitud para vos</span>
+                      </div>
+                      <div className="text-sm text-[#5B2A86] space-y-1">
+                        <p>Servicio: Uñas semipermanentes</p>
+                        <p>Zona: Escazú</p>
+                        <p>Disponibilidad: Viernes o sábado</p>
+                      </div>
+                    </div>
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3, type: "spring" }}
+                      className="bg-[#F2C572] rounded-xl p-3 text-center text-[#241335] font-semibold"
+                    >
+                      Ver detalles y responder
+                    </motion.div>
+                  </div>
+                )}
+                {activeStep === 3 && (
+                  <div className="text-center text-white">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", duration: 0.5 }}
+                      className="w-24 h-24 mx-auto mb-6 rounded-full bg-green-500 flex items-center justify-center"
+                    >
+                      <CheckCircle className="w-12 h-12" />
+                    </motion.div>
+                    <p className="text-2xl font-bold mb-2">Cita confirmada!</p>
+                    <p className="text-white/70">Viernes 3:00 PM</p>
+                    <p className="text-white/70">Servicio: Uñas semipermanentes</p>
+                    <p className="text-[#F2C572] font-semibold mt-4">₡18,000</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// Pain points section
+function PainPointsSection() {
+  const painPoints = [
+    "Repetir precios todo el día",
+    "Perder mensajes entre chats",
+    "Responder siempre las mismas preguntas",
+    "Coordinar manualmente cada cita",
+    "Perder oportunidades por tardar en responder",
+  ]
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-[#241335] via-[#5B2A86] to-[#241335] text-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+              Dejá de hacer esto{" "}
+              <span className="text-[#FF7A59]">manualmente</span>
+            </h2>
+            <p className="text-xl text-white/70 mb-8">
+              Sabemos que tu día se va en coordinar. LuVelle se encarga de eso.
+            </p>
+
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick("pain_points_cta")}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white font-bold rounded-full hover:shadow-xl transition-all duration-300 hover:scale-105"
+            >
+              <span>Quiero automatizar mi negocio</span>
+              <ArrowRight className="w-5 h-5" />
+            </a>
+          </motion.div>
+
+          <div className="space-y-4">
+            {painPoints.map((point, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="flex items-center gap-4 bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/10"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#FF7A59]/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[#FF7A59] text-xl">✗</span>
+                </div>
+                <span className="text-lg">{point}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// What LuVelle gives you
+function BenefitsSection() {
+  const benefits = [
+    { icon: Users, text: "Visibilidad ante nuevas clientas" },
+    { icon: Shield, text: "Mejor filtro de solicitudes" },
+    { icon: Zap, text: "Apoyo para cerrar citas" },
+    { icon: Calendar, text: "Orden en tu operación" },
+    { icon: Star, text: "Experiencia moderna para tu negocio" },
+  ]
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
+            Lo que LuVelle te da
+          </h2>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {benefits.map((benefit, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              className="text-center p-6 rounded-3xl bg-gradient-to-b from-[#FFF7F3] to-white border border-[#FFD8CC] hover:shadow-lg transition-all"
+            >
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#E94B8A] to-[#FF7A59] flex items-center justify-center">
+                <benefit.icon className="w-8 h-8 text-white" />
+              </div>
+              <p className="font-semibold text-[#241335]">{benefit.text}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// Provider plans
+function PlansSection() {
+  const plans = [
+    {
+      name: "Prueba Gratis",
+      price: "₡0",
+      period: "primer mes",
+      description: "Probá LuVelle sin compromiso",
+      features: [
+        "Recibí hasta 10 solicitudes",
+        "Perfil básico en LuVelle",
+        "Soporte por WhatsApp",
+      ],
+      cta: "Empezar gratis",
+      featured: false,
+    },
+    {
+      name: "Plan Profesional",
+      price: "₡9,900",
+      period: "/mes",
+      description: "Para profesionales que quieren crecer",
+      features: [
+        "Solicitudes ilimitadas",
+        "Perfil destacado",
+        "Prioridad en conexiones",
+        "Estadísticas de rendimiento",
+        "Soporte prioritario",
+      ],
+      cta: "Elegir plan profesional",
+      featured: true,
+    },
+  ]
+
+  return (
+    <section id="planes" className="py-20 bg-gradient-to-b from-[#FFF7F3] to-white">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#241335] mb-4">
+            Planes para profesionales
+          </h2>
+          <p className="text-lg text-[#5B2A86] max-w-2xl mx-auto">
+            Empezá gratis y crecé con LuVelle
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-8">
           {plans.map((plan, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.2 }}
-              whileHover={{ y: -8 }}
-              className={`relative rounded-3xl p-8 transition-all duration-300 ${
-                plan.featured 
-                  ? "bg-gradient-to-br from-[#241335] via-[#5B2A86] to-[#241335] text-white shadow-2xl shadow-[#5B2A86]/30" 
-                  : "bg-white border-2 border-[#FFD8CC] shadow-lg"
+              transition={{ delay: i * 0.15 }}
+              className={`relative rounded-3xl p-8 ${
+                plan.featured
+                  ? "bg-gradient-to-br from-[#5B2A86] to-[#241335] text-white shadow-2xl shadow-[#5B2A86]/30 scale-105"
+                  : "bg-white border-2 border-[#FFD8CC]"
               }`}
             >
               {plan.featured && (
-                <>
-                  <div className="absolute -inset-[2px] bg-gradient-to-r from-[#FF7A59] via-[#E94B8A] to-[#B388FF] rounded-3xl -z-10 animate-pulse" />
-                  <motion.span 
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF7A59] to-[#E94B8A] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg"
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    Más popular
-                  </motion.span>
-                </>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white text-sm font-semibold rounded-full">
+                  Más elegido
+                </div>
               )}
-              
+
               <h3 className={`text-2xl font-bold mb-2 ${plan.featured ? "text-white" : "text-[#241335]"}`}>
                 {plan.name}
               </h3>
-              <p className={`text-sm mb-6 ${plan.featured ? "text-white/70" : "text-[#5B2A86]"}`}>
+              <p className={`mb-4 ${plan.featured ? "text-white/70" : "text-[#5B2A86]"}`}>
                 {plan.description}
               </p>
-              
+
               <div className="mb-6">
-                <span className={`text-4xl font-bold ${plan.featured ? "text-[#F2C572]" : "text-[#241335]"}`}>
+                <span className={`text-4xl font-bold ${plan.featured ? "text-[#F2C572]" : "text-[#E94B8A]"}`}>
                   {plan.price}
                 </span>
-                {plan.period && (
-                  <span className={plan.featured ? "text-white/70" : "text-[#5B2A86]"}>
-                    {plan.period}
-                  </span>
-                )}
+                <span className={plan.featured ? "text-white/60" : "text-[#5B2A86]/60"}>
+                  {plan.period}
+                </span>
               </div>
-              
+
               <ul className="space-y-3 mb-8">
                 {plan.features.map((feature, j) => (
-                  <li key={j} className="flex items-center gap-3 text-sm">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                      plan.featured ? "bg-[#F2C572]" : "bg-gradient-to-r from-[#FF7A59] to-[#E94B8A]"
-                    }`}>
-                      <Check className={`w-3 h-3 ${plan.featured ? "text-[#241335]" : "text-white"}`} />
-                    </div>
-                    <span className={plan.featured ? "text-white/90" : "text-[#5B2A86]"}>{feature}</span>
+                  <li key={j} className="flex items-center gap-3">
+                    <CheckCircle className={`w-5 h-5 flex-shrink-0 ${plan.featured ? "text-[#F2C572]" : "text-[#E94B8A]"}`} />
+                    <span className={plan.featured ? "text-white/90" : "text-[#241335]"}>{feature}</span>
                   </li>
                 ))}
               </ul>
-              
-              <CTAButton 
-                href={WHATSAPP_URL} 
-                variant={plan.featured ? "primary" : "secondary"}
-                className="w-full justify-center"
+
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick(`plan_${plan.name}`)}
+                className={`block w-full text-center py-4 rounded-full font-bold transition-all duration-300 hover:scale-105 ${
+                  plan.featured
+                    ? "bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white hover:shadow-lg"
+                    : "bg-[#241335] text-white hover:bg-[#5B2A86]"
+                }`}
               >
                 {plan.cta}
-              </CTAButton>
+              </a>
+            </motion.div>
+          ))}
+        </div>
+
+        <p className="text-center text-[#5B2A86]/60 mt-8 text-sm">
+          Las clientas usan LuVelle gratis. Vos solo pagás si querés recibir más solicitudes y destacar tu perfil.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+// Trust section
+function TrustSection() {
+  const points = [
+    "Diseñado para profesionales independientes",
+    "Ideal para negocios que hoy viven en WhatsApp",
+    "Pensado para cerrar más citas sin complicarte más",
+  ]
+
+  return (
+    <section className="py-16 bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid sm:grid-cols-3 gap-6">
+          {points.map((point, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="text-center p-6"
+            >
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#E94B8A]/10 flex items-center justify-center">
+                <CheckCircle className="w-6 h-6 text-[#E94B8A]" />
+              </div>
+              <p className="text-[#241335] font-medium">{point}</p>
             </motion.div>
           ))}
         </div>
@@ -793,40 +815,41 @@ function PricingSection() {
 // FAQ Section
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
-  
+
   const faqs = [
     {
-      question: "Cómo funciona LuVelle AI?",
-      answer: "LuVelle AI es tu asistente de belleza por WhatsApp. Solo escribinos contándonos lo que necesitás y nuestra IA te dará recomendaciones personalizadas de productos, rutinas, o te conectará con profesionales verificadas."
+      q: "¿Para quién es LuVelle?",
+      a: "LuVelle es para profesionales de belleza y bienestar: estilistas, manicuristas, maquilladoras, esteticistas, masajistas, y más. Si ofrecés servicios y querés más clientas, LuVelle es para vos.",
     },
     {
-      question: "Es realmente gratis?",
-      answer: "Sí! Podés usar LuVelle AI gratis con consultas básicas ilimitadas. Si querés funciones avanzadas como rutinas personalizadas y conexión con profesionales, podés unirte al Club por ₡4.900/mes."
+      q: "¿Cómo me llegan clientas?",
+      a: "Las clientas le escriben a LuVelle AI por WhatsApp. Nuestra AI entiende lo que necesitan y te conecta con las solicitudes que hacen sentido para tu negocio.",
     },
     {
-      question: "Cómo me conectan con profesionales?",
-      answer: "Cuando necesitás un servicio, LuVelle AI analiza tu necesidad y te conecta directamente con la profesional verificada más adecuada. No tenés que buscar en directorios ni comparar perfiles."
+      q: "¿Necesito descargar algo?",
+      a: "No. Todo funciona por WhatsApp. No hay apps que descargar ni plataformas complicadas.",
     },
     {
-      question: "Puedo cancelar cuando quiera?",
-      answer: "Por supuesto. Si te unís al Club LuVelle, podés cancelar en cualquier momento sin penalidades. Tu suscripción seguirá activa hasta el final del período pagado."
-    }
+      q: "¿Cuánto cuesta?",
+      a: "Podés empezar gratis el primer mes. Después, el plan profesional cuesta ₡9,900/mes para recibir solicitudes ilimitadas y tener un perfil destacado.",
+    },
+    {
+      q: "¿Las clientas pagan por usar LuVelle?",
+      a: "No. Para las clientas, LuVelle es completamente gratis. Vos solo pagás si querés recibir más solicitudes y destacar tu perfil.",
+    },
   ]
 
   return (
-    <section id="faq" className="py-20 md:py-28 px-4">
-      <div className="max-w-3xl mx-auto">
+    <section id="faq" className="py-20 bg-[#FFF7F3]">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <span className="inline-block text-[#E94B8A] font-semibold text-sm mb-3 tracking-wider uppercase">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#241335] mb-4">
             Preguntas frecuentes
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#241335]">
-            Todavía tenés dudas?
           </h2>
         </motion.div>
 
@@ -837,20 +860,19 @@ function FAQSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl border border-[#FFD8CC] overflow-hidden shadow-sm"
+              transition={{ delay: i * 0.05 }}
+              className="bg-white rounded-2xl border border-[#FFD8CC] overflow-hidden"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full px-6 py-5 flex items-center justify-between text-left"
+                className="w-full flex items-center justify-between p-6 text-left"
               >
-                <span className="font-semibold text-[#241335]">{faq.question}</span>
-                <motion.div
-                  animate={{ rotate: openIndex === i ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ChevronDown className="w-5 h-5 text-[#E94B8A]" />
-                </motion.div>
+                <span className="font-semibold text-[#241335] pr-4">{faq.q}</span>
+                <ChevronDown
+                  className={`w-5 h-5 text-[#5B2A86] flex-shrink-0 transition-transform ${
+                    openIndex === i ? "rotate-180" : ""
+                  }`}
+                />
               </button>
               <AnimatePresence>
                 {openIndex === i && (
@@ -859,9 +881,8 @@ function FAQSection() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
                   >
-                    <p className="px-6 pb-5 text-[#5B2A86] leading-relaxed">{faq.answer}</p>
+                    <div className="px-6 pb-6 text-[#5B2A86]">{faq.a}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -873,35 +894,38 @@ function FAQSection() {
   )
 }
 
-// Final CTA Section
-function FinalCTA() {
+// Final CTA
+function FinalCTASection() {
   return (
-    <section className="py-20 md:py-28 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#FF7A59] via-[#E94B8A] to-[#B388FF]" />
-      
-      {/* Animated glow */}
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/20 rounded-full blur-3xl"
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 5, repeat: Infinity }}
-      />
-      
-      <div className="max-w-3xl mx-auto text-center relative z-10">
+    <section className="py-20 bg-gradient-to-br from-[#5B2A86] via-[#E94B8A] to-[#FF7A59] text-white relative overflow-hidden">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-10 left-10 w-40 h-40 bg-white rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-60 h-60 bg-white rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-            Empezá tu viaje de belleza hoy
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+            Convertí más conversaciones en citas reales
           </h2>
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl mx-auto">
-            Miles de mujeres ya descubrieron una forma más fácil de cuidarse. Es tu turno.
+          <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+            Unite a las profesionales que ya están recibiendo clientas con LuVelle
           </p>
-          <CTAButton href={WHATSAPP_URL} variant="ghost" size="large">
-            <MessageCircle className="w-5 h-5" />
-            Escribinos por WhatsApp
-          </CTAButton>
+
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick("final_cta")}
+            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-[#5B2A86] font-bold rounded-full text-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          >
+            <MessageCircle className="w-6 h-6" />
+            <span>Quiero unirme a LuVelle</span>
+          </a>
         </motion.div>
       </div>
     </section>
@@ -911,50 +935,60 @@ function FinalCTA() {
 // Footer
 function Footer() {
   return (
-    <footer className="py-12 px-4 bg-[#241335]">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-          <Link href="/" className="flex items-center gap-2">
-            <Image 
-              src="/images/luvelle-logo.png" 
-              alt="LuVelle" 
-              width={32} 
-              height={32}
-              className="w-8 h-8"
-            />
-            <span className="text-xl font-bold text-white">LuVelle</span>
-          </Link>
-          
-          <div className="flex items-center gap-6">
-            <Link href="/providers" className="text-sm text-white/60 hover:text-white transition-colors">
-              LuVelle Pro
-            </Link>
-            <Link href="/beauty-box" className="text-sm text-white/60 hover:text-white transition-colors">
-              Beauty Box
-            </Link>
-            <Link href="/partners" className="text-sm text-white/60 hover:text-white transition-colors">
-              Partners
-            </Link>
+    <footer className="bg-[#241335] text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-3">
+            <Image src="/images/luvelle-logo.png" alt="LuVelle" width={40} height={40} />
+            <span className="text-xl font-bold">LuVelle</span>
           </div>
-        </div>
-        
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-white/50">
-            2024 LuVelle. Todos los derechos reservados.
-          </p>
-          <div className="flex items-center gap-4">
-            <a href="#" className="text-white/50 hover:text-white transition-colors">
-              <Star className="w-5 h-5" />
+
+          <div className="flex items-center gap-6">
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span>WhatsApp</span>
+            </a>
+            <a
+              href="https://instagram.com/luvelle.club"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
+            >
+              <Instagram className="w-5 h-5" />
+              <span>Instagram</span>
             </a>
           </div>
         </div>
+
+        <div className="border-t border-white/10 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-white/50">
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacidad</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Términos</Link>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 text-sm text-white/50">
+            <a href={WHATSAPP_CONSUMER_URL} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+              Experiencia para clientas
+            </a>
+            <span className="text-white/30">The Beauty Box — Próximamente</span>
+          </div>
+        </div>
+
+        <p className="text-center text-white/30 text-sm mt-8">
+          © {new Date().getFullYear()} LuVelle. Todos los derechos reservados.
+        </p>
       </div>
     </footer>
   )
 }
 
-// Mobile Sticky CTA
-function MobileStickyCTA() {
+// Sticky mobile CTA
+function StickyMobileCTA() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -972,33 +1006,40 @@ function MobileStickyCTA() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-lg border-t border-[#FFD8CC] md:hidden z-50"
+          className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[#FFD8CC] z-50 md:hidden"
         >
-          <CTAButton href={WHATSAPP_URL} variant="primary" className="w-full justify-center">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick("sticky_mobile_cta")}
+            className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] text-white font-bold rounded-full"
+          >
             <MessageCircle className="w-5 h-5" />
-            Empezar por WhatsApp
-          </CTAButton>
+            <span>Unirme como profesional</span>
+          </a>
         </motion.div>
       )}
     </AnimatePresence>
   )
 }
 
-// Main Page
+// Main page component
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FFF7F3]">
       <Navbar />
       <HeroSection />
-      <TrustStrip />
-      <HowItWorks />
-      <UseCases />
-      <ConciergeSection />
-      <PricingSection />
+      <WhyProvidersSection />
+      <HowItWorksSection />
+      <PainPointsSection />
+      <BenefitsSection />
+      <PlansSection />
+      <TrustSection />
       <FAQSection />
-      <FinalCTA />
+      <FinalCTASection />
       <Footer />
-      <MobileStickyCTA />
+      <StickyMobileCTA />
     </main>
   )
 }
