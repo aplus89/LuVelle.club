@@ -17,15 +17,18 @@
     --font-sans: var(--font-plus-jakarta);
     --font-heading: var(--font-dancing);
 
-    /* NEW Light Feminine Premium Palette */
-    --luvelle-bg: #FFF8F6;
-    --luvelle-blush: #F4E3E6;
-    --luvelle-text: #2A2233;
-    --luvelle-text-secondary: #7D657D;
-    --luvelle-accent: #A56C7B;
-    --luvelle-gold: #E6C27A;
-    --luvelle-plum: #5A465E;
+    /* NEW Vibrant Feminine Premium Palette */
+    --luvelle-bg: #FFF7F3;
+    --luvelle-peach: #FFD8CC;
+    --luvelle-coral: #FF7A59;
+    --luvelle-berry: #E94B8A;
+    --luvelle-plum: #5B2A86;
+    --luvelle-aubergine: #241335;
+    --luvelle-lavender: #B388FF;
+    --luvelle-gold: #F2C572;
     --luvelle-white: #FFFFFF;
+    --luvelle-text: #241335;
+    --luvelle-text-secondary: #5B2A86;
 
     /* Legacy Brand color palette - kept for other pages */
     --brand-dark: 240 20% 8%; /* #141322 */
