@@ -17,56 +17,66 @@
     --font-sans: var(--font-plus-jakarta);
     --font-heading: var(--font-dancing);
 
-    /* Brand color palette - exact hex values */
+    /* NEW Light Feminine Premium Palette */
+    --luvelle-bg: #FFF8F6;
+    --luvelle-blush: #F4E3E6;
+    --luvelle-text: #2A2233;
+    --luvelle-text-secondary: #7D657D;
+    --luvelle-accent: #A56C7B;
+    --luvelle-gold: #E6C27A;
+    --luvelle-plum: #5A465E;
+    --luvelle-white: #FFFFFF;
+
+    /* Legacy Brand color palette - kept for other pages */
     --brand-dark: 240 20% 8%; /* #141322 */
     --brand-gold: 45 85% 70%; /* #f4cc6e */
     --brand-cream: 40 20% 92%; /* #efedea */
     --brand-light: 40 35% 91%; /* #eae0d5 */
     --brand-beige: 35 30% 87%; /* #e8ded3 */
 
-    /* LuVelle Ai palette: prominent #141322, then #1A5276, #f4cc6e, #eae0d5, #efedea */
+    /* LuVelle Ai palette */
     --ai-bg: 240 20% 8%; /* #141322 */
     --ai-accent: 207 65% 29%; /* #1A5276 */
     --ai-gold: 45 85% 70%; /* #f4cc6e */
     --ai-cream: 40 35% 91%; /* #eae0d5 */
     --ai-light: 40 20% 92%; /* #efedea */
 
-    /* The Beauty Box palette: prominent #f4cc6e, second #141321, use #e8ded3 only with #141321 */
+    /* The Beauty Box palette */
     --box-gold: 45 85% 70%; /* #f4cc6e */
     --box-bg: 240 20% 8%; /* #141321 */
-    --box-cream: 35 30% 87%; /* #e8ded3 - only with dark bg */
+    --box-cream: 35 30% 87%; /* #e8ded3 */
 
-    /* LuVelle Pro palette: prominent #1b5276, then #f4cc6e and #efedea only with #1b5276 */
+    /* LuVelle Pro palette */
     --pro-accent: 203 64% 28%; /* #1b5276 */
     --pro-gold: 45 85% 70%; /* #f4cc6e */
     --pro-light: 40 20% 92%; /* #efedea */
 
-    /* Design Tokens */
-    --background: var(--brand-dark);
-    --foreground: var(--brand-cream);
-    --card: 240 15% 10%;
-    --card-foreground: var(--brand-cream);
-    --popover: 240 20% 12%;
-    --popover-foreground: var(--brand-cream);
-    --primary: var(--brand-gold);
-    --primary-foreground: var(--brand-dark);
-    --secondary: 240 15% 15%;
-    --secondary-foreground: var(--brand-cream);
-    --muted: 240 10% 20%;
-    --muted-foreground: 40 10% 70%;
-    --accent: var(--brand-gold);
-    --accent-foreground: var(--brand-dark);
+    /* Design Tokens - Light theme for homepage */
+    --background: 0 33% 99%; /* #FFF8F6 */
+    --foreground: 260 20% 18%; /* #2A2233 */
+    --card: 0 0% 100%;
+    --card-foreground: 260 20% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 20% 18%;
+    --primary: 38 65% 69%; /* #E6C27A */
+    --primary-foreground: 260 20% 18%;
+    --secondary: 345 30% 92%; /* #F4E3E6 */
+    --secondary-foreground: 260 20% 18%;
+    --muted: 345 30% 92%;
+    --muted-foreground: 320 15% 45%; /* #7D657D */
+    --accent: 348 25% 54%; /* #A56C7B */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: var(--brand-cream);
-    --border: 240 15% 20%;
-    --input: 240 15% 15%;
-    --ring: var(--brand-gold);
+    --destructive-foreground: 0 0% 100%;
+    --border: 345 20% 88%;
+    --input: 345 20% 92%;
+    --ring: 38 65% 69%;
     --radius: 1rem;
 
-    /* Glass effect variables */
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-highlight: rgba(246, 206, 111, 0.1);
+    /* Glass effect variables - light theme */
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(165, 108, 123, 0.1);
+    --glass-highlight: rgba(230, 194, 122, 0.2);
   }
 }
 
@@ -75,8 +85,8 @@
     @apply border-border;
   }
   body {
-    background: linear-gradient(to bottom right, hsl(var(--brand-dark)), hsl(240 30% 12%), hsl(var(--brand-dark)));
-    color: hsl(var(--foreground));
+    background-color: var(--luvelle-bg);
+    color: var(--luvelle-text);
     min-height: 100vh;
   }
 }
