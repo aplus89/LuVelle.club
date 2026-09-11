@@ -1,154 +1,53 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
-import { Instagram, Linkedin, Twitter } from "lucide-react"
-import { LuVelleLogo } from "@/components/ui/luvelle-logo"
+import { Instagram, Linkedin } from "lucide-react"
 
 export function Footer() {
-  const handleNavClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
   return (
-    <footer className="border-t border-white/10 py-12 md:py-16 bg-[#141322]">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <Link href="/" onClick={handleNavClick} className="inline-block mb-4">
-              <LuVelleLogo variant="gold" width={120} height={48} />
+    <footer className="border-t border-[#F2DDD7] bg-white py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div className="max-w-sm">
+            <Link href="/" className="flex items-center gap-2" aria-label="LuVelle inicio">
+              <Image src="/images/luvelle-logo.png" alt="LuVelle" width={36} height={36} className="h-9 w-9" />
+              <span className="text-xl font-bold text-[#241335]">LuVelle</span>
             </Link>
-            <p className="text-sm text-[#e8ded3]/70 leading-relaxed">
-              Una plataforma. Tres formas de transformar tu bienestar.
+            <p className="mt-4 text-sm leading-6 text-[#6D5577]">
+              Tecnología, comunidad y herramientas para ayudar a profesionales de belleza y bienestar a crecer con más confianza y menos fricción.
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-[#e8ded3] mb-4">Productos</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/ai"
-                  onClick={handleNavClick}
-                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                >
-                  LuVelle Ai
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/beauty-box"
-                  onClick={handleNavClick}
-                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                >
-                  The Beauty Box
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/providers"
-                  onClick={handleNavClick}
-                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                >
-                  LuVelle Pro – Servicios
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/partners"
-                  onClick={handleNavClick}
-                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                >
-                  LuVelle Pro – Marcas
-                </Link>
-              </li>
+            <h4 className="font-semibold text-[#241335]">Explorá</h4>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li><Link href="/providers" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para profesionales</Link></li>
+              <li><Link href="/providers/mariana-lopez" className="text-[#6D5577] transition hover:text-[#E94B8A]">Perfil demo</Link></li>
+              <li><Link href="/partners" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para marcas</Link></li>
+              <li><Link href="/#como-funciona" className="text-[#6D5577] transition hover:text-[#E94B8A]">Cómo funciona</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold text-[#e8ded3] mb-4">Recursos</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="/#como-funciona" className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors">
-                  Cómo funciona
-                </a>
-              </li>
-              <li>
-                <a href="/#planes" className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors">
-                  Planes y precios
-                </a>
-              </li>
-              <li>
-                <Link
-                  href="/join"
-                  onClick={handleNavClick}
-                  className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                >
-                  Comenzar ahora
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-[#e8ded3] mb-4">Conectá con nosotras</h4>
-            <div className="flex gap-4 mb-4">
-              <a
-                href="https://www.instagram.com/luvelle_club"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5" />
+            <h4 className="font-semibold text-[#241335]">Conectá con LuVelle</h4>
+            <div className="mt-4 flex gap-3">
+              <a href="https://www.instagram.com/luvelle_club" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#F0DDD7] text-[#5B2A86] transition hover:border-[#E94B8A] hover:text-[#E94B8A]">
+                <Instagram className="h-5 w-5" />
               </a>
-              <a
-                href="https://www.linkedin.com/company/luvelleai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="https://twitter.com/LuVelleAi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                aria-label="X (Twitter)"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.tiktok.com/@luvelle.club"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#e8ded3]/70 hover:text-[#f4cc6e] transition-colors"
-                aria-label="TikTok"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
-                </svg>
+              <a href="https://www.linkedin.com/company/luvelleai" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="flex h-10 w-10 items-center justify-center rounded-full border border-[#F0DDD7] text-[#5B2A86] transition hover:border-[#E94B8A] hover:text-[#E94B8A]">
+                <Linkedin className="h-5 w-5" />
               </a>
             </div>
-            <p className="text-sm text-[#e8ded3]/70 mb-1">
-              <a href="mailto:hello@luvelle.club" className="hover:text-[#f4cc6e] transition-colors">
-                hello@luvelle.club
-              </a>
-            </p>
-            <p className="text-sm text-[#e8ded3]/70">
-              <a
-                href="https://wa.me/15557792120?text=Hola!%20Quiero%20saber%20más%20sobre%20LuVelle"
-                className="hover:text-[#f4cc6e] transition-colors"
-              >
-                WhatsApp: +1 555 779 2120
-              </a>
+            <p className="mt-4 text-sm text-[#6D5577]">
+              <a href="mailto:hello@luvelle.club" className="transition hover:text-[#E94B8A]">hello@luvelle.club</a>
             </p>
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 text-center text-sm text-[#e8ded3]/60">
-          <p>&copy; {new Date().getFullYear()} LuVelle.club. Todos los derechos reservados.</p>
+        <div className="mt-10 flex flex-col gap-3 border-t border-[#F2DDD7] pt-6 text-xs text-[#8A718F] sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} LuVelle.club. Todos los derechos reservados.</p>
+          <p>Construyendo con profesionales, validando antes de escalar.</p>
         </div>
       </div>
     </footer>
