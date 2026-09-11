@@ -1,163 +1,88 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Menu, X, ChevronDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { LuVelleLogo } from "@/components/ui/luvelle-logo"
-import { cn } from "@/lib/utils"
+import { ArrowRight, Menu, X } from "lucide-react"
 
 const navLinks = [
-  { href: "/ai", label: "LuVelle Ai" },
-  { href: "/beauty-box", label: "The Beauty Box" },
-  {
-    label: "LuVelle Pro",
-    submenu: [
-      { href: "/providers", label: "Pro Servicios" },
-      { href: "/partners", label: "Pro Marcas" },
-    ],
-  },
+  { href: "/", label: "Inicio" },
+  { href: "/providers", label: "Para profesionales" },
+  { href: "/partners", label: "Para marcas" },
+  { href: "/providers/mariana-lopez", label: "Perfil demo" },
+  { href: "/#como-funciona", label: "Cómo funciona" },
 ]
-
-const whatsappUrl = "https://wa.me/15557792120?text=Hola!%20Quiero%20empezar%20con%20LuVelle"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [proMenuOpen, setProMenuOpen] = useState(false)
 
-  const handleNavClick = () => {
-    setMobileMenuOpen(false)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+  const closeMenu = () => setMobileMenuOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#141322]/95 border-b border-white/10">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          <Link href="/" onClick={handleNavClick} className="hover:opacity-80 transition-opacity">
-            <LuVelleLogo variant="gold" width={100} height={40} />
-          </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-[#F2DDD7] bg-[#FFF7F3]/95 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:h-20 lg:px-8">
+        <Link href="/" onClick={closeMenu} className="flex items-center gap-2" aria-label="LuVelle inicio">
+          <Image src="/images/luvelle-logo.png" alt="LuVelle" width={36} height={36} className="h-9 w-9" />
+          <span className="text-xl font-bold text-[#241335]">LuVelle</span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-            {navLinks.map((link, idx) => {
-              if (link.submenu) {
-                return (
-                  <div key={idx} className="relative group">
-                    <button
-                      className="text-sm text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium flex items-center gap-1"
-                      onMouseEnter={() => setProMenuOpen(true)}
-                      onMouseLeave={() => setProMenuOpen(false)}
-                    >
-                      {link.label}
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                    <div
-                      className={cn(
-                        "absolute top-full left-0 mt-2 w-48 glass-card p-2 transition-all duration-200",
-                        proMenuOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2",
-                      )}
-                      onMouseEnter={() => setProMenuOpen(true)}
-                      onMouseLeave={() => setProMenuOpen(false)}
-                    >
-                      {link.submenu.map((sublink) => (
-                        <Link
-                          key={sublink.href}
-                          href={sublink.href}
-                          onClick={handleNavClick}
-                          className="block px-4 py-2 text-sm text-[#efedea] hover:text-[#f4cc6e] hover:bg-white/5 rounded-lg transition-colors"
-                        >
-                          {sublink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )
-              }
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="text-sm text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium"
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          <div className="hidden lg:block">
-            <Button
-              asChild
-              className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] px-6 rounded-full font-semibold"
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-[#5B2A86] transition-colors hover:text-[#E94B8A]"
             >
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                Empezar por WhatsApp
-              </a>
-            </Button>
-          </div>
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-[#efedea] hover:text-[#f4cc6e] transition-colors p-2"
-            aria-label="Toggle menu"
+        <div className="hidden lg:block">
+          <Link
+            href="/providers#aplicacion"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#E94B8A]/20"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            Crear mi perfil
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        {/* Mobile Menu */}
-        <div
-          className={cn(
-            "lg:hidden overflow-hidden transition-all duration-300 ease-in-out",
-            mobileMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0",
-          )}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+          className="rounded-full p-2 text-[#241335] transition hover:bg-[#FFD8CC]/40 lg:hidden"
+          aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={mobileMenuOpen}
         >
-          <nav className="flex flex-col gap-4 py-6 border-t border-white/10">
-            {navLinks.map((link, idx) => {
-              if (link.submenu) {
-                return (
-                  <div key={idx}>
-                    <div className="text-[#f4cc6e] font-medium py-2">{link.label}</div>
-                    <div className="flex flex-col gap-2 pl-4">
-                      {link.submenu.map((sublink) => (
-                        <Link
-                          key={sublink.href}
-                          href={sublink.href}
-                          onClick={handleNavClick}
-                          className="text-[#efedea] hover:text-[#f4cc6e] transition-colors py-2"
-                        >
-                          {sublink.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )
-              }
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="text-[#efedea] hover:text-[#f4cc6e] transition-colors font-medium py-2"
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-            <Button
-              asChild
-              className="bg-[#f4cc6e] hover:bg-[#f4cc6e]/90 text-[#141322] w-full mt-2 rounded-full font-semibold"
+          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {mobileMenuOpen ? (
+        <div className="border-t border-[#F2DDD7] bg-white lg:hidden">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className="rounded-xl px-3 py-3 font-medium text-[#5B2A86] transition hover:bg-[#FFF0EB] hover:text-[#E94B8A]"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/providers#aplicacion"
+              onClick={closeMenu}
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] px-5 py-3 font-semibold text-white"
             >
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleNavClick}>
-                Empezar por WhatsApp
-              </a>
-            </Button>
+              Crear mi perfil
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </nav>
         </div>
-      </div>
+      ) : null}
     </header>
   )
 }
