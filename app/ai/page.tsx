@@ -1,23 +1,19 @@
+import type { Metadata } from "next"
 import { Header } from "@/components/sections/header"
-import { AiHero } from "@/components/ai/ai-hero"
-import { AiFeatures } from "@/components/ai/ai-features"
-import { AiDashboardPreview } from "@/components/ai/ai-dashboard-preview"
-import { AiPricing } from "@/components/ai/ai-pricing"
-import { AiFinalCTA } from "@/components/ai/ai-final-cta"
+import { AiProviderExperiment } from "@/components/ai/ai-provider-experiment"
 import { Footer } from "@/components/sections/footer"
-import { WhatsAppButton } from "@/components/whatsapp-button"
+
+export const metadata: Metadata = {
+  title: "LuVelle AI para profesionales | LuVelle",
+  description: "Piloto de LuVelle AI para profesionales de belleza y bienestar: seguimiento, recuperación de oportunidades y operaciones simples.",
+}
 
 export default function AiPage() {
   return (
-    <main className="relative">
+    <main className="min-h-screen bg-[#FFF7F3]">
       <Header />
-      <AiHero />
-      <AiDashboardPreview />
-      <AiFeatures />
-      <AiPricing />
-      <AiFinalCTA />
+      <AiProviderExperiment />
       <Footer />
-      <WhatsAppButton />
     </main>
   )
 }
