@@ -1,43 +1,19 @@
+import type { Metadata } from "next"
 import { Header } from "@/components/sections/header"
-import { PartnersHero } from "@/components/partners/partners-hero"
-import { PartnersBenefits } from "@/components/partners/partners-benefits"
-import { PartnersDashboardPreview } from "@/components/partners/partners-dashboard-preview"
-import { PartnersProcess } from "@/components/partners/partners-process"
-import { PartnersForm } from "@/components/partners/partners-form"
+import { PartnersGrowthExperiment } from "@/components/partners/partners-growth-experiment"
 import { Footer } from "@/components/sections/footer"
-import { WhatsAppButton } from "@/components/whatsapp-button"
-import Link from "next/link"
-import { LuVelleButton } from "@/components/ui/luvelle-button"
+
+export const metadata: Metadata = {
+  title: "LuVelle para marcas | LuVelle",
+  description: "Explorá colaboraciones con profesionales, Club VIP, Beauty Box, eventos y comunidad de belleza y bienestar.",
+}
 
 export default function PartnersPage() {
   return (
-    <main className="relative">
+    <main className="min-h-screen bg-[#FFF7F3]">
       <Header />
-      <PartnersHero />
-      <PartnersBenefits />
-      <PartnersDashboardPreview />
-      <PartnersProcess />
-      <PartnersForm />
-
-      {/* Link to Providers */}
-      <section className="py-12 px-4 border-t border-white/10">
-        <div className="container mx-auto max-w-4xl">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-brand-cream/70">¿Sos profesional de servicios? Aplicá aquí →</p>
-            <div className="flex gap-4">
-              <LuVelleButton variant="outline" asChild>
-                <Link href="/providers">Ir a Proveedoras</Link>
-              </LuVelleButton>
-              <LuVelleButton variant="outline" asChild>
-                <Link href="/">Volver al inicio</Link>
-              </LuVelleButton>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <PartnersGrowthExperiment />
       <Footer />
-      <WhatsAppButton />
     </main>
   )
 }
