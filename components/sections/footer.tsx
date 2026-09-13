@@ -8,25 +8,34 @@ export function Footer() {
   return (
     <footer className="border-t border-[#F2DDD7] bg-white py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1fr]">
           <div className="max-w-sm">
             <Link href="/" className="flex items-center gap-2" aria-label="LuVelle inicio">
               <Image src="/images/luvelle-logo.png" alt="LuVelle" width={36} height={36} className="h-9 w-9" />
               <span className="text-xl font-bold text-[#241335]">LuVelle</span>
             </Link>
             <p className="mt-4 text-sm leading-6 text-[#6D5577]">
-              Tecnología, comunidad y herramientas para ayudar a profesionales de belleza y bienestar a crecer con más confianza y menos fricción.
+              Perfiles, comunidad y herramientas para profesionales de belleza y bienestar. Construimos con datos reales antes de escalar.
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold text-[#241335]">Explorá</h4>
+            <h4 className="font-semibold text-[#241335]">Empezá acá</h4>
             <ul className="mt-4 space-y-3 text-sm">
               <li><Link href="/providers" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para profesionales</Link></li>
               <li><Link href="/providers/mariana-lopez" className="text-[#6D5577] transition hover:text-[#E94B8A]">Perfil demo</Link></li>
               <li><Link href="/partners" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para marcas</Link></li>
-              <li><Link href="/club-vip" className="text-[#6D5577] transition hover:text-[#E94B8A]">LuVelle Club VIP</Link></li>
+              <li><Link href="/club-vip" className="text-[#6D5577] transition hover:text-[#E94B8A]">Club VIP</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-semibold text-[#241335]">Experimentos</h4>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li><Link href="/ai" className="text-[#6D5577] transition hover:text-[#E94B8A]">LuVelle AI para profesionales</Link></li>
+              <li><Link href="/beauty-box" className="text-[#6D5577] transition hover:text-[#E94B8A]">Beauty Box</Link></li>
               <li><Link href="/#como-funciona" className="text-[#6D5577] transition hover:text-[#E94B8A]">Cómo funciona</Link></li>
+              <li><Link href="/#precio" className="text-[#6D5577] transition hover:text-[#E94B8A]">Precio para profesionales</Link></li>
             </ul>
           </div>
 
