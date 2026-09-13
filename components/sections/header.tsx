@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/providers", label: "Para profesionales" },
   { href: "/partners", label: "Para marcas" },
+  { href: "/club-vip", label: "Club VIP" },
   { href: "/providers/mariana-lopez", label: "Perfil demo" },
   { href: "/#como-funciona", label: "Cómo funciona" },
 ]
@@ -26,7 +27,7 @@ export function Header() {
           <span className="text-xl font-bold text-[#241335]">LuVelle</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+        <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
           {navLinks.map((link) => (
             <Link
               key={link.href}
