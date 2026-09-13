@@ -25,6 +25,7 @@ export function Footer() {
               <li><Link href="/providers" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para profesionales</Link></li>
               <li><Link href="/providers/mariana-lopez" className="text-[#6D5577] transition hover:text-[#E94B8A]">Perfil demo</Link></li>
               <li><Link href="/partners" className="text-[#6D5577] transition hover:text-[#E94B8A]">Para marcas</Link></li>
+              <li><Link href="/club-vip" className="text-[#6D5577] transition hover:text-[#E94B8A]">LuVelle Club VIP</Link></li>
               <li><Link href="/#como-funciona" className="text-[#6D5577] transition hover:text-[#E94B8A]">Cómo funciona</Link></li>
             </ul>
           </div>
