@@ -4,8 +4,17 @@ import { BeautyBoxInterestExperiment } from "@/components/beauty-box/beauty-box-
 import { Footer } from "@/components/sections/footer"
 
 export const metadata: Metadata = {
-  title: "The Beauty Box | LuVelle",
-  description: "Acceso anticipado a la experiencia Beauty Box de LuVelle. Ayudanos a validar categorías, formato y rango de precio antes del lanzamiento.",
+  title: "The Beauty Box",
+  description: "Sumate al acceso anticipado de The Beauty Box by LuVelle: una experiencia curada para descubrir productos, marcas y favoritos de belleza y bienestar.",
+  openGraph: {
+    title: "The Beauty Box by LuVelle | Algo especial viene para vos",
+    description: "Una experiencia curada para descubrir productos, marcas y favoritos de belleza y bienestar.",
+    url: "https://www.luvelle.club/beauty-box",
+  },
+  twitter: {
+    title: "The Beauty Box by LuVelle",
+    description: "Una experiencia curada para descubrir productos, marcas y favoritos de belleza y bienestar.",
+  },
 }
 
 export default function BeautyBoxPage() {
