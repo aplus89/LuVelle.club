@@ -4,8 +4,13 @@ import { PartnersGrowthExperiment } from "@/components/partners/partners-growth-
 import { Footer } from "@/components/sections/footer"
 
 export const metadata: Metadata = {
-  title: "LuVelle para marcas | LuVelle",
-  description: "Explorá colaboraciones con profesionales, Club VIP, Beauty Box, eventos y comunidad de belleza y bienestar.",
+  title: "Para marcas",
+  description: "Conectá tu marca con profesionales, comunidad, eventos, Club VIP, Beauty Box y nuevas experiencias de belleza y bienestar dentro de LuVelle.",
+  openGraph: {
+    title: "LuVelle para marcas | Conectá con nuestra comunidad",
+    description: "Explorá colaboraciones con profesionales, comunidad, eventos y nuevas experiencias LuVelle.",
+    url: "https://www.luvelle.club/partners",
+  },
 }
 
 export default function PartnersPage() {
