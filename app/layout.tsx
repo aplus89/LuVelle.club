@@ -21,28 +21,42 @@ const dancingScript = Dancing_Script({
 })
 
 export const metadata: Metadata = {
-  title: "LuVelle.club - Tu bienestar, transformado",
+  metadataBase: new URL("https://www.luvelle.club"),
+  title: {
+    default: "LuVelle | Belleza, bienestar y crecimiento para profesionales",
+    template: "%s | LuVelle",
+  },
   description:
-    "Una sola plataforma. Tres formas de transformar tu bienestar. LuVelle Ai, The Beauty Box y LuVelle Pro.",
-  keywords: "beauty box, belleza, bienestar, suscripción, Costa Rica, skincare, maquillaje, LuVelle, proveedoras",
+    "LuVelle ayuda a profesionales de belleza y bienestar a mostrar su talento, conectar con oportunidades y acceder a nuevas herramientas para hacer crecer su negocio.",
+  keywords: [
+    "LuVelle",
+    "profesionales de belleza",
+    "bienestar",
+    "Costa Rica",
+    "maquillistas",
+    "lash artists",
+    "nail artists",
+    "esteticistas",
+    "perfiles profesionales",
+  ],
   openGraph: {
-    title: "LuVelle.club - Tu bienestar, transformado",
-    description: "Una sola plataforma. Tres formas de transformar tu bienestar.",
+    title: "LuVelle | Tu talento merece ser visto",
+    description: "Perfiles, comunidad y herramientas para profesionales de belleza y bienestar.",
     type: "website",
     locale: "es_CR",
-    siteName: "LuVelle.club",
+    siteName: "LuVelle",
+    url: "https://www.luvelle.club",
   },
   twitter: {
     card: "summary_large_image",
-    title: "LuVelle.club - Tu bienestar, transformado",
-    description: "Una sola plataforma. Tres formas de transformar tu bienestar.",
+    title: "LuVelle | Tu talento merece ser visto",
+    description: "Perfiles, comunidad y herramientas para profesionales de belleza y bienestar.",
   },
   alternates: {
     languages: {
       "es-CR": "/",
     },
   },
-    generator: 'v0.app'
 }
 
 export default function RootLayout({

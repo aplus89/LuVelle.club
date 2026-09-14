@@ -4,8 +4,17 @@ import { HomeStrategyV1 } from "@/components/home/home-strategy-v1"
 import { Footer } from "@/components/sections/footer"
 
 export const metadata: Metadata = {
-  title: "LuVelle | Perfiles y herramientas para profesionales de belleza",
-  description: "LuVelle construye perfiles, comunidad y herramientas para profesionales de belleza y bienestar, validando AI, marcas, Club VIP y Beauty Box con datos reales.",
+  title: "Tu talento merece ser visto",
+  description: "Creá un perfil profesional LuVelle para mostrar tu trabajo, inspirar confianza y hacer crecer tu negocio de belleza o bienestar.",
+  openGraph: {
+    title: "LuVelle | Tu talento merece ser visto",
+    description: "Creá un perfil profesional para mostrar tu trabajo, inspirar confianza y hacer crecer tu negocio.",
+    url: "https://www.luvelle.club/",
+  },
+  twitter: {
+    title: "LuVelle | Tu talento merece ser visto",
+    description: "Creá un perfil profesional para mostrar tu trabajo, inspirar confianza y hacer crecer tu negocio.",
+  },
 }
 
 export default function HomePage() {

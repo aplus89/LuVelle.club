@@ -15,7 +15,7 @@ export function Footer() {
               <span className="text-xl font-bold text-[#241335]">LuVelle</span>
             </Link>
             <p className="mt-4 text-sm leading-6 text-[#6D5577]">
-              Perfiles, comunidad y herramientas para profesionales de belleza y bienestar. Construimos con datos reales antes de escalar.
+              Perfiles, comunidad y herramientas para acompañar a profesionales de belleza y bienestar a mostrar su talento y hacer crecer su negocio.
             </p>
           </div>
 
@@ -30,12 +30,12 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold text-[#241335]">Experimentos</h4>
+            <h4 className="font-semibold text-[#241335]">Descubrí LuVelle</h4>
             <ul className="mt-4 space-y-3 text-sm">
-              <li><Link href="/ai" className="text-[#6D5577] transition hover:text-[#E94B8A]">LuVelle AI para profesionales</Link></li>
+              <li><Link href="/ai" className="text-[#6D5577] transition hover:text-[#E94B8A]">LuVelle AI</Link></li>
               <li><Link href="/beauty-box" className="text-[#6D5577] transition hover:text-[#E94B8A]">Beauty Box</Link></li>
               <li><Link href="/#como-funciona" className="text-[#6D5577] transition hover:text-[#E94B8A]">Cómo funciona</Link></li>
-              <li><Link href="/#precio" className="text-[#6D5577] transition hover:text-[#E94B8A]">Precio para profesionales</Link></li>
+              <li><Link href="/#precio" className="text-[#6D5577] transition hover:text-[#E94B8A]">Perfil Profesional</Link></li>
             </ul>
           </div>
 
@@ -57,7 +57,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-col gap-3 border-t border-[#F2DDD7] pt-6 text-xs text-[#8A718F] sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} LuVelle.club. Todos los derechos reservados.</p>
-          <p>Construyendo con profesionales, validando antes de escalar.</p>
+          <p>Belleza · bienestar · conexión</p>
         </div>
       </div>
     </footer>
