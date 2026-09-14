@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { createLeadAction } from "@/app/actions"
+import { createBeautyBoxWaitlistAction } from "@/app/waitlist-actions"
+import { BeautyBoxRibbonIntro } from "@/components/beauty-box/beauty-box-ribbon-intro"
+import { AuraHalo, AuraWaves } from "@/components/brand/luvelle-visual-system"
 
 const categoryOptions = ["Skincare", "Maquillaje", "Cabello", "Uñas", "Fragancias", "Wellness", "Mixto / sorpresa"]
 const purchaseOptions = ["Compra única", "Suscripción mensual", "Cada 2–3 meses", "Todavía no sé"]
@@ -25,16 +27,19 @@ export function BeautyBoxInterestExperiment() {
       return
     }
     setLoading(true)
-    const result = await createLeadAction({
-      persona: "consumer-beauty-box",
+    const result = await createBeautyBoxWaitlistAction({
+      name: formData.name,
       email: formData.email,
       whatsapp: formData.whatsapp || undefined,
+      preferred_category: formData.category,
+      purchase_preference: formData.purchasePreference || undefined,
+      approximate_budget: formData.budget || undefined,
+      must_have: formData.mustHave || undefined,
       source: "beauty-box-waitlist-v1",
-      notes: JSON.stringify({ preferred_category: formData.category, purchase_preference: formData.purchasePreference, approximate_budget: formData.budget, must_have: formData.mustHave }),
     })
     if (result.success) {
       setSubmitted(true)
-      toast({ title: "Lista de espera confirmada", description: "Gracias. Tu respuesta nos ayuda a decidir si y cómo lanzar Beauty Box." })
+      toast({ title: "Acceso anticipado confirmado", description: "Gracias. Ya estás en la lista de The Beauty Box." })
     } else {
       toast({ title: "No pudimos registrarte", description: "Intentá de nuevo en unos minutos.", variant: "destructive" })
     }
@@ -43,43 +48,46 @@ export function BeautyBoxInterestExperiment() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[#FFF7F3] px-4 py-20 md:py-28">
+      <BeautyBoxRibbonIntro />
+      <section className="relative overflow-hidden bg-[#FFF7F3] px-4 pb-32 pt-20 md:pb-40 md:pt-28">
         <div className="absolute -right-20 top-0 h-80 w-80 rounded-full bg-[#FFD8CC]/80 blur-3xl" />
+        <div className="absolute right-12 top-20 hidden lg:block"><AuraHalo className="w-64 opacity-70" /></div>
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-[#F2DDD7] bg-white px-4 py-2 text-sm font-semibold text-[#5B2A86]"><Box className="h-4 w-4" /> The Beauty Box by LuVelle</div>
-            <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-tight text-[#241335] sm:text-5xl lg:text-6xl">Descubrir belleza debería sentirse personal, no aleatorio.</h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6D5577]">Estamos explorando una experiencia curada de productos de belleza y bienestar junto a nuestra comunidad. Antes de construir inventario, logística o suscripciones, queremos saber qué tendría valor real para vos.</p>
+            <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-tight text-[#241335] sm:text-5xl lg:text-6xl">Una caja pensada para convertir descubrir belleza en un momento especial.</h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6D5577]">Productos, marcas y favoritos seleccionados para sorprenderte, inspirarte y ayudarte a descubrir nuevas formas de cuidarte.</p>
             <a href="#beauty-box-waitlist" className="mt-9 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] px-6 py-3.5 font-semibold text-white shadow-lg shadow-[#E94B8A]/15">Quiero acceso anticipado <ArrowRight className="h-4 w-4" /></a>
           </div>
 
           <div className="relative mx-auto w-full max-w-md rounded-[34px] border border-[#F2DDD7] bg-white p-8 shadow-[0_28px_90px_rgba(91,42,134,0.12)]">
             <div className="absolute -right-4 -top-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#E94B8A] text-white shadow-lg"><Sparkles className="h-6 w-6" /></div>
             <div className="flex aspect-[4/3] items-center justify-center rounded-[26px] bg-gradient-to-br from-[#FFD8CC] via-[#FFF7F3] to-[#E9DDF2]">
-              <div className="text-center"><PackageOpen className="mx-auto h-16 w-16 text-[#5B2A86]" /><p className="mt-4 text-2xl font-bold text-[#241335]">Beauty Box</p><p className="mt-1 text-sm text-[#6D5577]">Concepto en validación</p></div>
+              <div className="text-center"><PackageOpen className="mx-auto h-16 w-16 text-[#5B2A86]" /><p className="mt-4 text-2xl font-bold text-[#241335]">Beauty Box</p><p className="mt-1 text-sm text-[#6D5577]">Acceso anticipado</p></div>
             </div>
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-[#5B2A86]"><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Curaduría</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Descubrimiento</span><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Marcas</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Comunidad</span></div>
+            <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-[#5B2A86]"><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Curaduría</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Descubrimiento</span><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Marcas</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Sorpresa</span></div>
           </div>
         </div>
+        <AuraWaves />
       </section>
 
-      <section className="bg-white px-4 py-16 md:py-24">
+      <section className="bg-white px-4 py-20 md:py-28">
         <div className="mx-auto max-w-6xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E94B8A]">Lo que queremos aprender</p>
-          <h2 className="mt-3 text-3xl font-bold text-[#241335] md:text-4xl">Primero demanda; después logística.</h2>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            <article className="rounded-[26px] border border-[#F2DDD7] bg-[#FFFDFC] p-6"><Star className="h-6 w-6 text-[#E94B8A]" /><h3 className="mt-4 font-bold text-[#241335]">Qué productos querés descubrir</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Categorías, marcas y nivel de personalización que realmente importan.</p></article>
-            <article className="rounded-[26px] border border-[#F2DDD7] bg-[#FFFDFC] p-6"><Gift className="h-6 w-6 text-[#5B2A86]" /><h3 className="mt-4 font-bold text-[#241335]">Cómo preferís comprar</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Compra única, suscripción o una frecuencia menor antes de asumir un modelo.</p></article>
-            <article className="rounded-[26px] border border-[#F2DDD7] bg-[#FFFDFC] p-6"><Box className="h-6 w-6 text-[#FF7A59]" /><h3 className="mt-4 font-bold text-[#241335]">Qué precio tiene sentido</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Rango esperado frente al valor percibido, sin inventar planes todavía.</p></article>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#E94B8A]">Hecha alrededor de tus gustos</p>
+          <h2 className="mt-3 text-3xl font-bold text-[#241335] md:text-5xl">Queremos que abrirla se sienta como recibir algo elegido para vos.</h2>
+          <div className="mt-12 grid gap-x-10 gap-y-9 md:grid-cols-3">
+            <article className="border-b border-[#F2DDD7] pb-8"><Star className="h-6 w-6 text-[#E94B8A]" /><h3 className="mt-4 font-bold text-[#241335]">Tus categorías favoritas</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Skincare, maquillaje, cabello, wellness y otras categorías que realmente te interesen.</p></article>
+            <article className="border-b border-[#F2DDD7] pb-8"><Gift className="h-6 w-6 text-[#5B2A86]" /><h3 className="mt-4 font-bold text-[#241335]">Una experiencia para descubrir</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Nuevos productos, favoritos y marcas que podrían convertirse en parte de tu rutina.</p></article>
+            <article className="border-b border-[#F2DDD7] pb-8"><Box className="h-6 w-6 text-[#FF7A59]" /><h3 className="mt-4 font-bold text-[#241335]">A tu manera</h3><p className="mt-2 text-sm leading-6 text-[#6D5577]">Contanos cómo preferirías recibirla y qué haría que una Beauty Box realmente valga la pena para vos.</p></article>
           </div>
         </div>
       </section>
 
-      <section id="beauty-box-waitlist" className="bg-[#FAF6FF] px-4 py-16 md:py-24">
+      <section id="beauty-box-waitlist" className="bg-[#FAF6FF] px-4 py-20 md:py-28">
         <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[.8fr_1.2fr]">
-          <div><p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8B5DB0]">Acceso anticipado</p><h2 className="mt-3 text-3xl font-bold text-[#241335] md:text-4xl">Ayudanos a diseñar la primera prueba.</h2><p className="mt-4 leading-7 text-[#6D5577]">No estás comprando una caja ni suscripción hoy. Tu respuesta sirve para decidir si existe suficiente demanda y qué formato probar.</p></div>
+          <div><p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8B5DB0]">Acceso anticipado</p><h2 className="mt-3 text-3xl font-bold text-[#241335] md:text-4xl">Sé de las primeras en descubrirla.</h2><p className="mt-4 leading-7 text-[#6D5577]">Dejanos tus datos y contanos qué te gustaría recibir. Te avisaremos cuando tengamos una primera experiencia lista para compartir.</p></div>
           {submitted ? (
-            <div className="rounded-[28px] border border-[#E9DDF2] bg-white p-8 text-center shadow-[0_18px_60px_rgba(91,42,134,0.08)]"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E94B8A]/10 text-[#E94B8A]"><Sparkles className="h-7 w-7" /></div><h3 className="mt-5 text-2xl font-bold text-[#241335]">Estás en la lista</h3><p className="mt-3 leading-7 text-[#6D5577]">Te contactaremos únicamente cuando tengamos una prueba concreta que encaje con lo que nos contaste.</p></div>
+            <div className="rounded-[28px] border border-[#E9DDF2] bg-white p-8 text-center shadow-[0_18px_60px_rgba(91,42,134,0.08)]"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E94B8A]/10 text-[#E94B8A]"><Sparkles className="h-7 w-7" /></div><h3 className="mt-5 text-2xl font-bold text-[#241335]">Ya estás en la lista</h3><p className="mt-3 leading-7 text-[#6D5577]">Gracias. Te escribiremos cuando The Beauty Box esté lista para una primera experiencia.</p></div>
           ) : (
             <form onSubmit={handleSubmit} className="rounded-[28px] border border-[#E9DDF2] bg-white p-6 shadow-[0_18px_60px_rgba(91,42,134,0.08)] md:p-8">
               <div className="grid gap-5 md:grid-cols-2">
