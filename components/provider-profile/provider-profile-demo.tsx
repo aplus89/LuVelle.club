@@ -295,7 +295,7 @@ export function ProviderProfileDemo({ provider }: { provider: DemoProvider }) {
           <div className="max-w-2xl">
             <p className="text-sm font-semibold text-[#F2C572]">Perfil demo LuVelle</p>
             <h2 className="mt-2 font-serif text-3xl font-semibold">¿Te gustaría tener un perfil como este?</h2>
-            <p className="mt-3 text-sm leading-6 text-white/70">Mostrá tus servicios, portafolio y reputación sin publicar información sensible. Esta demo existe para validar el producto con profesionales reales.</p>
+            <p className="mt-3 text-sm leading-6 text-white/70">Mostrá tus servicios, portafolio y reputación sin publicar información sensible. Así podría verse tu presencia profesional dentro de LuVelle.</p>
           </div>
           <button type="button" onClick={() => setJoinOpen(true)} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#F2C572] px-6 py-3.5 font-bold text-[#2A2233] transition hover:bg-[#F6D48D] md:mt-0">
             <UserPlus className="h-5 w-5" />
@@ -322,7 +322,7 @@ export function ProviderProfileDemo({ provider }: { provider: DemoProvider }) {
             <ChevronRight className="h-5 w-5" />
           </button>
           <button type="button" onClick={() => setJoinOpen(true)} className="mt-2 flex w-full items-center justify-between rounded-xl bg-[#FFF0E9] px-4 py-3 text-left text-[#694E56] md:mt-0 md:w-1/2">
-            <span><span className="block text-xs text-[#8B7078]">¿Ofrecés servicios o productos?</span><span className="font-semibold">Inscríbete aquí</span></span>
+            <span><span className="block text-xs text-[#8B7078]">¿Ofrecés servicios o productos?</span><span className="font-semibold">Inscribite aquí</span></span>
             <ChevronRight className="h-5 w-5" />
           </button>
         </div>
@@ -334,7 +334,7 @@ export function ProviderProfileDemo({ provider }: { provider: DemoProvider }) {
             <button type="button" onClick={() => setAccessOpen(false)} className="absolute right-4 top-4 rounded-full p-2 text-[#7B656D] hover:bg-[#F8ECE8]" aria-label="Cerrar"><X className="h-5 w-5" /></button>
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FFF0EA] text-[#E75E52]"><ShieldCheck className="h-7 w-7" /></div>
             <h2 className="mt-5 text-center font-serif text-3xl font-semibold">Protegemos a especialistas y clientas</h2>
-            <p className="mt-3 text-center text-sm leading-6 text-[#705D64]">La ubicación exacta, reseñas detalladas y contacto directo estarán disponibles para cuentas verificadas. En este MVP, LuVelle coordina la solicitud por su canal central.</p>
+            <p className="mt-3 text-center text-sm leading-6 text-[#705D64]">La ubicación exacta, las reseñas detalladas y el contacto directo se mantienen protegidos. LuVelle coordina la solicitud para cuidar la experiencia de ambas partes.</p>
             <div className="mt-6 space-y-2 rounded-2xl bg-[#FFF7F3] p-4 text-sm text-[#5F5056]">
               <div className="flex items-center gap-2"><BadgeCheck className="h-4 w-4 text-[#4E925F]" /> Acceso a reseñas y comentarios detallados</div>
               <div className="flex items-center gap-2"><BadgeCheck className="h-4 w-4 text-[#4E925F]" /> Consulta de disponibilidad completa</div>
@@ -345,7 +345,7 @@ export function ProviderProfileDemo({ provider }: { provider: DemoProvider }) {
               Solicitar cita por LuVelle
             </a>
             <button type="button" onClick={() => setAccessOpen(false)} className="mt-2 w-full rounded-xl border border-[#E5CEC6] px-5 py-3 text-sm font-semibold text-[#745C64]">Seguir explorando</button>
-            <p className="mt-4 text-center text-xs text-[#9A858B]">Demo de validación: autenticación y mensajería privada se habilitarán después de validar demanda.</p>
+            <p className="mt-4 text-center text-xs text-[#9A858B]">Algunas funciones, como agenda, mensajería y acceso privado, se irán habilitando progresivamente.</p>
           </div>
         </div>
       ) : null}
@@ -356,7 +356,7 @@ export function ProviderProfileDemo({ provider }: { provider: DemoProvider }) {
             <button type="button" onClick={() => setJoinOpen(false)} className="absolute right-4 top-4 rounded-full p-2 text-[#7B656D] hover:bg-[#F8ECE8]" aria-label="Cerrar"><X className="h-5 w-5" /></button>
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#FFF0EA] text-[#E75E52]"><UserPlus className="h-7 w-7" /></div>
             <h2 className="mt-5 text-center font-serif text-3xl font-semibold">Creá tu presencia en LuVelle</h2>
-            <p className="mt-3 text-center text-sm leading-6 text-[#705D64]">Elegí el tipo de perfil que querés explorar. Por ahora te llevamos al flujo existente de LuVelle para validar interés sin agregar complejidad técnica innecesaria.</p>
+            <p className="mt-3 text-center text-sm leading-6 text-[#705D64]">Elegí cómo querés ser parte de LuVelle y te llevamos al registro correspondiente.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Link href="/providers" className="rounded-2xl border border-[#E8CEC5] bg-[#FFF8F5] p-5 transition hover:border-[#F18779] hover:bg-white">
                 <UserPlus className="mb-3 h-6 w-6 text-[#E75E52]" />
