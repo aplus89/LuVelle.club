@@ -117,7 +117,7 @@ export default function ProvidersPage() {
             </div>
           </div>
         </div>
-        <AuraWaves />
+        <AuraWaves intensity="subtle" />
       </section>
 
       <section className="bg-white px-4 py-20 md:py-28">
