@@ -2,13 +2,14 @@
 
 import type React from "react"
 import { useState } from "react"
-import { ArrowRight, Bot, CalendarCheck, CheckCircle2, Loader2, MessageCircleMore, RefreshCcw, Sparkles } from "lucide-react"
+import { ArrowRight, Bot, CalendarCheck, Loader2, MessageCircleMore, RefreshCcw, Sparkles } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { createLuvelleAiInterestAction } from "@/app/ai-interest-actions"
 import { AtelierStrip, AuraWaves } from "@/components/brand/luvelle-visual-system"
+import { AiPhoneStory } from "@/components/ai/ai-phone-story"
 
 const painOptions = [
   "Personas preguntan y no reservan",
@@ -83,26 +84,24 @@ export function AiProviderExperiment() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[#FFF7F3] px-4 pb-32 pt-20 md:pb-40 md:pt-28">
+      <section className="relative overflow-hidden bg-[#FFF7F3] px-4 pb-40 pt-20 md:pb-48 md:pt-28">
         <div className="absolute -right-24 top-8 h-72 w-72 rounded-full bg-[#FFD8CC]/60 blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#E9DDF2] bg-white px-4 py-2 text-sm font-semibold text-[#5B2A86]"><Bot className="h-4 w-4" /> LuVelle AI · Beta para profesionales</div>
+        <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_.92fr] lg:items-center">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#E9DDF2] bg-white/90 px-4 py-2 text-sm font-semibold text-[#5B2A86] shadow-sm"><Bot className="h-4 w-4" /> LuVelle AI · Beta para profesionales</div>
             <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-tight text-[#241335] sm:text-5xl lg:text-6xl">Menos conversaciones perdidas. Más tiempo para tu negocio.</h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#6D5577]">LuVelle AI está pensada para ayudarte a dar seguimiento, recuperar oportunidades y resolver tareas repetitivas sin perder el trato humano con tus clientas.</p>
-            <a href="#piloto-ai" className="mt-9 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] px-6 py-3.5 font-semibold text-white shadow-lg shadow-[#E94B8A]/15 transition hover:-translate-y-0.5 hover:shadow-xl">Quiero probar la Beta <ArrowRight className="h-4 w-4" /></a>
-          </div>
-
-          <div className="rounded-[32px] border border-[#E9DDF2] bg-white p-6 shadow-[0_28px_90px_rgba(91,42,134,0.12)] md:p-8">
-            <div className="flex items-center gap-3 border-b border-[#F2DDD7] pb-5"><div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#E94B8A] to-[#5B2A86] text-white"><Sparkles className="h-6 w-6" /></div><div><p className="font-bold text-[#241335]">Una conversación que no debería perderse</p><p className="text-sm text-[#8A718F]">La clienta preguntó por un servicio y dejó de responder.</p></div></div>
-            <div className="mt-6 space-y-4">
-              <div className="rounded-2xl bg-[#FFF7F3] p-4 text-sm leading-6 text-[#6D5577]">“Hola, ¿cuánto cuesta el lifting?” → recibió el precio → no respondió.</div>
-              <div className="rounded-2xl border border-[#E9DDF2] bg-[#FAF6FF] p-4"><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8B5DB0]">LuVelle AI puede ayudarte</p><p className="mt-2 text-sm leading-6 text-[#5B2A86]">Preparando un seguimiento corto, natural y contextual para que vos decidás si querés enviarlo.</p></div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-[#2F7A4A]"><CheckCircle2 className="h-4 w-4" /> Más seguimiento sin perder tu voz.</div>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <a href="#acceso-ai" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] px-6 py-3.5 font-semibold text-white shadow-lg shadow-[#E94B8A]/15 transition hover:-translate-y-0.5 hover:shadow-xl">Quiero probar la Beta <ArrowRight className="h-4 w-4" /></a>
+              <span className="text-sm text-[#8A718F]">Vos mantenés el control de lo que se envía.</span>
             </div>
           </div>
+
+          <div className="relative z-10 py-4 lg:py-0">
+            <AiPhoneStory />
+          </div>
         </div>
-        <AuraWaves />
+        <AuraWaves intensity="hero" />
       </section>
 
       <section className="bg-white px-4 py-20 md:py-28">
@@ -117,7 +116,8 @@ export function AiProviderExperiment() {
         </div>
       </section>
 
-      <section id="piloto-ai" className="bg-[#FAF6FF] px-4 py-20 md:py-28">
+      <section id="acceso-ai" className="relative scroll-mt-24 bg-[#FAF6FF] px-4 py-20 md:py-28">
+        <span id="piloto-ai" aria-hidden className="absolute -top-24" />
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
           <div><p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#8B5DB0]">Acceso Beta</p><h2 className="mt-3 text-3xl font-bold text-[#241335] md:text-4xl">Contanos dónde necesitás más ayuda.</h2><p className="mt-4 leading-7 text-[#6D5577]">Queremos conocer qué pasa hoy con tus consultas, seguimientos y agenda para invitar primero a profesionales cuyo reto encaje con las primeras funciones.</p></div>
 
