@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { CalendarCheck, Check, Sparkles } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 
 const scenes = [
   {
@@ -141,7 +141,7 @@ export function AiPhoneStory() {
   )
 }
 
-function MessageBubble({ children, side }: { children: React.ReactNode; side: "left" | "right" }) {
+function MessageBubble({ children, side }: { children: ReactNode; side: "left" | "right" }) {
   return (
     <div className={`flex ${side === "right" ? "justify-end" : "justify-start"}`}>
       <div
