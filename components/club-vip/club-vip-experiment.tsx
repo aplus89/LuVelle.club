@@ -5,7 +5,7 @@ import { ArrowRight, BadgePercent, Crown, Gift, Heart, Loader2, ShieldCheck, Spa
 import { Header } from "@/components/sections/header"
 import { Footer } from "@/components/sections/footer"
 import { createClubVipWaitlistAction } from "@/app/waitlist-actions"
-import { AuraHalo, ConstellationField } from "@/components/brand/luvelle-visual-system"
+import { AuraHalo, AuraWaves, ConstellationField } from "@/components/brand/luvelle-visual-system"
 
 const benefitOptions = [
   "Descuentos en servicios",
@@ -66,7 +66,7 @@ export function ClubVipExperiment() {
         <ConstellationField className="opacity-35" />
         <div className="absolute -right-24 top-10 h-80 w-80 rounded-full bg-[#FFD8CC]/55 blur-3xl" />
         <div className="absolute right-12 top-10 hidden lg:block"><AuraHalo className="w-64 opacity-60" /></div>
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-4 pb-28 pt-16 sm:px-6 md:pb-36 md:pt-24 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-[#EACEC5] bg-white/80 px-4 py-2 text-sm font-semibold text-[#8A5575]"><Sparkles className="h-4 w-4 text-[#E94B8A]" /> Acceso anticipado</div>
             <h1 className="mt-6 max-w-3xl text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">LuVelle Club VIP<span className="block bg-gradient-to-r from-[#E94B8A] to-[#FF7A59] bg-clip-text text-transparent">más beneficios para disfrutar lo que amás.</span></h1>
@@ -84,6 +84,7 @@ export function ClubVipExperiment() {
             </div>
           </div>
         </div>
+        <AuraWaves intensity="subtle" />
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 md:py-28">

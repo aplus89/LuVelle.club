@@ -68,7 +68,7 @@ export function BeautyBoxInterestExperiment() {
             <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-[#5B2A86]"><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Curaduría</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Descubrimiento</span><span className="rounded-xl bg-[#FFF7F3] px-3 py-3">Marcas</span><span className="rounded-xl bg-[#FAF6FF] px-3 py-3">Sorpresa</span></div>
           </div>
         </div>
-        <AuraWaves />
+        <AuraWaves intensity="soft" />
       </section>
 
       <section className="bg-white px-4 py-20 md:py-28">

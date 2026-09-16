@@ -2,32 +2,100 @@
 
 import { motion, useReducedMotion } from "framer-motion"
 
-export function AuraWaves({ className = "" }: { className?: string }) {
+type AuraWaveIntensity = "hero" | "soft" | "subtle"
+
+export function AuraWaves({
+  className = "",
+  intensity = "hero",
+}: {
+  className?: string
+  intensity?: AuraWaveIntensity
+}) {
   const reduceMotion = useReducedMotion()
-  const paths = [
-    { d: "M-40 132 C 120 70, 260 190, 430 118 S 760 72, 1040 138 S 1330 188, 1540 106", stroke: "#FFD8CC", width: 28 },
-    { d: "M-40 146 C 140 88, 300 214, 474 136 S 800 88, 1070 154 S 1340 202, 1540 128", stroke: "#FF7A59", width: 16 },
-    { d: "M-40 160 C 150 102, 330 230, 510 150 S 830 104, 1110 170 S 1370 222, 1540 146", stroke: "#E94B8A", width: 12 },
-    { d: "M-40 176 C 180 118, 350 246, 546 162 S 860 122, 1140 184 S 1400 236, 1540 160", stroke: "#5B2A86", width: 10 },
+  const settings = {
+    hero: { height: "h-44 sm:h-52 md:h-64", opacity: 1 },
+    soft: { height: "h-40 sm:h-48 md:h-56", opacity: 0.82 },
+    subtle: { height: "h-28 sm:h-36 md:h-44", opacity: 0.6 },
+  }[intensity]
+
+  const layers = [
+    {
+      d: "M-80 118 C 90 54 245 116 390 92 C 560 63 675 19 845 74 C 1020 130 1155 38 1325 74 C 1425 96 1515 82 1580 52 L1580 340 L-80 340 Z",
+      fill: "#B388FF",
+      opacity: 0.28,
+      duration: 16,
+      x: 12,
+    },
+    {
+      d: "M-80 150 C 105 78 245 160 425 124 C 580 92 720 54 890 108 C 1070 166 1185 74 1360 108 C 1450 126 1525 116 1580 90 L1580 340 L-80 340 Z",
+      fill: "#5B2A86",
+      opacity: 0.25,
+      duration: 18,
+      x: -10,
+    },
+    {
+      d: "M-80 188 C 80 124 265 202 440 170 C 610 138 750 94 920 148 C 1090 202 1225 118 1390 150 C 1470 166 1530 164 1580 142 L1580 340 L-80 340 Z",
+      fill: "#E94B8A",
+      opacity: 0.42,
+      duration: 14,
+      x: 9,
+    },
+    {
+      d: "M-80 226 C 95 164 260 242 455 210 C 635 180 780 140 955 190 C 1120 238 1255 166 1410 194 C 1490 208 1540 210 1580 194 L1580 340 L-80 340 Z",
+      fill: "#FF7A59",
+      opacity: 0.5,
+      duration: 17,
+      x: -8,
+    },
+    {
+      d: "M-80 266 C 90 214 275 282 470 254 C 650 228 795 198 970 236 C 1140 274 1280 224 1430 246 C 1500 256 1545 260 1580 250 L1580 340 L-80 340 Z",
+      fill: "#FFD8CC",
+      opacity: 0.88,
+      duration: 15,
+      x: 7,
+    },
   ]
 
   return (
-    <div aria-hidden className={`pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden ${className}`}>
-      <svg viewBox="0 0 1500 230" className="h-auto w-full" preserveAspectRatio="none">
-        {paths.map((path, index) => (
+    <div
+      aria-hidden
+      className={`pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden ${settings.height} ${className}`}
+      style={{ opacity: settings.opacity }}
+    >
+      <div className="absolute inset-x-[8%] bottom-0 h-2/3 rounded-full bg-[#FFD8CC]/30 blur-3xl" />
+      <svg viewBox="0 0 1500 340" className="absolute -left-[4%] bottom-0 h-full w-[108%]" preserveAspectRatio="none">
+        {layers.map((layer, index) => (
           <motion.path
-            key={path.stroke}
-            d={path.d}
-            fill="none"
-            stroke={path.stroke}
-            strokeWidth={path.width}
-            strokeLinecap="round"
-            opacity={0.82 - index * 0.08}
-            initial={reduceMotion ? undefined : { pathLength: 0.88, x: -20 }}
-            animate={reduceMotion ? undefined : { pathLength: 1, x: [0, 18, 0] }}
-            transition={reduceMotion ? undefined : { duration: 8 + index, repeat: Infinity, ease: "easeInOut" }}
+            key={layer.fill}
+            d={layer.d}
+            fill={layer.fill}
+            opacity={layer.opacity}
+            initial={false}
+            animate={
+              reduceMotion
+                ? undefined
+                : {
+                    x: [0, layer.x, 0],
+                    y: [0, index % 2 === 0 ? 4 : -3, 0],
+                  }
+            }
+            transition={
+              reduceMotion
+                ? undefined
+                : {
+                    duration: layer.duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }
+            }
           />
         ))}
+        <path
+          d="M-80 208 C 95 146 260 224 455 192 C 635 162 780 122 955 172 C 1120 220 1255 148 1410 176 C 1490 190 1540 192 1580 176"
+          fill="none"
+          stroke="rgba(255,255,255,.48)"
+          strokeWidth="2"
+        />
       </svg>
     </div>
   )
